@@ -14,7 +14,7 @@ model User {
   email       String   @unique
   imageUrl    String
   isCompleted Boolean  @default(false)
-  bio         String?
+  bio         String?  @db.Char(255)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

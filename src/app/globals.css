@@ -7,6 +7,10 @@ body,
 :root {
   height: 100%;
 }
+
+.no-focus {
+  @apply focus-within:ring-0 focus-within:ring-offset-0 !important;
+}
  
 @layer base {
   :root {
