@@ -30,3 +30,21 @@ export const links = [
         href: ''
     },
 ]
+
+export const linksMobile = [
+    {
+        icon: "/assets/home-icon.svg",
+        title: "Home",
+        href: "/home"
+    },
+    {
+        icon: "/assets/search-icon.svg",
+        title: "Explore",
+        href: "/explore"
+    },
+    {
+        icon: "/assets/notifications-icon.svg",
+        title: "Notifications",
+        href: "/notifications"
+    },
+]
