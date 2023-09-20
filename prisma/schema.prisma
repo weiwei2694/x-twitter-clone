@@ -8,14 +8,15 @@ datasource db {
 }
 
 model User {
-  id        String   @id
-  name      String
-  username  String   @unique
-  email     String   @unique
-  imageUrl  String
-  bio       String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id
+  name        String
+  username    String   @unique
+  email       String   @unique
+  imageUrl    String
+  isCompleted Boolean  @default(false)
+  bio         String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   threads    Thread[]
   followers  Follower[] @relation("UserFollowers")
