@@ -2,11 +2,13 @@
 
 import { SignOutButton } from "@clerk/nextjs"
 
-const Logout = () => {
+const Logout = ({ children }: { children: React.ReactNode }) => {
   return (
     <SignOutButton signOutCallback={() => {
-        window.location.href = "/"
-    }} />
+      window.location.href = "/"
+    }}>
+      {children}
+    </SignOutButton>
   )
 }
 

@@ -35,7 +35,7 @@ const Page = async () => {
                     height={20}
                     className="object-contain"
                 />
-                <Logout />
+                <Logout>Sign Out</Logout>
             </div>
             <div className="max-lg:hidden lg:flex flex-col justify-evenly items-center min-w-fit p-20 border-r border-r-gray-300">
                 <Image
@@ -45,7 +45,7 @@ const Page = async () => {
                     height={215}
                     className="object-contain"
                 />
-                <Logout />
+                <Logout>Sign Out</Logout>
             </div>
             <div className="max-lg:p-10 p-20 w-full flex flex-col justify-center">
                 <h1 className="text-6xl font-extrabold tracking-wider">Let's complete your profile</h1>
