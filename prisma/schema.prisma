@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id
+  name      String
+  username  String   @unique
+  email     String   @unique
+  imageUrl  String
+  bio       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  threads    Thread[]
+  followers  Follower[] @relation("UserFollowers")
+  followings Follower[] @relation("UserFollowing")
+  likes      Like[]
+}
+
+model Follower {
+  id          String @id @default(uuid())
+  followerId  String
+  followingId String
+
+  user      User @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+}
+
+model Thread {
+  id        String   @id @default(uuid())
+  text      String   @db.Char(255)
+  parentId  String?
+  userId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent    Thread?  @relation("RepliesTo", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Thread[] @relation("RepliesTo")
+  likes     Like[]   @relation("PostLikes")
+}
+
+model Like {
+  id       String @id @default(uuid())
+  userId   String
+  threadId String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  thread   Thread @relation("PostLikes", fields: [threadId], references: [id], onDelete: Cascade)
+}
