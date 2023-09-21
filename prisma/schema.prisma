@@ -38,6 +38,7 @@ model Thread {
   text      String   @db.Char(255)
   parentId  String?
   userId    String
+  imageUrl  String?
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   parent    Thread?  @relation("RepliesTo", fields: [parentId], references: [id], onDelete: Cascade)
