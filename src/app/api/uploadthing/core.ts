@@ -18,7 +18,7 @@ export const ourFileRouter = {
 			console.info("file url:", file.url);
 		}),
 	imageThreaad: f({
-		image: { maxFileSize: "2MB" },
+		image: { maxFileSize: "4MB", maxFileCount: 1 },
 	})
 		.middleware(async () => {
 			const user = await currentUser();

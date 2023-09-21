@@ -30,7 +30,7 @@ export async function saveUser({
 				username,
 				email,
 				bio,
-                isCompleted: true
+				isCompleted: true,
 			},
 		});
 
@@ -40,18 +40,18 @@ export async function saveUser({
 	}
 }
 
-export async function getUser(id: string){
-    try {
-        if (!id) return;
+export async function getUser(id: string) {
+	try {
+		if (!id) return;
 
-        const result = await prisma.user.findUnique({
-            where: { id }
-        });
+		const result = await prisma.user.findUnique({
+			where: { id },
+		});
 
-        if (!result) return;
+		if (!result) return;
 
-        return result;
-    } catch (error: any) {
-        console.log("[ERROR_GET_USER", error.message);
-    }
+		return result;
+	} catch (error: any) {
+		console.log("[ERROR_GET_USER", error.message);
+	}
 }

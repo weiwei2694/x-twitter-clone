@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 const Bottombar = () => {
     return (
-        <div className="flex sm:hidden fixed bottom-0 py-7 left-0 right-0 border-t border-t-gray-300 backdrop-blur bg-black/80 rounded-t-2xl">
+        <div className="max-sm:flex sm:hidden fixed bottom-0 py-7 left-0 right-0 border-t border-t-gray-300 backdrop-blur bg-black/80 rounded-t-2xl">
             <ul className="flex items-center justify-evenly w-full">
                 {linksMobile.map(link => (
                     <li
