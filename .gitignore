@@ -15,6 +15,9 @@
 # production
 /build
 
+# secret
+.env
+
 # misc
 .DS_Store
 *.pem

@@ -3,14 +3,17 @@
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
 } from "@/components/ui/dialog"
 import { useTweetModal } from "@/hooks/useTweetModal";
 import CreateTweetForm from "../forms/CreateTweetForm";
-import Image from "next/image";
 
-const CreateTweet = () => {
+interface Props {
+    userId: string;
+    imageUrl: string;
+}
+
+const CreateTweet = ({ userId, imageUrl }: Props) => {
     const tweetModal = useTweetModal()
 
     return (
@@ -22,7 +25,7 @@ const CreateTweet = () => {
                     </h3>
                 </DialogHeader>
                 <div className="mt-5">
-                    <CreateTweetForm />
+                    <CreateTweetForm isModal userId={userId} imageUrl={imageUrl} id="createtweet" />
                 </div>
             </DialogContent>
         </Dialog>
