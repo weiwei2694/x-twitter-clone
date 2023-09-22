@@ -22,6 +22,7 @@ model User {
   followers  Follower[] @relation("UserFollowers")
   followings Follower[] @relation("UserFollowing")
   likes      Like[]
+  bookmarks  Bookmark[]
 }
 
 model Follower {
@@ -34,16 +35,17 @@ model Follower {
 }
 
 model Thread {
-  id        String   @id @default(uuid())
-  text      String   @db.Char(255)
+  id        String     @id @default(uuid())
+  text      String     @db.Char(255)
   parentId  String?
   userId    String
   imageUrl  String?
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  parent    Thread?  @relation("RepliesTo", fields: [parentId], references: [id], onDelete: Cascade)
-  replies   Thread[] @relation("RepliesTo")
-  likes     Like[]   @relation("PostLikes")
+  createdAt DateTime   @default(now())
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent    Thread?    @relation("RepliesTo", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   Thread[]   @relation("RepliesTo")
+  likes     Like[]     @relation("PostLikes")
+  bookmarks Bookmark[]
 }
 
 model Like {
@@ -52,4 +54,12 @@ model Like {
   threadId String
   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   thread   Thread @relation("PostLikes", fields: [threadId], references: [id], onDelete: Cascade)
+}
+
+model Bookmark {
+  id       String @id @default(uuid())
+  userId   String
+  threadId String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  thread   Thread @relation(fields: [threadId], references: [id], onDelete: Cascade)
 }
