@@ -83,7 +83,7 @@ const Searchbar = ({ currentUser }: Props) => {
 
             {isFocused && (
                 <div
-                    className={cn("absolute max-h-[600px] overflow-y-auto top-14 left-0 right-0 bg-black-100 shadow-[0_0_10px_1px_rgba(255,255,255,0.3)] p-3 text-center rounded-xl", isUsersEmpty && "pb-16")}
+                    className={cn("absolute max-h-[600px] overflow-y-auto top-14 left-0 right-0 bg-black-100 box-shadow p-3 text-center rounded-xl", isUsersEmpty && "pb-16")}
                 >
                     {!searchTerm
                         ? (

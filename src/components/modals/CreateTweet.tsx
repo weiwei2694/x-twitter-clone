@@ -14,18 +14,37 @@ interface Props {
 }
 
 const CreateTweet = ({ userId, imageUrl }: Props) => {
-    const tweetModal = useTweetModal()
+    const { parentId, dataTweet, onClose, isOpen, setDataTweet, setParentId } = useTweetModal()
+
+    const isDataTweetEmpty = !dataTweet;
+    const isParentIdEmpty = !parentId;
 
     return (
-        <Dialog open={tweetModal.isOpen} onOpenChange={tweetModal.onClose}>
+        <Dialog open={isOpen} onOpenChange={() => {
+            setDataTweet(undefined)
+            setParentId(undefined)
+            onClose()
+        }}>
             <DialogContent className="!outline-none !border-none bg-black-100 w-full select-none">
                 <DialogHeader>
                     <h3 className="tracking-wide text-2xl font-semibold">
-                        Create Tweet
+                        {
+                            !isParentIdEmpty && !isDataTweetEmpty
+                                ? `Replying to @${dataTweet.user.username}`
+                                : 'Post Tweet'
+                        }
                     </h3>
                 </DialogHeader>
                 <div className="mt-5">
-                    <CreateTweetForm isModal userId={userId} imageUrl={imageUrl} id="createtweet" />
+                    <CreateTweetForm
+                        isModal
+                        userId={userId}
+                        imageUrl={imageUrl}
+                        id="createtweet"
+                        isReply
+                        parentId={parentId}
+                        dataTweet={dataTweet}
+                    />
                 </div>
             </DialogContent>
         </Dialog>

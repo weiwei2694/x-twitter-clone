@@ -4,14 +4,9 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation"
 import { followUser, unfollowUser } from "@/actions/follower.action";
-import { Follower, User } from "@prisma/client";
 import { useTransition } from "react";
 import { cn } from "@/lib/utils";
-
-interface UserWithFollowers extends User {
-    followers: Follower[];
-    followings: Follower[];
-}
+import { UserWithFollowers } from "@/interfaces/user.interface";
 
 interface UsersProps {
     username: string;
@@ -27,17 +22,14 @@ const Users = ({ username, name, imageUrl, userId, currentUser, isOnSearch }: Us
     const [isPending, startTransition] = useTransition()
 
     const followed = currentUser.followings.find(({ followingId }) => followingId === currentUser.id)
-
     const toggleFollowUserAction = () => {
-        if (followed) {
-            startTransition(() => {
+        startTransition(() => {
+            if (followed) {
                 unfollowUser(followed.id)
-            });
-        } else {
-            startTransition(() => {
+            } else {
                 followUser({ userId, currentUserId: currentUser.id })
-            });
-        }
+            }
+        });
 
         router.refresh();
     }

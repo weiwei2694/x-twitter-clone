@@ -22,16 +22,28 @@ import { Image as ImageIcon, X } from "lucide-react"
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { createTweet } from "@/actions/tweet.action";
-import { cn } from "@/lib/utils";
+import { cn, customDatePost, renderText } from "@/lib/utils";
+import { DataTweet } from "@/interfaces/tweet.interface";
 
 interface Props {
     isModal?: boolean;
     userId: string;
     imageUrl: string;
     id: string;
+    parentId?: string | undefined;
+    isReply?: boolean;
+    dataTweet?: DataTweet;
 }
 
-const CreateTweetForm = ({ isModal, userId, imageUrl, id }: Props) => {
+const CreateTweetForm = ({
+    isModal,
+    userId,
+    imageUrl,
+    id,
+    parentId,
+    isReply,
+    dataTweet
+}: Props) => {
     const tweetModalOnClose = useTweetModal(state => state.onClose)
     const router = useRouter();
 
@@ -44,18 +56,21 @@ const CreateTweetForm = ({ isModal, userId, imageUrl, id }: Props) => {
         defaultValues: {
             userId,
             text: "",
-            imageUrl: ""
+            imageUrl: "",
+            parentId
         }
     })
 
+    // create previewImage when user try upload file image
     const onChangeImage = (event: ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files ?? []
         if (!files.length) return;
 
         const file = files[0]
-        const maxSizeInBytes = 2 * 1024 * 1024;
+        const maxSizeInBytes = 2 * 1024 * 1024; // 2mb
         if (!file) return;
 
+        // if file size greather then 2mb, return alert
         if (file.size > maxSizeInBytes) return alert("Maximum Size Image 2MB")
 
         setFile(file);
@@ -65,6 +80,7 @@ const CreateTweetForm = ({ isModal, userId, imageUrl, id }: Props) => {
 
     async function onSubmit(values: z.infer<typeof tweetSchema>) {
         try {
+            // if previewImage exist, upload image to server
             if (previewImage) {
                 const formData = new FormData();
                 formData.append("file", file!);
@@ -78,6 +94,7 @@ const CreateTweetForm = ({ isModal, userId, imageUrl, id }: Props) => {
                 const isStatus200 = response.status === 200
                 if (!isStatus200) return;
 
+                // changes current values.imageUrl
                 values.imageUrl = response.data.url
             }
 
@@ -115,20 +132,64 @@ const CreateTweetForm = ({ isModal, userId, imageUrl, id }: Props) => {
         current.style.height = current.scrollHeight + 'px';
     }
 
+    // component
+    const IsReplyComponent = () => {
+        // if isReply false or dataTweet empty, return null
+        if (!isReply || !dataTweet) return null;
+
+        // format date | dataTweet.createdAt
+        const formattedCreatedAt = customDatePost(dataTweet.createdAt.getTime());
+
+        return (
+            <section className="flex justify-start items-start gap-x-5 h-full">
+                <div className="flex flex-col items-center justify-start gap-y-1 h-full">
+                    <Image
+                        src={dataTweet.user.imageUrl}
+                        alt={dataTweet.user.name}
+                        width={35}
+                        height={35}
+                        className="object-cover rounded-full"
+                    />
+
+                    <div
+                        className="h-full w-[2px] bg-gray-300 rounded-full"
+                    />
+                </div>
+                <div className="flex-1 flex flex-col gap-y-5">
+                    <div className="flex-1 flex items-center flex-wrap gap-x-2">
+                        <h5 className="text-ellipsis overflow-hidden whitespace-nowrap font-bold text-white w-fit max-w-[150px]">
+                            {dataTweet.user.name}
+                        </h5>
+                        <p
+                            className="text-ellipsis whitespace-nowrap font-normal text-gray-200"
+                        >
+                            @{dataTweet.user.username} · {formattedCreatedAt}
+                        </p>
+                    </div>
+                    <p className="whitespace-break-spaces">
+                        {renderText(dataTweet.text)}
+                    </p>
+                </div>
+            </section>
+        )
+    }
+
     return (
         <Form {...form}>
             <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className={
                     cn(
-                        "flex flex-col w-full space-y-4 relative z-0",
+                        "flex flex-col w-full space-y-4 relative z-0 h-full",
                         !isModal
                         &&
                         cn("px-3 py-4", isLoading && "bg-gray-300")
                     )
                 }
             >
-                <div className="flex items-start justify-start gap-x-5 w-full">
+                <IsReplyComponent />
+
+                <section className="flex items-start justify-start gap-x-5 w-full">
                     <div className="flex jsutify-start rounded-full overflow-hidden">
                         <Image
                             src={imageUrl}
@@ -175,24 +236,24 @@ const CreateTweetForm = ({ isModal, userId, imageUrl, id }: Props) => {
                             </div>
                         }
                     </div>
-                </div>
+                </section>
 
                 <div className="h-[1px] w-full bg-gray-300" />
 
-                <div className="flex items-center justify-between">
+                <section className="flex items-center justify-between">
                     {/* Choosing Files */}
                     <div>
                         <Label htmlFor={`image-upload-${id}`} className="cursor-pointer">
                             <ImageIcon size="20px" className="text-blue hover:text-blue/90" />
                         </Label>
-                        <Input id={`image-upload-${id}`} type="file" onChange={onChangeImage} className="hidden" />
+                        <Input accept="image/*" id={`image-upload-${id}`} type="file" onChange={onChangeImage} className="hidden" />
                     </div>
 
                     {/* Submit Button */}
                     <div className="flex-1 flex justify-end">
                         <Button disabled={isLoading} variant="primary" className="px-6 py-1.5 w-fit" type="submit">Post</Button>
                     </div>
-                </div>
+                </section>
             </form>
         </Form>
     )
