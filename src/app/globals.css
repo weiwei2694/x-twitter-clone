@@ -8,6 +8,14 @@ body,
   height: 100%;
 }
 
+.hide-scrollbar::-webkit-scrollbar{
+  display: none;
+}
+
+.box-shadow {
+  @apply shadow-[0_0_10px_1px_rgba(255,255,255,0.3)];
+}
+
 .no-focus {
   @apply focus-within:ring-0 focus-within:ring-offset-0 !important;
 }

@@ -4,7 +4,7 @@ const nextConfig = {
 		serverActions: true,
 	},
 	images: {
-		domains: ["img.clerk.com", "utfs.io"],
+		domains: ["img.clerk.com", "utfs.io", "res.cloudinary.com"],
 	},
 };
 
