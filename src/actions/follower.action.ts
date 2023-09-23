@@ -3,41 +3,37 @@
 import prisma from "@/lib/prismadb"
 
 interface Props {
-    userId: string;
-    currentUserId: string;
+    id?: string;
+    userId?: string;
+    currentUserId?: string;
 }
 
-export async function followUser({ userId, currentUserId }: Props){
-    try {
-        if (!userId || !currentUserId) return;
-
-        const result = await prisma.follower.create({
-            data: {
-                followerId: userId,
-                followingId: currentUserId
-            }
-        })
-
-        if (!result) return;
-
-        return result;
-    } catch (error:any) {
-        console.log("[ERROR_FOLLOW_USER]", error.message)
-    }
-}
-
-export async function unfollowUser(id: string){
-    try {
-        if (!id) return;
-
+export const toggleFollowUserAction = async ({
+    id,
+    userId,
+    currentUserId
+}: Props) => {
+    // delete
+    if (id) {
         const result = await prisma.follower.delete({
             where: { id }
         })
 
         if (!result) return;
 
-        return result;
-    } catch (error:any) {
-        console.log("[ERROR_FOLLOW_USER]", error.message)
+        return result
     }
+
+    // create
+    if (!userId || !currentUserId) return;
+    const result = await prisma.follower.create({
+        data: {
+            followerId: userId,
+            followingId: currentUserId
+        }
+    })
+
+    if (!result) return;
+
+    return result;
 }

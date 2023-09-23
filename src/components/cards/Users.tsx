@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation"
-import { followUser, unfollowUser } from "@/actions/follower.action";
+import { toggleFollowUserAction } from "@/actions/follower.action";
 import { useTransition } from "react";
 import { cn } from "@/lib/utils";
 import { UserWithFollowers } from "@/interfaces/user.interface";
@@ -22,18 +22,16 @@ const Users = ({ username, name, imageUrl, userId, currentUser, isOnSearch }: Us
     const [isPending, startTransition] = useTransition()
 
     const followed = currentUser.followings.find(({ followingId }) => followingId === currentUser.id)
-    const toggleFollowUserAction = () => {
+    const toggleFollowUser = () => {
+        if (isPending) return;
+
         startTransition(() => {
-            if (followed) {
-                unfollowUser(followed.id)
-            } else {
-                followUser({ userId, currentUserId: currentUser.id })
-            }
+            if (followed) toggleFollowUserAction({ id: followed.id })
+            else toggleFollowUserAction({ userId, currentUserId: currentUser.id })
         });
 
         router.refresh();
     }
-
     const isFollowed = () => {
         if (isPending) return "..."
         if (followed) return "Unfollow"
@@ -64,7 +62,7 @@ const Users = ({ username, name, imageUrl, userId, currentUser, isOnSearch }: Us
                 <div className="flex-1 flex justify-end">
                     <Button
                         disabled={isPending}
-                        onClick={toggleFollowUserAction}
+                        onClick={toggleFollowUser}
                         className={
                             cn(
                                 "py-1 px-4 font-bold tracking-wide rounded-full",

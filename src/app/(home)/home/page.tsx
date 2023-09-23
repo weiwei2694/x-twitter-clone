@@ -22,7 +22,7 @@ const Page = async ({ searchParams }: { searchParams: { filter: string }}) => {
                 <CreateTweetForm userId={user.id} imageUrl={user.imageUrl} id="home" />
             </div>
             {/* TODO : Display Posts & Infinite Scrolls */}
-            <TweetsList dataTweets={tweets ?? []} filter={searchParams.filter} userId={user.id} />
+            <TweetsList dataTweets={tweets ?? []} userId={user.id} />
         </div>
     )
 }
