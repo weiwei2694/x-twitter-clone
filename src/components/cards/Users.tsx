@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { useRouter } from "next/navigation"
-import { toggleFollowUserAction } from "@/actions/follower.action";
+import { usePathname } from "next/navigation"
 import { useTransition } from "react";
 import { cn } from "@/lib/utils";
 import { UserWithFollowers } from "@/interfaces/user.interface";
+import { toggleFollowUser } from "@/lib/user";
+import { useToast } from "../ui/use-toast";
 
 interface UsersProps {
     username: string;
@@ -18,20 +19,15 @@ interface UsersProps {
 }
 
 const Users = ({ username, name, imageUrl, userId, currentUser, isOnSearch }: UsersProps) => {
-    const router = useRouter();
+    // toast
+    const { toast } = useToast()
+    // path
+    const path = usePathname();
+    // mutation for toggle follow and unfollow user
     const [isPending, startTransition] = useTransition()
 
     const followed = currentUser.followings.find(({ followingId }) => followingId === currentUser.id)
-    const toggleFollowUser = () => {
-        if (isPending) return;
 
-        startTransition(() => {
-            if (followed) toggleFollowUserAction({ id: followed.id })
-            else toggleFollowUserAction({ userId, currentUserId: currentUser.id })
-        });
-
-        router.refresh();
-    }
     const isFollowed = () => {
         if (isPending) return "..."
         if (followed) return "Unfollow"
@@ -62,7 +58,16 @@ const Users = ({ username, name, imageUrl, userId, currentUser, isOnSearch }: Us
                 <div className="flex-1 flex justify-end">
                     <Button
                         disabled={isPending}
-                        onClick={toggleFollowUser}
+                        onClick={() => toggleFollowUser({
+                            isPending,
+                            startTransition,
+                            toast,
+                            path,
+                            username,
+                            followed,
+                            userId,
+                            currentUserId: currentUser.id,
+                          })}
                         className={
                             cn(
                                 "py-1 px-4 font-bold tracking-wide rounded-full",

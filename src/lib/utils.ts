@@ -5,6 +5,7 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
+// generate by chatGPT
 export function customDatePost(timestamp: number) {
 	const now = Date.now();
 	const timeDiff = now - timestamp;
@@ -31,8 +32,10 @@ export function customDatePost(timestamp: number) {
 	}
 }
 
-export const renderText = (text: string) => {
-	const textWithoutEmptyLines = text.replace(/^\s*$/gm, '');
-	const textWithSingleLineBreaks = textWithoutEmptyLines.replace(/\n+/g, '\n\n');
-	return textWithSingleLineBreaks
+// generate by chatGPT
+export const formatDateTime = (Date: Date) => {
+  const formattedTime = Date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const formattedDate = Date.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+  
+  return `${formattedTime} · ${formattedDate}`;
 }

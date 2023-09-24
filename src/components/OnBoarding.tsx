@@ -5,7 +5,7 @@ import * as z from "zod"
 import { useForm } from 'react-hook-form'
 import { useState } from "react";
 import { userSchema } from '@/validations/user.validation'
-import { saveUser } from "@/actions/user.action";
+import { saveUserAction } from "@/actions/user.action";
 
 import "@uploadthing/react/styles.css";
 import { UploadButton } from "@uploadthing/react";
@@ -62,7 +62,7 @@ const OnBoarding = ({ initialValue }: OnBoardingProps) => {
         }
 
         try {
-            const result = await saveUser(newUser);
+            const result = await saveUserAction(newUser);
 
             if (!result) return;
 

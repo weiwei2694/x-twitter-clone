@@ -1,4 +1,4 @@
-import { getUser } from "@/actions/user.action";
+import { getUserAction } from "@/actions/user.action";
 import Logout from "@/components/Logout";
 import OnBoarding from "@/components/OnBoarding"
 import { currentUser } from "@clerk/nextjs"
@@ -20,8 +20,8 @@ const Page = async () => {
         bio: ""
     }
 
-    const user = await getUser(clerkUser.id);
-
+    const user = await getUserAction(clerkUser.id);
+    
     const isCompleted = user && user.isCompleted;
     if (isCompleted) redirect("/home");
 

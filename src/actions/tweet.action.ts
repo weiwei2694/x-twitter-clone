@@ -1,38 +1,21 @@
 "use server";
 
+import {
+	CreateTweetActionProps,
+	GetTweetsActionProps,
+	ToggleLikeActionProps,
+	ToggleBookmarkActionProps,
+} from "@/interfaces/tweet.interface";
 import prisma from "@/lib/prismadb";
+import { revalidatePath } from "next/cache";
 
-interface getTweetsInterface {
-	take?: number;
-	userId: string;
-	isFollowing: boolean;
-}
-
-interface createTweetInterface {
-	userId: string;
-	imageUrl?: string | undefined;
-	text: string;
-	parentId?: string;
-}
-
-interface toggleLikeTweetInterface {
-	likeId?: string;
-	userId?: string;
-	threadId?: string;
-}
-
-interface toggleBookmarkTweet {
-	bookmarkId?: string;
-	userId?: string;
-	threadId?: string;
-}
-
-export const createTweet = async ({
+export const createTweetAction = async ({
 	userId,
 	imageUrl,
 	text,
 	parentId,
-}: createTweetInterface) => {
+	path,
+}: CreateTweetActionProps) => {
 	try {
 		// if parentId exist -> create reply
 		if (parentId) {
@@ -62,14 +45,16 @@ export const createTweet = async ({
 		return result;
 	} catch (error: any) {
 		console.log("[ERROR_CREATE_TWEET]", error.message);
+	} finally {
+		revalidatePath(path || "/home");
 	}
 };
 
-export async function getTweets({
+export async function getTweetsAction({
 	take = 20,
 	userId,
 	isFollowing,
-}: getTweetsInterface) {
+}: GetTweetsActionProps) {
 	try {
 		if (isFollowing) {
 			const results = await prisma.thread.findMany({
@@ -88,7 +73,6 @@ export async function getTweets({
 						include: {
 							followers: true,
 							followings: true,
-							bookmarks: true,
 						},
 					},
 					bookmarks: true,
@@ -117,7 +101,6 @@ export async function getTweets({
 					include: {
 						followers: true,
 						followings: true,
-						bookmarks: true,
 					},
 				},
 				bookmarks: true,
@@ -140,11 +123,12 @@ export async function getTweets({
 	}
 }
 
-export async function toggleLikeTweet({
+export async function toggleLikeAction({
 	likeId = "",
 	userId,
 	threadId,
-}: toggleLikeTweetInterface) {
+	path,
+}: ToggleLikeActionProps) {
 	try {
 		// unlike
 		const exits = await prisma.like.findUnique({
@@ -174,14 +158,17 @@ export async function toggleLikeTweet({
 		return result;
 	} catch (error: any) {
 		console.log("[ERROR_TOGGLE_LIKE_TWEET]", error.message);
+	} finally {
+		revalidatePath(path || "/home");
 	}
 }
 
-export async function toggleBookmarkTweet({
+export async function toggleBookmarkAction({
 	bookmarkId = "",
 	userId,
 	threadId,
-}: toggleBookmarkTweet) {
+	path,
+}: ToggleBookmarkActionProps) {
 	try {
 		// delete bookmark
 		const exits = await prisma.bookmark.findUnique({
@@ -211,10 +198,12 @@ export async function toggleBookmarkTweet({
 		return result;
 	} catch (error: any) {
 		console.log("[ERROR_TOGGLE_BOOKMARK_TWEET]", error.message);
+	} finally {
+		revalidatePath(path || "/home");
 	}
 }
 
-export async function deleteTweetAction(id: string) {
+export async function deleteTweetAction(id: string, path: string) {
 	try {
 		if (!id) return;
 
@@ -225,5 +214,53 @@ export async function deleteTweetAction(id: string) {
 		return result;
 	} catch (error: any) {
 		console.log("[ERROR_DELETE_TWEET_ACTION]", error.message);
+	} finally {
+		revalidatePath(path || "/home");
+	}
+}
+
+export async function getTweetAction(id: string) {
+	try {
+		if (!id) return;
+
+		const result = await prisma.thread.findUnique({
+			where: { id },
+			include: {
+				user: {
+					include: {
+						followers: true,
+						followings: true,
+					},
+				},
+				bookmarks: true,
+				likes: true,
+				replies: {
+					orderBy: {
+						createdAt: "desc",
+					},
+					include: {
+						user: {
+							include: {
+								followers: true,
+								followings: true,
+							},
+						},
+						bookmarks: true,
+						likes: true,
+						replies: {
+							select: {
+								id: true,
+							},
+						},
+					},
+				},
+			},
+		});
+
+		if (!result) return;
+
+		return result;
+	} catch (error: any) {
+		console.log("[ERROR_GET_TWEET]", error.message);
 	}
 }

@@ -1,31 +1,17 @@
 "use server";
 
+import { GetUsersActionProps, SaveUserActionProps, ToggleFollowUserActionProps } from "@/interfaces/user.interface";
 import prisma from "@/lib/prismadb";
+import { revalidatePath } from "next/cache";
 
-interface saveUserInterface {
-	id: string;
-	imageUrl: string;
-	name: string;
-	username: string;
-	email: string;
-	bio: string;
-}
-
-interface getUsersInterface {
-	take?: number;
-	skip?: number;
-	userId: string;
-	searchQuery?: string;
-}
-
-export async function saveUser({
+export async function saveUserAction({
 	id,
 	imageUrl,
 	name,
 	username,
 	email,
 	bio,
-}: saveUserInterface) {
+}: SaveUserActionProps) {
 	try {
 		if (!id || !imageUrl || !name || !username || !email) return;
 
@@ -47,12 +33,12 @@ export async function saveUser({
 	}
 }
 
-export async function getUsers({
+export async function getUsersAction({
 	take = 2,
 	skip = 0,
 	userId,
 	searchQuery = "",
-}: getUsersInterface) {
+}: GetUsersActionProps) {
 	try {
 		const result = await prisma.user.findMany({
 			where: {
@@ -73,7 +59,7 @@ export async function getUsers({
 	}
 }
 
-export async function getUser(id: string) {
+export async function getUserAction(id: string) {
 	try {
 		if (!id) return;
 
@@ -92,3 +78,40 @@ export async function getUser(id: string) {
 		console.log("[ERROR_GET_USER", error.message);
 	}
 }
+
+export const toggleFollowUserAction = async ({
+	id,
+	userId,
+	currentUserId,
+	path,
+}: ToggleFollowUserActionProps) => {
+	try {
+		// delete
+		if (id) {
+			const result = await prisma.follower.delete({
+				where: { id },
+			});
+
+			if (!result) return;
+
+			return result;
+		}
+
+		// create
+		if (!userId || !currentUserId) return;
+		const result = await prisma.follower.create({
+			data: {
+				followerId: userId,
+				followingId: currentUserId,
+			},
+		});
+
+		if (!result) return;
+
+		return result;
+	} catch (error: any) {
+		console.log("[ERROR_TOGGLE_FOLLOWER_USER_ACTION]", error.messsage);
+	} finally {
+		revalidatePath(path || "/home");
+	}
+};

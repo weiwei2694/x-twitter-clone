@@ -40,7 +40,7 @@ const CreateTweet = ({ userId, imageUrl }: Props) => {
                         isModal
                         userId={userId}
                         imageUrl={imageUrl}
-                        id="createtweet"
+                        htmlForId="createtweet"
                         isReply
                         parentId={parentId}
                         dataTweet={dataTweet}
