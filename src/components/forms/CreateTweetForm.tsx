@@ -256,7 +256,7 @@ const CreateTweetForm = ({
                         }
                     </div>
                 </section>
-                
+
                 {/* divider */}
                 <div className="h-[1px] w-full bg-gray-300" />
 

@@ -34,8 +34,15 @@ export function customDatePost(timestamp: number) {
 
 // generate by chatGPT
 export const formatDateTime = (Date: Date) => {
-  const formattedTime = Date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  const formattedDate = Date.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
-  
-  return `${formattedTime} · ${formattedDate}`;
-}
+	const formattedTime = Date.toLocaleTimeString([], {
+		hour: "2-digit",
+		minute: "2-digit",
+	});
+	const formattedDate = Date.toLocaleDateString([], {
+		month: "short",
+		day: "numeric",
+		year: "numeric",
+	});
+
+	return `${formattedTime} · ${formattedDate}`;
+};

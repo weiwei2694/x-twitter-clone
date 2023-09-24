@@ -67,7 +67,7 @@ const Users = ({ username, name, imageUrl, userId, currentUser, isOnSearch }: Us
                             followed,
                             userId,
                             currentUserId: currentUser.id,
-                          })}
+                        })}
                         className={
                             cn(
                                 "py-1 px-4 font-bold tracking-wide rounded-full",
