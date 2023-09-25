@@ -3,13 +3,9 @@ import {
 	toggleBookmarkAction,
 	toggleLikeAction,
 } from "@/actions/tweet.action";
-import { useTweetModal } from "@/hooks/useTweetModal";
 import {
 	CopyLinkTweetProps,
-	DataTweet,
 	DeleteTweetProps,
-	MultipleTweetWithConnection,
-	SingleTweetWithConnection,
 	ToggleBookmarkTweetProps,
 	ToggleLikeTweetProps,
 } from "@/interfaces/tweet.interface";
@@ -23,7 +19,7 @@ export const deleteTweet = ({
 }: DeleteTweetProps) => {
 	if (isPending) return;
 
-	startTransition(async () => {
+	startTransition(() => {
     deleteTweetAction(id, path);
 
     toast({

@@ -22,6 +22,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "./ui/textarea";
 import Image from "next/image";
+import { toast } from "./ui/use-toast";
 
 interface InitialValueInterface {
     id: string;
@@ -51,9 +52,7 @@ const OnBoarding = ({ initialValue }: OnBoardingProps) => {
     })
 
     async function onSubmit(values: z.infer<typeof userSchema>) {
-        if (isImageHasChange) {
-            values.imageUrl = imageUrl
-        }
+        if (isImageHasChange) values.imageUrl = imageUrl
 
         const newUser = {
             ...values,
@@ -62,9 +61,16 @@ const OnBoarding = ({ initialValue }: OnBoardingProps) => {
         }
 
         try {
-            const result = await saveUserAction(newUser);
+            const responsed = await saveUserAction(newUser);
 
-            if (!result) return;
+            if ("message" in responsed) {
+                toast({
+                    title: responsed.message,
+                    duration: 2000,
+                    variant: "destructive"
+                })
+                return;
+            }
 
             window.location.href = "/home"
         } catch (error) {
