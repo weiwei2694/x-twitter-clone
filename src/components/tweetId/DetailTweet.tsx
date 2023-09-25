@@ -13,11 +13,10 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useEffect, useState, useTransition } from 'react'
 import { cn, formatDateTime } from '@/lib/utils'
-import { useToast } from "@/components/ui/use-toast"
+import toast from 'react-hot-toast';
 import { useTweetModal } from '@/hooks/useTweetModal'
 import { copyLinkTweet, deleteTweet, renderText, toggleBookmarkTweet, toggleLikeTweet } from '@/lib/tweet';
 import { toggleFollowUser } from '@/lib/user';
-
 
 interface Props {
   tweet: SingleTweetWithConnection;
@@ -31,8 +30,6 @@ const DetailTweet = ({ tweet, userId }: Props) => {
   const router = useRouter();
   // current pathname
   const pathname = usePathname();
-  // toast from shadcn
-  const { toast } = useToast();
   // state from useTweetModal
   const tweetModal = useTweetModal();
 

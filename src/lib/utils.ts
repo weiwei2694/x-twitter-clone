@@ -61,3 +61,12 @@ export const getErrorMessage = (error: unknown): string => {
 
 	return message;
 }
+
+// toast option
+export const toastOptions = {
+	duration: 2000,
+	style: {
+		color: "#fff",
+		backgroundColor: "#1D9BF0",
+	},
+}

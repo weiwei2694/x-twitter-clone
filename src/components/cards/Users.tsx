@@ -7,7 +7,7 @@ import { useTransition } from "react";
 import { cn } from "@/lib/utils";
 import { UserWithFollowers } from "@/interfaces/user.interface";
 import { toggleFollowUser } from "@/lib/user";
-import { useToast } from "../ui/use-toast";
+import toast from "react-hot-toast";
 
 interface UsersProps {
     username: string;
@@ -19,8 +19,6 @@ interface UsersProps {
 }
 
 const Users = ({ username, name, imageUrl, userId, currentUser, isOnSearch }: UsersProps) => {
-    // toast
-    const { toast } = useToast()
     // path
     const path = usePathname();
     // mutation for toggle follow and unfollow user

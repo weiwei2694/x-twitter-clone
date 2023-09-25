@@ -22,7 +22,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Textarea } from "./ui/textarea";
 import Image from "next/image";
-import { toast } from "./ui/use-toast";
+import toast from "react-hot-toast";
 
 interface InitialValueInterface {
     id: string;
@@ -63,16 +63,9 @@ const OnBoarding = ({ initialValue }: OnBoardingProps) => {
         try {
             const responsed = await saveUserAction(newUser);
 
-            if ("message" in responsed) {
-                toast({
-                    title: responsed.message,
-                    duration: 2000,
-                    variant: "destructive"
-                })
-                return;
-            }
+            if ("message" in responsed) return toast.error(responsed.message);
 
-            window.location.href = "/home"
+            window.location.href = "/home";
         } catch (error) {
             console.log("ERROR_ONBOARDING", error)
         }

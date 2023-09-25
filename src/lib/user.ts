@@ -1,5 +1,6 @@
 import { toggleFollowUserAction } from "@/actions/user.action";
 import { toggleFollowUserProps } from "@/interfaces/user.interface";
+import { toastOptions } from "./utils";
 
 export const toggleFollowUser = ({
   isPending,
@@ -19,20 +20,10 @@ export const toggleFollowUser = ({
         id: followed.id,
         path
       })
-
-      toast({
-        title: `You unfollowed ${username}`,
-        duration: 2000,
-        variant: "primary"
-      })
+      toast(`You unfollowed ${username}`, toastOptions)
     } else {
       toggleFollowUserAction({ userId, currentUserId, path })
-
-      toast({
-        title: `You followed ${username}`,
-        duration: 2000,
-        variant: "primary"
-      })
+      toast(`You followed ${username}`, toastOptions)
     }
   });
 }

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { useEffect, useState, useTransition } from 'react'
 import { cn, customDatePost } from '@/lib/utils'
-import { useToast } from "@/components/ui/use-toast"
+import toast from 'react-hot-toast';
 import { useTweetModal } from '@/hooks/useTweetModal'
 import { copyLinkTweet, deleteTweet, renderText, toggleBookmarkTweet, toggleLikeTweet } from '@/lib/tweet'
 import { toggleFollowUser } from '@/lib/user'
@@ -32,8 +32,6 @@ const Tweets = ({ tweet, userId }: Props) => {
   const router = useRouter();
   // current path
   const pathname = usePathname();
-  // toast from shadcn
-  const { toast } = useToast();
   // state from useTweetModal
   const tweetModal = useTweetModal();
 

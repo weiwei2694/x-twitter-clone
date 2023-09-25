@@ -9,6 +9,7 @@ import {
 	ToggleBookmarkTweetProps,
 	ToggleLikeTweetProps,
 } from "@/interfaces/tweet.interface";
+import { toastOptions } from "./utils";
 
 export const deleteTweet = ({
 	isPending,
@@ -22,11 +23,7 @@ export const deleteTweet = ({
 	startTransition(() => {
     deleteTweetAction(id, path);
 
-    toast({
-      title: "Your post was deleted",
-      duration: 2000,
-      variant: "primary",
-    });
+    toast("Your post was deleted", toastOptions)
 	});
 };
 
@@ -48,11 +45,7 @@ export const toggleBookmarkTweet = ({
         path,
 			});
 
-			toast({
-				title: "Removed from your Bookmarks",
-				duration: 2000,
-				variant: "primary",
-			});
+			toast("Removed from your Bookmarks", toastOptions);
 		} else {
 			toggleBookmarkAction({
 				userId,
@@ -60,11 +53,7 @@ export const toggleBookmarkTweet = ({
         path,
 			});
 
-			toast({
-				title: "Added to your Bookmarks",
-				duration: 2000,
-				variant: "primary",
-			});
+			toast("Added to your Bookmarks", toastOptions);
 		}
 	});
 };
@@ -77,11 +66,7 @@ export const copyLinkTweet = ({
 	const url = process.env.NEXT_PUBLIC_NEXT_URL;
 	navigator.clipboard.writeText(`${url}/${username}/status/${tweetId}`);
 
-	toast({
-		title: "Copied to clipboard",
-		duration: 2000,
-		variant: "primary",
-	});
+	toast("Copied to clipboard", toastOptions);
 };
 
 export const toggleLikeTweet = ({
