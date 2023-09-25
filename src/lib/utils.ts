@@ -70,3 +70,19 @@ export const toastOptions = {
 		backgroundColor: "#1D9BF0",
 	},
 }
+
+// generate by chatGPT
+export const months = [
+  "Januari",
+  "Februari",
+  "Maret",
+  "April",
+  "Mei",
+  "Juni",
+  "Juli",
+  "Agustus",
+  "September",
+  "Oktober",
+  "November",
+  "Desember"
+];

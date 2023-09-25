@@ -13,6 +13,7 @@ model User {
   username    String   @unique
   email       String   @unique
   imageUrl    String
+  bannerUrl   String?
   isCompleted Boolean  @default(false)
   bio         String?  @db.Char(255)
   createdAt   DateTime @default(now())

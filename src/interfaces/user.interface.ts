@@ -1,4 +1,4 @@
-import { Follower, User } from "@prisma/client";
+import { Follower, Thread, User } from "@prisma/client";
 import { InitialProps } from "./interface";
 
 export interface UserWithFollowers extends User {
@@ -11,6 +11,11 @@ export interface toggleFollowUserProps extends InitialProps {
   followed: Follower | undefined;
   userId: string;
   currentUserId: string;
+}
+
+export interface CopyLinkUserProps {
+	toast: any;
+	username: string;
 }
 
 // action
