@@ -8,6 +8,7 @@ import { getUsersAction } from '@/actions/user.action';
 import { User } from '@prisma/client';
 import Users from './cards/Users';
 import { UserWithFollowers } from '@/interfaces/user.interface';
+import toast from 'react-hot-toast';
 
 interface Props {
     currentUser: UserWithFollowers;
@@ -19,12 +20,14 @@ const Searchbar = ({ currentUser }: Props) => {
     const [users, setUsers] = useState<User[]>([])
 
     async function getAllOfUsers(searchQuery: string) {
-        const result = await getUsersAction({
+        const data = await getUsersAction({
             searchQuery,
             userId: currentUser.id
         })
 
-        setUsers(result ?? [])
+        if (!data || "message" in data) return toast.error(data.message, { duration: 2000 })
+
+        setUsers(data)
     }
 
     const onChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {

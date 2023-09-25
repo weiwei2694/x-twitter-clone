@@ -34,7 +34,7 @@ export const createTweetAction = async ({
 
 		if (!userId) throw new Error("userId required");
 		if (!text) throw new Error("text required");
-		
+
 		// if parentId doent's exist -> create tweet
 		const result = await prisma.thread.create({
 			data: {
@@ -46,10 +46,10 @@ export const createTweetAction = async ({
 
 		return result;
 	} catch (error) {
-		console.log("[ERROR_CREATE_TWEET_ACTION]", error)
+		console.log("[ERROR_CREATE_TWEET_ACTION]", error);
 		return {
-			message: getErrorMessage(error)
-		}
+			message: getErrorMessage(error),
+		};
 	} finally {
 		revalidatePath(path || "/home");
 	}
@@ -124,10 +124,10 @@ export async function getTweetsAction({
 
 		return results;
 	} catch (error) {
-		console.log("[GET_TWEETS_ACTION]", error)
+		console.log("[GET_TWEETS_ACTION]", error);
 		return {
-			message: getErrorMessage(error)
-		}
+			message: getErrorMessage(error),
+		};
 	}
 }
 
@@ -164,10 +164,10 @@ export async function toggleLikeAction({
 
 		return result;
 	} catch (error) {
-		console.log("[ERROR_TOGGLE_LIKE_ACTION]", error)
+		console.log("[ERROR_TOGGLE_LIKE_ACTION]", error);
 		return {
-			message: getErrorMessage(error)
-		}
+			message: getErrorMessage(error),
+		};
 	} finally {
 		revalidatePath(path || "/home");
 	}
@@ -206,12 +206,73 @@ export async function toggleBookmarkAction({
 
 		return result;
 	} catch (error) {
-		console.log("[ERROR_TOGGLE_BOOKMARK_ACTION]", error)
+		console.log("[ERROR_TOGGLE_BOOKMARK_ACTION]", error);
+		return {
+			message: getErrorMessage(error),
+		};
+	} finally {
+		revalidatePath(path || "/home");
+	}
+}
+
+export async function getBookmarksAction(userId: string) {
+	try {
+		if (!userId) throw new Error("userId required");
+
+		const results = await prisma.bookmark.findMany({
+			where: { userId },
+			include: {
+				thread: {
+					include: {
+						user: {
+							include: {
+								followers: true,
+								followings: true,
+							},
+						},
+						bookmarks: true,
+						likes: true,
+						replies: {
+							select: {
+								id: true,
+							},
+						},
+					},
+				},
+			},
+		});
+
+		if (!results) return [];
+
+		const tweets = results.map(value => value.thread)
+
+		return tweets;
+	} catch (error) {
+		console.log("[ERROR_GET_BOOKMARKS_ACTION]", error);
+		return {
+			message: getErrorMessage(error),
+		};
+	}
+}
+
+export async function deleteBookmarksAction(userId: string, path: string) {
+	try {
+		if (!userId) throw new Error("userId required");
+
+		const deleteBookmarks = await prisma.bookmark.deleteMany({
+			where: {
+				userId
+			}
+		})
+
+		return deleteBookmarks;
+	} catch (error) {
+		console.log("[ERROR_DELETE_BOOKMARKS_ACTION]", error)
 		return {
 			message: getErrorMessage(error)
 		}
 	} finally {
-		revalidatePath(path || "/home");
+		revalidatePath(path || "/bookmarks");
 	}
 }
 
@@ -225,10 +286,10 @@ export async function deleteTweetAction(id: string, path: string) {
 
 		return result;
 	} catch (error) {
-		console.log("[ERROR_DELETE_TWEET_ACTION]", error)
+		console.log("[ERROR_DELETE_TWEET_ACTION]", error);
 		return {
-			message: getErrorMessage(error)
-		}
+			message: getErrorMessage(error),
+		};
 	} finally {
 		revalidatePath(path || "/home");
 	}
@@ -276,7 +337,7 @@ export async function getTweetAction(id: string) {
 	} catch (error) {
 		console.log("[ERROR_GET_TWEET_ACTION]", error);
 		return {
-			message: getErrorMessage(error)
-		}
+			message: getErrorMessage(error),
+		};
 	}
 }
