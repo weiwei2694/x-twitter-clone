@@ -57,13 +57,16 @@ const OnBoarding = ({ initialValue }: OnBoardingProps) => {
         const newUser = {
             ...values,
             username: initialValue.username,
-            email: initialValue.email
+            email: initialValue.email,
+            isCompleted: true,
         }
 
         try {
             const responsed = await saveUserAction(newUser);
 
-            if ("message" in responsed) return toast.error(responsed.message);
+            if ("message" in responsed) return toast.error(responsed.message, {
+                duration: 2000,
+            });
 
             window.location.href = "/home";
         } catch (error) {

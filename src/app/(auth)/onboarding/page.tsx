@@ -1,4 +1,4 @@
-import { getUserAction } from "@/actions/user.action";
+import { getUserAction, saveUserAction } from "@/actions/user.action";
 import Logout from "@/components/Logout";
 import OnBoarding from "@/components/OnBoarding"
 import { currentUser } from "@clerk/nextjs"
@@ -9,6 +9,13 @@ const Page = async () => {
     const clerkUser = await currentUser();
     if (!clerkUser) return null;
 
+    // if user already registered and isCompleted already true, redirect to home page
+    const user = await getUserAction(clerkUser.id);
+    if (user && "isCompleted" in user) {
+        const isCompleted = user.isCompleted;
+        if (isCompleted) redirect('/home');
+    }
+
     const mapUser = {
         id: clerkUser.id,
         imageUrl: clerkUser.imageUrl,
@@ -18,12 +25,14 @@ const Page = async () => {
         bio: ""
     }
 
-    const user = await getUserAction(clerkUser.id);
-    if (user && "isCompleted" in user) {
-        const isCompleted = user.isCompleted;
-
-        if (isCompleted) redirect('/home');
+    const createTemporaryUserData = {
+        ...mapUser,
+        name: "unknown",
+        bio: "",
+        isCompleted: false,
     }
+    // save temporary user data into database
+    await saveUserAction(createTemporaryUserData);
 
     return (
         <section className="w-full h-full flex lg:flex-row max-lg:flex-col">

@@ -21,6 +21,7 @@ export interface SaveUserActionProps {
 	username: string;
 	email: string;
 	bio: string;
+	isCompleted: boolean;
 }
 
 export interface GetUsersActionProps {

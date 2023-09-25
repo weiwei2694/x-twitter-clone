@@ -2,10 +2,24 @@ import CreateAnAccount from "@/components/CreateAnAccount"
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import Image from "next/image"
+import { getUserAction } from "@/actions/user.action";
 
 export default async function Home() {
   const clerkUser = await currentUser();
-  if (clerkUser) redirect('/onboarding');
+
+  // if the clerk user data exists
+  if (clerkUser) {
+    // get data user from database
+    const user = await getUserAction(clerkUser.id);
+
+    // if user data exists and isCompleted is within user
+    if (user && "isCompleted" in user) {
+
+      // if isCompleted false, redirect to /onboarding
+      const isCompleted = user.isCompleted;
+      if (!isCompleted) redirect('/onboarding')
+    }
+  }
 
   return (
     <main className="max-w-4xl mx-auto h-full grid place-items-center p-3 sm:p-12 lg:p-0">

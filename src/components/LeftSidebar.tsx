@@ -1,13 +1,14 @@
 "use client"
 import { links } from '@/constants'
 import { Button } from './ui/button';
-import { LogOut, Plus } from 'lucide-react';
+import { MoreHorizontal, Plus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import { SignOutButton, SignedIn } from '@clerk/nextjs';
 import { useTweetModal } from '@/hooks/useTweetModal';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
 interface LeftSidebarProps {
     username: string;
@@ -53,27 +54,40 @@ const LeftSidebar = ({ username, name, imageUrl }: LeftSidebarProps) => {
                     </span>
                 </Button>
             </ul>
-            <SignedIn>
-                <SignOutButton>
-                    <div className="max-lg:p-3 lg:py-2 lg:px-5 rounded-full hover:bg-black-200 transition flex items-center gap-x-20 cursor-pointer">
-                        <div className="max-lg:hidden lg:flex items-center gap-x-2">
-                            <Image
-                                src={imageUrl}
-                                alt={name}
-                                width={50}
-                                height={50}
-                                priority
-                                className="object-contain rounded-full"
-                            />
-                            <div className="flex flex-col items-start">
-                                <h5 className="font-bold text-white tracking-wide whitespace-nowrap">{name.length > 10 ? `${name.slice(0, 10)} ...` : name}</h5>
-                                <span className="text-gray-200 font-bold whitespace-nowrap">@{username.length > 8 ? `${username.slice(0, 8)} ...` : username}</span>
-                            </div>
+            <DropdownMenu>
+                <DropdownMenuTrigger
+                    className="max-lg:p-3 lg:py-2 lg:px-5 rounded-full hover:bg-black-200 transition flex items-center gap-x-20 cursor-pointer !outline-none !w-full"
+                >
+                    <div className="max-lg:hidden lg:flex items-center gap-x-2">
+                        <Image
+                            src={imageUrl}
+                            alt={name}
+                            width={50}
+                            height={50}
+                            priority
+                            className="object-contain rounded-full"
+                        />
+                        <div className="flex flex-col items-start">
+                            <h5 className="font-bold text-white tracking-wide whitespace-nowrap">{name.length > 10 ? `${name.slice(0, 10)} ...` : name}</h5>
+                            <span className="text-gray-200 font-bold whitespace-nowrap">@{username.length > 8 ? `${username.slice(0, 8)} ...` : username}</span>
                         </div>
-                        <LogOut size={30} />
                     </div>
-                </SignOutButton>
-            </SignedIn>
+                    <MoreHorizontal size={30} className="text-white" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <DropdownMenuItem>
+                        <SignOutButton
+                            signOutCallback={() => {
+                                window.location.href = "/"
+                            }}
+                        >
+                            <p>
+                                Log out @{username}
+                            </p>
+                        </SignOutButton>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
         </aside>
     )
 }
