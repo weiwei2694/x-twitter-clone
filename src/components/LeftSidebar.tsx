@@ -6,7 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
-import { SignOutButton, SignedIn } from '@clerk/nextjs';
+import { SignOutButton } from '@clerk/nextjs';
 import { useTweetModal } from '@/hooks/useTweetModal';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
 
@@ -32,9 +32,9 @@ const LeftSidebar = ({ username, name, imageUrl }: LeftSidebarProps) => {
                     return (
                         <li
                             key={link.title}
-                            className={cn("w-fit max-lg:p-3 lg:py-3 lg:px-5 rounded-full hover:bg-black-200 transition", isSamePath && "bg-black-200 font-bold")}
+                            className={cn("w-fit rounded-full overflow-hidden", isSamePath && "bg-black-200 font-bold")}
                         >
-                            <Link href={link.href} className="flex flex-row items-center gap-x-6 tracking-wider text-xl">
+                            <Link href={link.href} className="flex flex-row items-center gap-x-6 tracking-wider text-xl max-lg:p-3 lg:py-3 lg:px-5 hover:bg-black-200 transition">
                                 <Image src={link.icon} alt={link.title} width={30} height={30} className="object-contain w-[30px] h-[30px]" />
                                 {isNotLogo && (
                                     <span className="max-lg:hidden lg:inline">
