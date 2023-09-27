@@ -102,7 +102,7 @@ const DetailTweet = ({ tweet, userId }: Props) => {
             width={35}
             height={35}
             priority
-            className="object-cover rounded-full"
+            className="object-cover rounded-full w-[35px] h-[35px]"
           />
           <div className="flex-1 flex flex-col items-start -space-y-1">
             <h5 className="text-ellipsis overflow-hidden whitespace-nowrap font-bold text-white w-fit max-w-[150px]">

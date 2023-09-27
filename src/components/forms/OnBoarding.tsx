@@ -3,15 +3,12 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { useForm } from 'react-hook-form'
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { userSchema } from '@/validations/user.validation'
 import { saveUserAction } from "@/actions/user.action";
 
-import "@uploadthing/react/styles.css";
-import { UploadButton } from "@uploadthing/react";
-
 import { Button } from "@/components/ui/button"
-import { Label } from "./ui/label";
+import { Label } from "../ui/label";
 import {
     Form,
     FormControl,
@@ -20,9 +17,12 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "./ui/textarea";
+import { Textarea } from "../ui/textarea";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { toastOptions } from "@/lib/utils";
+import axios from "axios";
+import { Camera } from "lucide-react";
 
 interface InitialValueInterface {
     id: string;
@@ -38,8 +38,28 @@ interface OnBoardingProps {
 }
 
 const OnBoarding = ({ initialValue }: OnBoardingProps) => {
-    const [isImageHasChange, setIsImageHasChange] = useState(false);
-    const [imageUrl, setImageUrl] = useState("");
+    const [file, setFile] = useState<File>();
+    const [previewImage, setPreviewImage] = useState("")
+
+    const onChangeImage = (event: ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files ?? []
+        if (!files.length) return;
+
+        const file = files[0]
+        const maxSizeInBytes = 1 * 1024 * 1024; // 1mb
+        if (!file) return;
+
+        // if file size greather then 1mb, return alert
+        if (file.size > maxSizeInBytes) {
+            toast.error("Maximum Size Image 1MB", { duration: 2000 })
+            return;
+        }
+
+        setFile(file);
+        const previewPhoto = URL.createObjectURL(file);
+        setPreviewImage(previewPhoto);
+    };
+
 
     const form = useForm<z.infer<typeof userSchema>>({
         resolver: zodResolver(userSchema),
@@ -52,7 +72,22 @@ const OnBoarding = ({ initialValue }: OnBoardingProps) => {
     })
 
     async function onSubmit(values: z.infer<typeof userSchema>) {
-        if (isImageHasChange) values.imageUrl = imageUrl
+        if (previewImage) {
+            const formData = new FormData();
+            formData.append("file", file!);
+            formData.append("upload_preset", process.env.NEXT_PUBLIC_UPLOAD_PRESET!);
+
+            const response = await axios.post(
+                `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`,
+                formData
+            );
+
+            const isStatus200 = response.status === 200
+            if (!isStatus200) return;
+
+            // changes current values.imageUrl
+            values.imageUrl = response.data.url
+        }
 
         const newUser = {
             ...values,
@@ -84,28 +119,28 @@ const OnBoarding = ({ initialValue }: OnBoardingProps) => {
                     name="imageUrl"
                     render={({ field }) => (
                         <FormItem>
-                            <div className="flex items-center gap-x-8 space-y-4 sm:space-y-8 flex-wrap">
-                                <Label>
-                                    <Image
-                                        src={imageUrl || initialValue.imageUrl}
-                                        alt={initialValue.username}
-                                        width={80}
-                                        height={80}
-                                        className="object-contain rounded-full"
-                                    />
-                                </Label>
-                                {/* @ts-ignore */}
-                                <UploadButton
-                                    endpoint="imageProfile"
-                                    onClientUploadComplete={(res: any) => {
-                                        setIsImageHasChange(true);
-                                        setImageUrl(res[0].fileUrl)
-                                    }}
-                                    onUploadError={(error: Error) => {
-                                        alert(`ERROR! ${error.message}`);
-                                    }}
+                            <div className="relative w-[80px] h-[80px] rounded-full overflow-hidden">
+                                <Image
+                                    src={previewImage || initialValue.imageUrl}
+                                    alt={initialValue.username}
+                                    width={80}
+                                    height={80}
+                                    className="object-cover w-[80px] h-[80px] rounded-full select-none"
                                 />
+                                <Label
+                                    htmlFor="upload-profile-image"
+                                    className="absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%] p-3 rounded-full bg-gray-300/80 hover:bg-gray-300/50 transition text-white cursor-pointer"
+                                >
+                                    <Camera />
+                                </Label>
                             </div>
+                            <Input
+                                id="upload-profile-image"
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={onChangeImage}
+                            />
                             <FormMessage />
                         </FormItem>
                     )}

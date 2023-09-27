@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { usePathname } from "next/navigation"
-import { useTransition } from "react";
+import { usePathname, useRouter } from "next/navigation"
+import { Dispatch, SetStateAction, useTransition } from "react";
 import { cn } from "@/lib/utils";
 import { UserWithFollowers } from "@/interfaces/user.interface";
 import { toggleFollowUser } from "@/lib/user";
@@ -18,11 +18,14 @@ interface UsersProps {
     userId: string;
     currentUser: UserWithFollowers;
     isOnSearch?: boolean;
+    setIsFocused?: Dispatch<SetStateAction<boolean>>;
 }
 
-const Users = ({ username, name, imageUrl, userId, currentUser, isOnSearch }: UsersProps) => {
+const Users = ({ username, name, imageUrl, userId, currentUser, isOnSearch, setIsFocused }: UsersProps) => {
     // path
     const path = usePathname();
+    // router
+    const router = useRouter();
     // mutation for toggle follow and unfollow user
     const [isPending, startTransition] = useTransition()
 
@@ -34,9 +37,17 @@ const Users = ({ username, name, imageUrl, userId, currentUser, isOnSearch }: Us
         return "Follow"
     }
 
+    const redirectToProfilePage = () => {
+        if (!isOnSearch || !setIsFocused) return;
+
+        router.push(`/${username}`)
+        setIsFocused(false);
+    }
+
     return (
         <li
-            className="flex items-center jsutify-between gap-x-8 w-full hover:bg-gray-300/90 rounded-xl p-3 overflow-hidden"
+            className={cn("flex items-center jsutify-between gap-x-8 w-full hover:bg-gray-300/90 rounded-xl p-3 overflow-hidden", isOnSearch && 'cursor-pointer')}
+            onClick={redirectToProfilePage}
         >
             <div className="flex items-center gap-x-2 overflow-hidden">
                 <Image
@@ -44,12 +55,12 @@ const Users = ({ username, name, imageUrl, userId, currentUser, isOnSearch }: Us
                     alt={name}
                     width={40}
                     height={40}
-                    className="object-cover rounded-full"
+                    className="object-cover rounded-full w-[40px] h-[40px]"
                 />
                 <div className="flex items-start flex-col -space-y-1">
                     <Link
                         href={`/${username}`}
-                        className="font-normal text-white whitespace-nowrap hover:underline"
+                        className={cn("font-normal text-white whitespace-nowrap hover:underline")}
                     >
                         {name}
                     </Link>

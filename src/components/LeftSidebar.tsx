@@ -65,7 +65,7 @@ const LeftSidebar = ({ username, name, imageUrl }: LeftSidebarProps) => {
                             width={50}
                             height={50}
                             priority
-                            className="object-contain rounded-full"
+                            className="object-cover rounded-full w-[50px] h-[50px]"
                         />
                         <div className="flex flex-col items-start">
                             <h5 className="font-bold text-white tracking-wide whitespace-nowrap">{name.length > 10 ? `${name.slice(0, 10)} ...` : name}</h5>

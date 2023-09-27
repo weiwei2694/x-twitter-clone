@@ -150,7 +150,7 @@ const UserProfile = ({ user, isMyProfile, currentUser }: Props) => {
             alt={user.name}
             width={133}
             height={133}
-            className="object-cover rounded-full max-sm:border-2 sm:border-4 border-black -translate-y-[50%] bg-gray-300 select-none max-sm:w-[90px] sm:w-[133px]"
+            className="object-cover rounded-full max-sm:border-2 sm:border-4 border-black -translate-y-[50%] bg-gray-300 select-none max-sm:w-[90px] max-sm:h-[90px] sm:h-[133px] sm:w-[133px]"
           />
 
           {/* handler -> Edit Button | Follow or Unfollow, Menu ( Copy Link To Profile ) */}
