@@ -1,6 +1,6 @@
 "use client"
 
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { Input } from './ui/input'
 import { Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -9,6 +9,7 @@ import { User } from '@prisma/client';
 import Users from './cards/Users';
 import { UserWithFollowers } from '@/interfaces/user.interface';
 import toast from 'react-hot-toast';
+import { useDebounce } from "@uidotdev/usehooks";
 
 interface Props {
     currentUser: UserWithFollowers;
@@ -17,12 +18,14 @@ interface Props {
 const Searchbar = ({ currentUser }: Props) => {
     const [isFocused, setIsFocused] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
-    const [users, setUsers] = useState<User[]>([])
+    const [users, setUsers] = useState<User[]>([]);
+    const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
     async function getAllOfUsers(searchQuery: string) {
         const data = await getUsersAction({
             searchQuery,
-            userId: currentUser.id
+            userId: currentUser.id,
+            isOnSearch: true
         })
 
         if (!data || "message" in data) return toast.error(data.message, { duration: 2000 })
@@ -30,13 +33,13 @@ const Searchbar = ({ currentUser }: Props) => {
         setUsers(data)
     }
 
+    useEffect(() => {
+        getAllOfUsers(debouncedSearchTerm)
+    }, [debouncedSearchTerm])
+
     const onChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setSearchTerm(value)
-
-        setTimeout(() => {
-            getAllOfUsers(value)
-        }, 500)
     }
 
     const isUsersEmpty = !users.length;

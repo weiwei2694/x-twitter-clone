@@ -34,6 +34,7 @@ export interface GetUsersActionProps {
 	skip?: number;
 	userId: string;
 	searchQuery?: string;
+	isOnSearch?: boolean;
 }
 
 export interface ToggleFollowUserActionProps {

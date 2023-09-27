@@ -1,6 +1,10 @@
 "use server";
 
-import { GetUsersActionProps, SaveUserActionProps, ToggleFollowUserActionProps } from "@/interfaces/user.interface";
+import {
+	GetUsersActionProps,
+	SaveUserActionProps,
+	ToggleFollowUserActionProps,
+} from "@/interfaces/user.interface";
 import prisma from "@/lib/prismadb";
 import { getErrorMessage } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
@@ -12,7 +16,7 @@ export async function saveUserAction({
 	username,
 	email,
 	bio,
-	isCompleted
+	isCompleted,
 }: SaveUserActionProps) {
 	try {
 		if (!id) throw new Error("id required");
@@ -24,8 +28,8 @@ export async function saveUserAction({
 
 		// is user data already exists
 		const existingUser = await prisma.user.findUnique({
-			where: { id }
-		})
+			where: { id },
+		});
 
 		// if user existing, update data user
 		if (existingUser) {
@@ -35,9 +39,9 @@ export async function saveUserAction({
 					name,
 					imageUrl,
 					bio,
-					isCompleted
-				}
-			})
+					isCompleted,
+				},
+			});
 
 			return updateUser;
 		}
@@ -57,23 +61,41 @@ export async function saveUserAction({
 
 		return newUser;
 	} catch (error) {
-		console.log("[ERROR_SAVE_USER_ACTION]", error)
+		console.log("[ERROR_SAVE_USER_ACTION]", error);
 		return {
-			message: getErrorMessage(error)
-		}
+			message: getErrorMessage(error),
+		};
 	}
 }
 
 export async function getUsersAction({
-	take = 2,
+	take = 10,
 	skip = 0,
 	userId,
 	searchQuery = "",
+	isOnSearch,
 }: GetUsersActionProps) {
 	try {
 		if (!userId) throw new Error("userId required");
 
-		const result = await prisma.user.findMany({
+		if (isOnSearch) {
+			const users = await prisma.user.findMany({
+				where: {
+					id: {
+						not: userId,
+					},
+					username: {
+						contains: searchQuery,
+					},
+				},
+				take,
+				skip,
+			});
+
+			return users;
+		}
+
+		const users = await prisma.user.findMany({
 			where: {
 				id: {
 					not: userId,
@@ -81,17 +103,24 @@ export async function getUsersAction({
 				username: {
 					contains: searchQuery,
 				},
+				followers: {
+					none: {
+						NOT: {
+							followerId: userId,
+						},
+					},
+				},
 			},
 			take,
 			skip,
 		});
 
-		return result;
+		return users;
 	} catch (error) {
-		console.log("[ERROR_GET_USERS_ACTION]", error)
+		console.log("[ERROR_GET_USERS_ACTION]", error);
 		return {
-			message: getErrorMessage(error)
-		}
+			message: getErrorMessage(error),
+		};
 	}
 }
 
@@ -111,8 +140,8 @@ export async function getUserAction(id: string) {
 	} catch (error) {
 		console.log("[ERROR_USER_ACTION]", error);
 		return {
-			message: getErrorMessage(error)
-		}
+			message: getErrorMessage(error),
+		};
 	}
 }
 
@@ -124,15 +153,15 @@ export async function getUserByUsernameAction(username: string) {
 			where: { username },
 			include: {
 				followers: true,
-				followings: true
-			}
-		})
+				followings: true,
+			},
+		});
 
 		return user;
 	} catch (error) {
 		return {
-			message: getErrorMessage(error)
-		}
+			message: getErrorMessage(error),
+		};
 	}
 }
 
@@ -156,7 +185,7 @@ export const toggleFollowUserAction = async ({
 		// userId and currentUserId is required, to create new follower
 		if (!userId) throw new Error("userId required");
 		if (!currentUserId) throw new Error("currentUserId");
-		
+
 		// create
 		const result = await prisma.follower.create({
 			data: {
@@ -167,10 +196,10 @@ export const toggleFollowUserAction = async ({
 
 		return result;
 	} catch (error) {
-		console.log("[ERROR_TOGGLE_FOLLOW_USER_ACTION]", error)
+		console.log("[ERROR_TOGGLE_FOLLOW_USER_ACTION]", error);
 		return {
-			message: getErrorMessage(error)
-		}
+			message: getErrorMessage(error),
+		};
 	} finally {
 		revalidatePath(path || "/home");
 	}
