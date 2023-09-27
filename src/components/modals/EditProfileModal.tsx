@@ -1,13 +1,13 @@
 "use client";
 
-import { Dispatch, SetStateAction, useState } from "react";
-import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
+import { Dispatch, SetStateAction } from "react";
+import { Dialog, DialogContent } from "../ui/dialog";
 import EditProfileForm from "../forms/EditProfileForm";
 import { User } from "@prisma/client";
 
 interface Props {
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  isOpen?: boolean;
+  setIsOpen?: Dispatch<SetStateAction<boolean>>;
   user: User;
 }
 

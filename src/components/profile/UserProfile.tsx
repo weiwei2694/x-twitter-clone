@@ -8,10 +8,10 @@ import { copyLinkUser, toggleFollowUser } from '@/lib/user';
 import { usePathname } from 'next/navigation';
 import { cn, convertToHttps, months } from '@/lib/utils';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import { CalendarDays, LinkIcon, MapPin, MoreHorizontal } from 'lucide-react';
+import { CalendarDays, LinkIcon, MapPin, MoreHorizontal, Router } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { renderText } from '@/lib/tweet';
-import EditProfileModal from './EditProfileModal';
+import EditProfileModal from '../modals/EditProfileModal';
 import Link from 'next/link';
 
 interface Props {
@@ -138,18 +138,25 @@ const UserProfile = ({ user, isMyProfile, currentUser }: Props) => {
       <div
         className="flex items-center gap-x-4"
       >
-        {/* TODO: create dialog modal edit profile */}
+        {/* Dekstop */}
         <Button
           variant="primary"
-          className="py-2 px-4 font-bold tracking-wide rounded-full bg-transparent hover:bg-gray-300/30 border border-gray-200 text-sm"
+          className="py-2 px-4 font-bold tracking-wide rounded-full bg-transparent hover:bg-gray-300/30 border border-gray-200 text-sm max-md:hidden md:block"
           onClick={() => setIsOpen(true)}
         >
           Edit Profile
         </Button>
+        {/* Mobile */}
+        <Link
+          className="py-2 px-4 font-bold tracking-wide rounded-full bg-transparent hover:bg-gray-300/30 border border-gray-200 text-sm max-md:block md:hidden"
+          href="/settings/profile"
+        >
+          Edit Profile
+        </Link>
       </div>
     )
   }
-  
+
   const displayFollowersAndFollowings = () => {
     const totalFollowers = user.followers.length;
     const totalFollowings = user.followings.length;
@@ -204,7 +211,7 @@ const UserProfile = ({ user, isMyProfile, currentUser }: Props) => {
         </div>
       </section>
 
-      {/* Update Profile Modal */}
+      {/* Edit Profile Modal */}
       <EditProfileModal
         isOpen={isOpen}
         setIsOpen={setIsOpen}

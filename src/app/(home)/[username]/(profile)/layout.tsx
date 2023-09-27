@@ -1,19 +1,17 @@
-import React from 'react'
-import { headers } from 'next/headers';
+import { ReactNode } from 'react'
 import { currentUser as clerkCurrentUser } from "@clerk/nextjs";
 import { getUserAction, getUserByUsernameAction } from "@/actions/user.action";
 import { redirect } from 'next/navigation';
 import NotFound from '@/components/404';
-import { getTweetsByUserIdAction } from '@/actions/tweet.action';
 import UserProfile from '@/components/profile/UserProfile';
 import Topbar from '@/components/profile/Topbar';
 import Tabs from '@/components/profile/Tabs';
 
 interface Props {
-  children: React.ReactNode;
+  children: ReactNode;
   params: {
     username: string;
-  }
+  },
 }
 
 const Layout = async ({ children, params }: Props) => {
