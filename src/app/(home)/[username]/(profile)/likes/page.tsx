@@ -33,8 +33,20 @@ const Page = async ({ params }: Props) => {
     return (
       <div className="flex justify-center mt-8 px-3">
         <div className="flex flex-col items-start max-w-[300px]">
-          <h1 className="text-3xl font-extrabold tracking-wide">You don’t have any likes yet</h1>
-          <p className="font-normal text-gray-200">Tap the heart on any post to show it some love. When you do, it’ll show up here..</p>
+          {currentUser.id === user.id
+            ? (
+              <>
+                <h1 className="text-3xl font-extrabold tracking-wide">You don’t have any likes yet</h1>
+                <p className="font-normal text-gray-200">Tap the heart on any post to show it some love. When you do, it’ll show up here..</p>
+              </>
+            )
+            : (
+              <>
+                <h1 className="text-3xl font-extrabold tracking-wide">@{user.username} hasn’t </h1>
+                <p className="font-normal text-gray-200">When they do, those posts will show up here.</p>
+              </>
+            )}
+
         </div>
       </div>
     )
@@ -45,14 +57,14 @@ const Page = async ({ params }: Props) => {
       {isLikeTweetsEmpty
         ? savePostsForLater()
         : (
-        likeTweets.map(tweet => (
-          <Tweets
-            key={tweet.id}
-            tweet={tweet}
-            userId={currentUser.id}
-          />
-        ))
-      )}
+          likeTweets.map(tweet => (
+            <Tweets
+              key={tweet.id}
+              tweet={tweet}
+              userId={currentUser.id}
+            />
+          ))
+        )}
     </>
   )
 }

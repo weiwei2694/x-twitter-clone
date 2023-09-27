@@ -37,6 +37,17 @@ export interface GetUsersActionProps {
 	isOnSearch?: boolean;
 }
 
+export interface UpdateUserActionProps {
+	id: string;
+	imageUrl: string;
+	bannerUrl?: string | undefined;
+	name: string;
+	bio: string;
+	location: string;
+	website: string;
+	path: string;
+}
+
 export interface ToggleFollowUserActionProps {
 	id?: string;
 	userId?: string;

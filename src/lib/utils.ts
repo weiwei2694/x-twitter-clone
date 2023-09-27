@@ -56,11 +56,11 @@ export const getErrorMessage = (error: unknown): string => {
 	} else if (error && typeof error === "object" && "message" in error) {
 		message = String(error.message);
 	} else {
-		message = "Something went wrong."
+		message = "Something went wrong.";
 	}
 
 	return message;
-}
+};
 
 // toast option
 export const toastOptions = {
@@ -69,20 +69,41 @@ export const toastOptions = {
 		color: "#fff",
 		backgroundColor: "#1D9BF0",
 	},
-}
+};
 
 // generate by chatGPT
 export const months = [
-  "Januari",
-  "Februari",
-  "Maret",
-  "April",
-  "Mei",
-  "Juni",
-  "Juli",
-  "Agustus",
-  "September",
-  "Oktober",
-  "November",
-  "Desember"
+	"Januari",
+	"Februari",
+	"Maret",
+	"April",
+	"Mei",
+	"Juni",
+	"Juli",
+	"Agustus",
+	"September",
+	"Oktober",
+	"November",
+	"Desember",
 ];
+
+export function convertToHttps(url: string) {
+	if (!url) return;
+
+	if (url.startsWith("https://")) {
+		return {
+			href: url,
+			title: url.slice(8)
+		};
+	} else if (url.startsWith("http://")) {
+		return {
+			href: "https://" + url.slice(7),
+			title: url.slice(7)
+		}
+	} else {
+		return {
+			href: "https://" + url,
+			title: url
+		};
+	}
+}

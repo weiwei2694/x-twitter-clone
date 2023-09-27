@@ -2,15 +2,17 @@
 
 import { UserWithFollowers } from '@/interfaces/user.interface';
 import Image from 'next/image';
-import React, { useTransition } from 'react'
+import React, { useTransition, useState } from 'react'
 import { Button } from '../ui/button';
 import { copyLinkUser, toggleFollowUser } from '@/lib/user';
 import { usePathname } from 'next/navigation';
-import { cn, months } from '@/lib/utils';
+import { cn, convertToHttps, months } from '@/lib/utils';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
-import { CalendarDays, LinkIcon, MoreHorizontal } from 'lucide-react';
+import { CalendarDays, LinkIcon, MapPin, MoreHorizontal } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { renderText } from '@/lib/tweet';
+import EditProfileModal from './EditProfileModal';
+import Link from 'next/link';
 
 interface Props {
   isMyProfile: boolean;
@@ -22,18 +24,9 @@ interface Props {
 }
 
 const UserProfile = ({ user, isMyProfile, currentUser }: Props) => {
-  const isBannerUrlEmpty = !user.bannerUrl
   const [isPending, startTransition] = useTransition()
+  const [isOpen, setIsOpen] = useState(false)
   const path = usePathname()
-
-  const displayBanner = () => {
-    if (isBannerUrlEmpty) {
-      return <div className="w-full max-sm:h-[135px] sm:h-[230px] bg-gray-300" />
-    }
-
-    // WIP
-    // TODO: create banner from bannerUrl
-  }
 
   const followed = user.followers.find(({ followingId }) => followingId === currentUser.id)
 
@@ -44,6 +37,52 @@ const UserProfile = ({ user, isMyProfile, currentUser }: Props) => {
   }
 
   // Components
+  const displayBanner = () => {
+    if (!user.bannerUrl) {
+      return <div className="w-full max-sm:h-[135px] sm:h-[230px] bg-gray-300" />
+    }
+
+    return (
+      <Image
+        src={user.bannerUrl}
+        alt={user.username}
+        width={600}
+        height={230}
+        className="object-cover w-full h-[230px]"
+      />
+    )
+  }
+
+  const displayInformation = () => {
+    const month = new Date(user.createdAt).getMonth()
+    const year = new Date(user.createdAt).getFullYear()
+
+    const linkWebsite = convertToHttps(user.website!)
+
+    return (
+      <div className="flex gap-x-3 flex-wrap">
+        {user.location && (
+          <p className="font-normal text-gray-200 flex items-center gap-x-1">
+            <MapPin size="18" />
+            {user.location}
+          </p>
+        )}
+        {linkWebsite && (
+          <Link href={linkWebsite.href} target="_blank" className="font-normal text-blue hover:text-blue/90 flex items-center gap-x-1">
+            <LinkIcon size="18" className="text-gray-200" />
+            <span className="max-w-[231px] text-ellipsis overflow-hidden whitespace-nowrap">
+              {linkWebsite.title}
+            </span>
+          </Link>
+        )}
+        <p className="font-normal text-gray-200 flex items-center gap-x-1">
+          <CalendarDays size="18" />
+          Joined {months[month]} {year}
+        </p>
+      </div>
+    )
+  }
+
   const displayHandler = () => {
     if (!isMyProfile) {
       return (
@@ -75,7 +114,7 @@ const UserProfile = ({ user, isMyProfile, currentUser }: Props) => {
               startTransition,
               toast,
               path,
-              username: currentUser.username,
+              username: user.username,
               followed,
               userId: user.id,
               currentUserId: currentUser.id,
@@ -103,25 +142,14 @@ const UserProfile = ({ user, isMyProfile, currentUser }: Props) => {
         <Button
           variant="primary"
           className="py-2 px-4 font-bold tracking-wide rounded-full bg-transparent hover:bg-gray-300/30 border border-gray-200 text-sm"
+          onClick={() => setIsOpen(true)}
         >
           Edit Profile
         </Button>
       </div>
     )
   }
-
-  const displayJoinedDate = () => {
-    const month = new Date(user.createdAt).getMonth()
-    const year = new Date(user.createdAt).getFullYear()
-
-    return (
-      <p className="font-normal text-gray-200 flex items-center gap-x-2">
-        <CalendarDays size="18" />
-        Joined {months[month]} {year}
-      </p>
-    )
-  }
-
+  
   const displayFollowersAndFollowings = () => {
     const totalFollowers = user.followers.length;
     const totalFollowings = user.followings.length;
@@ -135,7 +163,7 @@ const UserProfile = ({ user, isMyProfile, currentUser }: Props) => {
   }
 
   return (
-    <div>
+    <>
       {/* BannerUrl */}
       <section>
         {displayBanner()}
@@ -168,12 +196,21 @@ const UserProfile = ({ user, isMyProfile, currentUser }: Props) => {
           {/* Bio, Followers, Followings */}
           <div className="flex flex-col space-y-2">
             <p className="whitespace-break-spaces text-gray-100">{renderText(user.bio || "")}</p>
-            {displayJoinedDate()}
+            {/* Join Date, Location, Website */}
+            {displayInformation()}
+            {/* Followers, Followings */}
             {displayFollowersAndFollowings()}
           </div>
         </div>
       </section>
-    </div>
+
+      {/* Update Profile Modal */}
+      <EditProfileModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        user={user}
+      />
+    </>
   )
 }
 

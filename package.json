@@ -39,10 +39,12 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.2.2",
     "uploadthing": "^5.6.1",
+    "validator": "^13.11.0",
     "zod": "^3.22.2",
     "zustand": "^4.4.1"
   },
   "devDependencies": {
+    "@types/validator": "^13.11.2",
     "prisma": "^5.3.1"
   }
 }
