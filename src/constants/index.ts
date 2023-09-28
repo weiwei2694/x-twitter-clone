@@ -53,3 +53,16 @@ export const linksMobile = [
         href: "/notifications"
     },
 ]
+
+export const mobileSidebarLinks = [
+    {
+        icon: "/assets/profile-icon.svg",
+        title: "Profile",
+        href: ''
+    },
+    {
+        icon: "/assets/bookmarks-icon.svg",
+        title: "Bookmarks",
+        href: "/bookmarks"
+    },
+]

@@ -1,5 +1,8 @@
 import { toggleFollowUserAction } from "@/actions/user.action";
-import { CopyLinkUserProps, toggleFollowUserProps } from "@/interfaces/user.interface";
+import {
+	CopyLinkUserProps,
+	toggleFollowUserProps,
+} from "@/interfaces/user.interface";
 import { toastOptions } from "./utils";
 
 export const toggleFollowUser = ({
@@ -28,10 +31,7 @@ export const toggleFollowUser = ({
 	});
 };
 
-export const copyLinkUser = ({
-	toast,
-	username,
-}: CopyLinkUserProps) => {
+export const copyLinkUser = ({ toast, username }: CopyLinkUserProps) => {
 	const url = process.env.NEXT_PUBLIC_NEXT_URL;
 	navigator.clipboard.writeText(`${url}/${username}`);
 
