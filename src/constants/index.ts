@@ -38,6 +38,11 @@ export const linksMobile = [
         href: "/home"
     },
     {
+        icon: "/assets/profile-icon.svg",
+        title: "Profile",
+        href: ''
+    },
+    {
         icon: "/assets/search-icon.svg",
         title: "Explore",
         href: "/explore"

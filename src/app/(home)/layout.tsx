@@ -34,7 +34,7 @@ const layout = async ({ children}: Props) => {
                 </section>
                 <RightSidebar users={users} user={user} />
             </section>
-            <Bottombar />
+            <Bottombar username={user.username} />
         </main>
     )
 }
