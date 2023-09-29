@@ -12,7 +12,7 @@ interface RightSidebarProps {
 const RightSidebar = ({ users, user: currentUser }: RightSidebarProps) => {
 
   return (
-    <aside className="h-screen w-full max-w-[350px] p-3 border-l border-l-gray-300 max-lg:hidden lg:flex flex-col space-y-6">
+    <aside className="h-screen w-full max-w-[350px] p-3 max-lg:hidden lg:flex flex-col space-y-6">
       <Searchbar currentUser={currentUser} />
       <WhoToFollow users={users} currentUser={currentUser} />
     </aside>

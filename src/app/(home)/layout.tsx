@@ -1,7 +1,7 @@
 import { ReactNode } from "react"
 import { getUserAction, getUsersAction } from '@/actions/user.action'
 import Bottombar from '@/components/sharing/Bottombar'
-import LeftSidebar from '@/components/sharing/LeftSidebar'
+import LeftSidebar from '@/components/sharing/leftsidebar/LeftSidebar'
 import RightSidebar from '@/components/sharing/rightsidebar/RightSidebar'
 import Modal from '@/components/modals/Modal'
 import { currentUser } from '@clerk/nextjs'
@@ -28,11 +28,18 @@ const layout = async ({ children}: Props) => {
         <main className="max-h-screen overflow-hidden">
             <Modal imageUrl={user.imageUrl} userId={user.id} />
             <section className="h-full max-w-7xl mx-auto flex">
-                <LeftSidebar username={user.username} name={user.name} imageUrl={user.imageUrl} />
-                <section className="hide-scrollbar w-full max-h-screen overflow-y-auto max-sm:pb-32 sm:pb-0">
+                <LeftSidebar
+                    username={user.username}
+                    name={user.name}
+                    imageUrl={user.imageUrl}
+                />
+                <section className="hide-scrollbar border-l border-r border-gray-300 w-full max-h-screen overflow-y-auto max-sm:pb-32 sm:pb-0">
                     {children}
                 </section>
-                <RightSidebar users={users} user={user} />
+                <RightSidebar
+                    users={users}
+                    user={user}
+                />
             </section>
             <Bottombar username={user.username} />
         </main>
