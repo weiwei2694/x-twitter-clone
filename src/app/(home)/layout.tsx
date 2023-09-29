@@ -2,7 +2,7 @@ import { ReactNode } from "react"
 import { getUserAction, getUsersAction } from '@/actions/user.action'
 import Bottombar from '@/components/sharing/Bottombar'
 import LeftSidebar from '@/components/sharing/LeftSidebar'
-import RightSidebar from '@/components/sharing/RightSidebar'
+import RightSidebar from '@/components/sharing/rightsidebar/RightSidebar'
 import Modal from '@/components/modals/Modal'
 import { currentUser } from '@clerk/nextjs'
 import { redirect } from 'next/navigation'
