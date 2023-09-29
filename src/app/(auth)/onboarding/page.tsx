@@ -1,5 +1,5 @@
 import { getUserAction, saveUserAction } from "@/actions/user.action";
-import Logout from "@/components/Logout";
+import Logout from "@/components/sharing/Logout";
 import OnBoarding from "@/components/forms/OnBoarding"
 import { currentUser } from "@clerk/nextjs"
 import { redirect } from "next/navigation";

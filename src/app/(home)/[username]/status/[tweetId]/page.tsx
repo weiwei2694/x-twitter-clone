@@ -7,6 +7,7 @@ import { currentUser as clerkCurrentUser } from '@clerk/nextjs';
 import CreateTweetForm from '@/components/forms/CreateTweetForm';
 import NotFound from '@/components/sharing/404';
 import { redirect } from 'next/navigation';
+import { DataTweet } from '@/interfaces/tweet.interface';
 
 interface Props {
   params: {
@@ -34,8 +35,21 @@ const Page = async ({ params }: Props) => {
   const isValidUsername = user.username === username;
   if (!isValidUsername) return <NotFound />
 
+  const dataReplyTweet: DataTweet = {
+    id: dataTweet.id,
+    text: dataTweet.text,
+    imageUrl: dataTweet.imageUrl,
+    createdAt: dataTweet.createdAt,
+    parentId: dataTweet.id,
+    user: {
+      name: dataTweet.user.name,
+      username: dataTweet.user.username,
+      imageUrl: dataTweet.user.imageUrl
+    }
+  }
+
   return (
-    <div className="relative">
+    <>
       <Topbar />
       <DetailTweet
         tweet={dataTweet}
@@ -47,8 +61,7 @@ const Page = async ({ params }: Props) => {
           imageUrl={currentUser.imageUrl}
           isReply
           htmlForId="tweetId"
-          dataTweet={dataTweet}
-          parentId={dataTweet.id}
+          dataTweet={dataReplyTweet}
         />
       </div>
       {/* Create Infinite Scroll -> if required */}
@@ -61,7 +74,7 @@ const Page = async ({ params }: Props) => {
           />
         ))
       }
-    </div>
+    </>
   )
 }
 

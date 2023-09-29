@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/dialog"
 import { useTweetModal } from "@/hooks/useTweetModal";
 import CreateTweetForm from "../forms/CreateTweetForm";
+import { useReplyTweet } from "@/hooks/useReplyTweet";
 
 interface Props {
     userId: string;
@@ -14,22 +15,26 @@ interface Props {
 }
 
 const CreateTweet = ({ userId, imageUrl }: Props) => {
-    const { parentId, dataTweet, onClose, isOpen, setDataTweet, setParentId } = useTweetModal()
+    const { onClose, isOpen } = useTweetModal()
+    const { setDataTweet, dataTweet } = useReplyTweet();
 
     const isDataTweetEmpty = !dataTweet;
-    const isParentIdEmpty = !parentId;
+
+    const onOpenChangeDialog = () => {
+        setDataTweet(null)
+        onClose()
+    }
 
     return (
-        <Dialog open={isOpen} onOpenChange={() => {
-            setDataTweet(undefined)
-            setParentId(undefined)
-            onClose()
-        }}>
+        <Dialog
+            open={isOpen}
+            onOpenChange={onOpenChangeDialog}
+        >
             <DialogContent className="!outline-none !border-none bg-black-100 w-full select-none">
                 <DialogHeader>
                     <h3 className="tracking-wide text-2xl font-semibold">
                         {
-                            !isParentIdEmpty && !isDataTweetEmpty
+                            !isDataTweetEmpty
                                 ? `Replying to @${dataTweet.user.username}`
                                 : 'Post Tweet'
                         }
@@ -42,7 +47,6 @@ const CreateTweet = ({ userId, imageUrl }: Props) => {
                         imageUrl={imageUrl}
                         htmlForId="createtweet"
                         isReply
-                        parentId={parentId}
                         dataTweet={dataTweet}
                     />
                 </div>

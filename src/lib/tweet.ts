@@ -5,6 +5,7 @@ import {
 } from "@/actions/tweet.action";
 import {
 	CopyLinkTweetProps,
+	DataTweet,
 	DeleteTweetProps,
 	ToggleBookmarkTweetProps,
 	ToggleLikeTweetProps,
@@ -21,9 +22,9 @@ export const deleteTweet = ({
 	if (isPending) return;
 
 	startTransition(() => {
-    deleteTweetAction(id, path);
+		deleteTweetAction(id, path);
 
-    toast("Your post was deleted", toastOptions)
+		toast("Your post was deleted", toastOptions);
 	});
 };
 
@@ -31,7 +32,7 @@ export const toggleBookmarkTweet = ({
 	isPending,
 	startTransition,
 	toast,
-  path,
+	path,
 	bookmark,
 	userId,
 	threadId,
@@ -42,7 +43,7 @@ export const toggleBookmarkTweet = ({
 		if (bookmark) {
 			toggleBookmarkAction({
 				bookmarkId: bookmark.id,
-        path,
+				path,
 			});
 
 			toast("Removed from your Bookmarks", toastOptions);
@@ -50,7 +51,7 @@ export const toggleBookmarkTweet = ({
 			toggleBookmarkAction({
 				userId,
 				threadId,
-        path,
+				path,
 			});
 
 			toast("Added to your Bookmarks", toastOptions);
@@ -75,7 +76,7 @@ export const toggleLikeTweet = ({
 	liked,
 	userId,
 	threadId,
-  path,
+	path,
 }: ToggleLikeTweetProps) => {
 	if (isPending) return;
 
@@ -83,13 +84,13 @@ export const toggleLikeTweet = ({
 		if (liked) {
 			toggleLikeAction({
 				likeId: liked.id,
-        path,
+				path,
 			});
 		} else {
 			toggleLikeAction({
 				userId,
 				threadId,
-        path
+				path,
 			});
 		}
 	});

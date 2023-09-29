@@ -59,7 +59,7 @@ export async function getTweetAction(id: string) {
 	try {
 		if (!id) throw new Error("id required");
 
-		const result = await prisma.thread.findUnique({
+		const dataTweet = await prisma.thread.findUnique({
 			where: { id },
 			include: {
 				user: {
@@ -93,7 +93,7 @@ export async function getTweetAction(id: string) {
 			},
 		});
 
-		return result;
+		return dataTweet;
 	} catch (error) {
 		console.log("[ERROR_GET_TWEET_ACTION]", error);
 		return {

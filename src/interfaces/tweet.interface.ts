@@ -32,6 +32,7 @@ export interface DataTweet {
 	text: string;
 	imageUrl: string | null;
 	createdAt: Date;
+	parentId: string;
 	user: {
 		name: string;
 		username: string;

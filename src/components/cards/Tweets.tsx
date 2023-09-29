@@ -15,6 +15,7 @@ import { useEffect, useState, useTransition } from 'react'
 import { cn, customDatePost } from '@/lib/utils'
 import toast from 'react-hot-toast';
 import { useTweetModal } from '@/hooks/useTweetModal'
+import { useReplyTweet } from '@/hooks/useReplyTweet'
 import { copyLinkTweet, deleteTweet, renderText, toggleBookmarkTweet, toggleLikeTweet } from '@/lib/tweet'
 import { toggleFollowUser } from '@/lib/user'
 import Link from 'next/link'
@@ -33,7 +34,8 @@ const Tweets = ({ tweet, userId }: Props) => {
   // current path
   const pathname = usePathname();
   // state from useTweetModal
-  const tweetModal = useTweetModal();
+  const setDataTweet = useReplyTweet(state => state.setDataTweet);
+  const setOnOpenReplyTweetModal = useTweetModal(state => state.onOpen);
 
   // mutation
   // like
@@ -49,12 +51,13 @@ const Tweets = ({ tweet, userId }: Props) => {
   const followed = tweet.user.followers.find(({ followingId }) => followingId === userId)
   const bookmark = tweet.bookmarks.find(item => item.userId === userId);
 
-  const replyTweet = () => {
+  const replyTweet = (isForModal: boolean) => {
     const dataTweet: DataTweet = {
       id: tweet.id,
       text: tweet.text,
       imageUrl: tweet.imageUrl,
       createdAt: tweet.createdAt,
+      parentId: tweet.id,
       user: {
         name: tweet.user.name,
         username: tweet.user.username,
@@ -62,9 +65,13 @@ const Tweets = ({ tweet, userId }: Props) => {
       },
     };
 
-    tweetModal.setParentId(tweet.id);
-    tweetModal.setDataTweet(dataTweet);
-    tweetModal.onOpen();
+    setDataTweet(dataTweet);
+
+    if (isForModal) {
+      setOnOpenReplyTweetModal();
+    } else {
+      router.push('/compose/tweet');
+    }
   };
 
   // format date | tweet.createdAt
@@ -176,12 +183,24 @@ const Tweets = ({ tweet, userId }: Props) => {
             )}
           </div>
           <div className="flex items-center gap-x-8">
-            {/* Comment */}
+            {/* Comment Dekstop */}
             <Button
               variant="icon"
               size="icon"
-              className="flex items-center gap-x-2 text-gray-200 transition hover:text-blue !outline-none"
-              onClick={replyTweet}
+              className="flex items-center gap-x-2 text-gray-200 transition hover:text-blue !outline-none max-sm:hidden"
+              onClick={() => replyTweet(true)}
+            >
+              <MessageCircle size="20px" />
+              <span className="text-sm font-extrabold">
+                {tweet.replies.length}
+              </span>
+            </Button>
+            {/* Comment Mobile */}
+            <Button
+              variant="icon"
+              size="icon"
+              className="flex items-center gap-x-2 text-gray-200 transition hover:text-blue !outline-none sm:hidden"
+              onClick={() => replyTweet(false)}
             >
               <MessageCircle size="20px" />
               <span className="text-sm font-extrabold">

@@ -6,6 +6,7 @@ import * as z from "zod"
 import { useForm } from 'react-hook-form'
 import { tweetSchema } from '@/validations/tweet.validation'
 import { useTweetModal } from "@/hooks/useTweetModal";
+import { useReplyTweet } from "@/hooks/useReplyTweet";
 import { ChangeEvent, useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { Button } from "../ui/button";
@@ -25,15 +26,16 @@ import { createTweetAction } from "@/actions/tweet.action";
 import { cn, customDatePost } from "@/lib/utils";
 import { DataTweet } from "@/interfaces/tweet.interface";
 import { renderText } from "@/lib/tweet";
+import ButtonBack from "../sharing/ButtonBack";
 
 interface Props {
     isModal?: boolean;
     userId: string;
     imageUrl: string;
     htmlForId: string;
-    parentId?: string | undefined;
+    isMobile?: boolean;
     isReply?: boolean;
-    dataTweet?: DataTweet;
+    dataTweet?: DataTweet | null;
 }
 
 const CreateTweetForm = ({
@@ -41,11 +43,12 @@ const CreateTweetForm = ({
     userId,
     imageUrl,
     htmlForId,
-    parentId,
+    isMobile,
     isReply,
     dataTweet
 }: Props) => {
     const tweetModal = useTweetModal();
+    const setDataTweet = useReplyTweet(state => state.setDataTweet)
     const path = usePathname();
 
     const [file, setFile] = useState<File>();
@@ -58,7 +61,7 @@ const CreateTweetForm = ({
             userId,
             text: "",
             imageUrl: "",
-            parentId
+            parentId: dataTweet?.parentId
         }
     })
 
@@ -99,19 +102,24 @@ const CreateTweetForm = ({
                 values.imageUrl = response.data.url
             }
 
-            // RESET
-            form.reset();
-            setPreviewImage("");
             if (isModal) {
-                tweetModal.setDataTweet(undefined);
-                tweetModal.setParentId(undefined);
-                tweetModal.onClose();
+                setDataTweet(null)
+                tweetModal.onClose()
             }
 
             await createTweetAction({
                 ...values,
                 path
             })
+
+            if (isMobile && isReply) {
+                window.location.href = `/${dataTweet?.user?.username}/status/${dataTweet?.id}`;
+            } else if (isMobile) {
+                window.location.href = "/home";
+            }
+
+            form.reset();
+            setPreviewImage("");
         } catch (error: any) {
             console.log("[ERROR_CREATE_TWEET_FORM]", error.message)
         }
@@ -140,9 +148,7 @@ const CreateTweetForm = ({
     // component
     const IsReplyComponent = () => {
         // if isReply false or dataTweet empty, return null
-        if (!isReply || !dataTweet) return null;
-        // if is isn't modal, don't display reply comment component
-        if (!isModal) return null;
+        if (!isReply || !dataTweet || htmlForId === "tweetId") return null;
 
         // format date | dataTweet.createdAt
         const formattedCreatedAt = customDatePost(dataTweet.createdAt.getTime());
@@ -206,6 +212,19 @@ const CreateTweetForm = ({
                     )
                 }
             >
+                {isMobile && (
+                    <nav className="flex items-center justify-between">
+                        <ButtonBack />
+                        <Button
+                            disabled={isLoading}
+                            variant="primary"
+                            className="px-6 py-1.5 text-base w-fit"
+                            type="submit"
+                        >
+                            {showTextSubmitButton()}
+                        </Button>
+                    </nav>
+                )}
                 <IsReplyComponent />
 
                 <section className="flex items-start justify-start gap-x-5 w-full">
@@ -270,16 +289,18 @@ const CreateTweetForm = ({
                     </div>
 
                     {/* Submit Button */}
-                    <div className="flex-1 flex justify-end">
-                        <Button
-                            disabled={isLoading}
-                            variant="primary"
-                            className="px-6 py-1.5 w-fit"
-                            type="submit"
-                        >
-                            {showTextSubmitButton()}
-                        </Button>
-                    </div>
+                    {!isMobile && (
+                        <div className="flex-1 flex justify-end">
+                            <Button
+                                disabled={isLoading}
+                                variant="primary"
+                                className="px-6 py-1.5 w-fit"
+                                type="submit"
+                            >
+                                {showTextSubmitButton()}
+                            </Button>
+                        </div>
+                    )}
                 </section>
             </form>
         </Form>
