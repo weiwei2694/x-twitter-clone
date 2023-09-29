@@ -1,0 +1,48 @@
+"use client"
+
+import { Button } from '@/components/ui/button'
+import { toggleLikeTweet } from '@/lib/tweet'
+import { cn } from '@/lib/utils'
+import { Like as Liked } from '@prisma/client'
+import { Heart } from 'lucide-react'
+import Image from 'next/image'
+import { TransitionStartFunction } from 'react'
+
+interface Props {
+  isPending: boolean;
+  startTransition: TransitionStartFunction;
+  liked: Liked;
+  userId: string;
+  path: string;
+  threadId: string;
+  totalLikes: number;
+}
+
+const Like = ({isPending, startTransition, liked, userId, path, threadId, totalLikes }: Props) => {
+  return (
+    <Button
+      variant="icon"
+      size="icon"
+      className={cn("flex items-center gap-x-2 transition", liked ? "text-red-500" : "text-gray-200 hover:text-red-500")}
+      onClick={() => toggleLikeTweet({
+        isPending,
+        startTransition,
+        liked,
+        userId,
+        threadId,
+        path
+      })}
+      disabled={isPending}
+    >
+      {liked
+        ? <Image src="/assets/heart-fill-icon.png" alt="Heart Fill" width={20} height={20} className="object-contain" />
+        : <Heart size="20" />
+      }
+      <span className="text-sm font-extrabold">
+        {totalLikes}
+      </span>
+    </Button>
+  )
+}
+
+export default Like

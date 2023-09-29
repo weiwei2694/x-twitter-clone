@@ -1,7 +1,7 @@
 import { getLikeTweetsByUserId } from "@/actions/tweet.action";
 import { getUserAction, getUserByUsernameAction } from "@/actions/user.action";
 import NotFound from "@/components/sharing/404";
-import Tweets from "@/components/cards/Tweets";
+import Tweets from "@/components/cards/tweets/Tweets";
 import { currentUser as clerkCurrentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 

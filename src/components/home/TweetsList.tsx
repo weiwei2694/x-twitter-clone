@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Tweets from "../cards/Tweets";
+import Tweets from "../cards/tweets/Tweets";
 import { MultipleTweetWithConnection } from "@/interfaces/tweet.interface";
 import Loading from "../sharing/Loading";
 import { useTabsPosts } from "@/hooks/useTabsPosts";

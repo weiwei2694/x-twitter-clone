@@ -1,7 +1,7 @@
 import { getTweetAction } from '@/actions/tweet.action'
 import { getUserAction, getUserByUsernameAction } from '@/actions/user.action';
 import DetailTweet from '@/components/tweetId/DetailTweet';
-import Tweets from '@/components/cards/Tweets';
+import Tweets from '@/components/cards/tweets/Tweets';
 import Topbar from '@/components/tweetId/Topbar'
 import { currentUser as clerkCurrentUser } from '@clerk/nextjs';
 import CreateTweetForm from '@/components/forms/createtweetform/CreateTweetForm';
