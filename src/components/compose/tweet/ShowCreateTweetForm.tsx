@@ -1,6 +1,6 @@
 "use client"
 
-import CreateTweetForm from '@/components/forms/CreateTweetForm'
+import CreateTweetForm from '@/components/forms/createtweetform/CreateTweetForm'
 import { useReplyTweet } from '@/hooks/useReplyTweet'
 
 interface Props {

@@ -1,5 +1,5 @@
 import Topbar from "@/components/home/Topbar"
-import CreateTweetForm from "@/components/forms/CreateTweetForm";
+import CreateTweetForm from "@/components/forms/createtweetform/CreateTweetForm";
 import TweetsList from "@/components/home/TweetsList";
 import { getTweetsAction } from "@/actions/tweet.action";
 import { currentUser } from "@clerk/nextjs";

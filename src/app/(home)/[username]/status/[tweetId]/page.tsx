@@ -4,7 +4,7 @@ import DetailTweet from '@/components/tweetId/DetailTweet';
 import Tweets from '@/components/cards/Tweets';
 import Topbar from '@/components/tweetId/Topbar'
 import { currentUser as clerkCurrentUser } from '@clerk/nextjs';
-import CreateTweetForm from '@/components/forms/CreateTweetForm';
+import CreateTweetForm from '@/components/forms/createtweetform/CreateTweetForm';
 import NotFound from '@/components/sharing/404';
 import { redirect } from 'next/navigation';
 import { DataTweet } from '@/interfaces/tweet.interface';

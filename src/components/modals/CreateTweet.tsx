@@ -6,7 +6,7 @@ import {
     DialogHeader,
 } from "@/components/ui/dialog"
 import { useTweetModal } from "@/hooks/useTweetModal";
-import CreateTweetForm from "../forms/CreateTweetForm";
+import CreateTweetForm from "../forms/createtweetform/CreateTweetForm";
 import { useReplyTweet } from "@/hooks/useReplyTweet";
 
 interface Props {
