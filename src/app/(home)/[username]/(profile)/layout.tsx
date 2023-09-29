@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import { currentUser as clerkCurrentUser } from "@clerk/nextjs";
 import { getUserAction, getUserByUsernameAction } from "@/actions/user.action";
 import { redirect } from 'next/navigation';
-import NotFound from '@/components/404';
+import NotFound from '@/components/sharing/404';
 import UserProfile from '@/components/profile/UserProfile';
 import Topbar from '@/components/profile/Topbar';
 import Tabs from '@/components/profile/Tabs';

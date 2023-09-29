@@ -1,15 +1,17 @@
 "use client"
 
 import { ChangeEvent, useEffect, useState } from 'react';
-import { Input } from './ui/input'
+import { Input } from '../../ui/input'
 import { Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getUsersAction } from '@/actions/user.action';
 import { User } from '@prisma/client';
-import Users from './cards/Users';
+import Users from '../../cards/Users';
 import { UserWithFollowers } from '@/interfaces/user.interface';
 import toast from 'react-hot-toast';
 import { useDebounce } from "@uidotdev/usehooks";
+import Link from 'next/link';
+import Focused from './Focused';
 
 interface Props {
     currentUser: UserWithFollowers;
@@ -37,35 +39,23 @@ const Searchbar = ({ currentUser }: Props) => {
         getAllOfUsers(debouncedSearchTerm)
     }, [debouncedSearchTerm])
 
+    // property input search
     const onChangeSearch = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         setSearchTerm(value)
     }
 
-    const isUsersEmpty = !users.length;
-
-    const renderSearchResults = () => {
-        if (isUsersEmpty) {
-            return <p className="font-normal text-gray-200 tracking-wide">{searchTerm} not found</p>
+    const onBlurSearch = () => {
+            setTimeout(() => {
+                setIsFocused(false);
+                setUsers([]);
+                setSearchTerm("");
+            }, 100)
         }
 
-        return <ul>
-            {
-                users.map(user => (
-                    <Users
-                        key={user.id}
-                        username={user.username}
-                        name={user.name}
-                        imageUrl={user.imageUrl}
-                        userId={user.id}
-                        currentUser={currentUser}
-                        isOnSearch={true}
-                        setIsFocused={setIsFocused}
-                    />
-                ))
-            }
-        </ul>
-    }
+    const onFocusSearch = () => {
+            setIsFocused(true)
+        }
 
     return (
         <div className="relative">
@@ -79,30 +69,18 @@ const Searchbar = ({ currentUser }: Props) => {
                     onChange={onChangeSearch}
                     className="no-focus !outline-none border-transparent focus:border-blue ps-12 bg-gray-400 text-white placeholder:text-white/80 rounded-full"
                     placeholder="Search"
-                    onFocus={() => setIsFocused(true)}
-                    onBlur={() => {
-                        setTimeout(() => {
-                            setIsFocused(false);
-                            setUsers([]);
-                            setSearchTerm("");
-                        }, 100)
-                    }}
+                    onFocus={onFocusSearch}
+                    onBlur={onBlurSearch}
                 />
             </div>
 
             {isFocused && (
-                <div
-                    className={cn("absolute max-h-[600px] overflow-y-auto top-14 left-0 right-0 bg-black-100 box-shadow p-3 text-center rounded-xl", isUsersEmpty && "pb-16")}
-                >
-                    {!searchTerm
-                        ? (
-                            <p className="font-normal text-gray-200">
-                                Try searching for people
-                            </p>
-                        )
-                        : renderSearchResults()}
-
-                </div>
+                <Focused
+                    users={users}
+                    currentUser={currentUser}
+                    setIsFocused={setIsFocused}
+                    searchTerm={searchTerm}
+                />
             )}
         </div>
     )

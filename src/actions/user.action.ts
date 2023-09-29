@@ -8,6 +8,7 @@ import {
 } from "@/interfaces/user.interface";
 import prisma from "@/lib/prismadb";
 import { getErrorMessage } from "@/lib/utils";
+import { User } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export async function saveUserAction({
@@ -70,8 +71,8 @@ export async function saveUserAction({
 }
 
 export async function getUsersAction({
-	take = 10,
-	skip = 0,
+	size = 5,
+	page = 0,
 	userId,
 	searchQuery = "",
 	isOnSearch,
@@ -80,6 +81,8 @@ export async function getUsersAction({
 		if (!userId) throw new Error("userId required");
 
 		if (isOnSearch) {
+			if (!searchQuery) return [];
+
 			const users = await prisma.user.findMany({
 				where: {
 					id: {
@@ -89,34 +92,51 @@ export async function getUsersAction({
 						contains: searchQuery,
 					},
 				},
-				take,
-				skip,
+				take: size,
 			});
 
 			return users;
 		}
 
-		const users = await prisma.user.findMany({
-			where: {
-				id: {
-					not: userId,
-				},
-				username: {
-					contains: searchQuery,
-				},
-				followers: {
-					none: {
-						NOT: {
-							followerId: userId,
+		const skip = size * page;
+		let dataUsers: User[];
+
+		if (skip) {
+			dataUsers = await prisma.user.findMany({
+				where: {
+					id: {
+						not: userId,
+					},
+					followers: {
+						none: {
+							NOT: {
+								followerId: userId,
+							},
 						},
 					},
 				},
-			},
-			take,
-			skip,
-		});
+				skip,
+				take: size,
+			});
+		} else {
+			dataUsers = await prisma.user.findMany({
+				where: {
+					id: {
+						not: userId,
+					},
+					followers: {
+						none: {
+							NOT: {
+								followerId: userId,
+							},
+						},
+					},
+				},
+				take: size
+			})
+		}
 
-		return users;
+		return dataUsers;
 	} catch (error) {
 		console.log("[ERROR_GET_USERS_ACTION]", error);
 		return {
@@ -154,8 +174,8 @@ export async function updateUserAction({
 	bio,
 	location,
 	website,
-	path
-}: UpdateUserActionProps){
+	path,
+}: UpdateUserActionProps) {
 	try {
 		if (!id) throw new Error("id required");
 		if (!imageUrl) throw new Error("bannerUrl required");
@@ -169,18 +189,18 @@ export async function updateUserAction({
 				bannerUrl,
 				bio,
 				location,
-				website
-			}
-		})
+				website,
+			},
+		});
 
 		return updateUser;
 	} catch (error) {
-		console.log("[ERROR_UPDATE_USER_ACTION]", error)
+		console.log("[ERROR_UPDATE_USER_ACTION]", error);
 		return {
-			message: getErrorMessage(error)
-		}
+			message: getErrorMessage(error),
+		};
 	} finally {
-		revalidatePath(path || "")
+		revalidatePath(path || "");
 	}
 }
 

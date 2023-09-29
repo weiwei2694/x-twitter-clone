@@ -1,8 +1,8 @@
 import { ReactNode } from "react"
 import { getUserAction, getUsersAction } from '@/actions/user.action'
-import Bottombar from '@/components/Bottombar'
-import LeftSidebar from '@/components/LeftSidebar'
-import RightSidebar from '@/components/RightSidebar'
+import Bottombar from '@/components/sharing/Bottombar'
+import LeftSidebar from '@/components/sharing/LeftSidebar'
+import RightSidebar from '@/components/sharing/RightSidebar'
 import Modal from '@/components/modals/Modal'
 import { currentUser } from '@clerk/nextjs'
 import { redirect } from 'next/navigation'
@@ -25,7 +25,7 @@ const layout = async ({ children}: Props) => {
     if (!users || "message" in users) users = [];
 
     return (
-        <main>
+        <main className="max-h-screen overflow-hidden">
             <Modal imageUrl={user.imageUrl} userId={user.id} />
             <section className="h-full max-w-7xl mx-auto flex">
                 <LeftSidebar username={user.username} name={user.name} imageUrl={user.imageUrl} />

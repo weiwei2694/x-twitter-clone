@@ -29,7 +29,7 @@ const Users = ({ username, name, imageUrl, userId, currentUser, isOnSearch, setI
     // mutation for toggle follow and unfollow user
     const [isPending, startTransition] = useTransition()
 
-    const followed = currentUser.followings.find(({ followingId }) => followingId === currentUser.id)
+    const followed = currentUser.followings.find(({ followingId }) => followingId === userId)
 
     const isFollowed = () => {
         if (isPending) return "..."
@@ -46,7 +46,7 @@ const Users = ({ username, name, imageUrl, userId, currentUser, isOnSearch, setI
 
     return (
         <li
-            className={cn("flex items-center jsutify-between gap-x-8 w-full hover:bg-gray-300/90 rounded-xl p-3 overflow-hidden", isOnSearch && 'cursor-pointer')}
+            className={cn("flex items-center jsutify-between gap-x-8 w-full hover:bg-gray-300/90 p-3 overflow-hidden", isOnSearch ? 'cursor-pointer' : "rounded-xl")}
             onClick={redirectToProfilePage}
         >
             <div className="flex items-center gap-x-2 overflow-hidden">

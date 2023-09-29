@@ -1,7 +1,7 @@
 import { User } from '@prisma/client'
 import React from 'react'
-import Users from './cards/Users'
-import Searchbar from './Searchbar';
+import Users from '../cards/Users'
+import Searchbar from './searchbar/Searchbar';
 import { UserWithFollowers } from '@/interfaces/user.interface';
 
 interface RightSidebarProps {

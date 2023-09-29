@@ -30,11 +30,12 @@ export interface SaveUserActionProps {
 }
 
 export interface GetUsersActionProps {
-	take?: number;
-	skip?: number;
+	size?: number;
+	page?: number;
 	userId: string;
 	searchQuery?: string;
 	isOnSearch?: boolean;
+	isOnExplore?: boolean;
 }
 
 export interface UpdateUserActionProps {

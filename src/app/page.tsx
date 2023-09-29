@@ -1,4 +1,4 @@
-import CreateAnAccount from "@/components/CreateAnAccount"
+import CreateAnAccount from "@/components/sharing/CreateAnAccount"
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import Image from "next/image"

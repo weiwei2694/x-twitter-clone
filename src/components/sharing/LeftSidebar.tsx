@@ -1,6 +1,6 @@
 "use client"
 import { links } from '@/constants'
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
 import { MoreHorizontal, Plus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import { SignOutButton } from '@clerk/nextjs';
 import { useTweetModal } from '@/hooks/useTweetModal';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 
 interface LeftSidebarProps {
     username: string;
