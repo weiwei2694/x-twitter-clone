@@ -2,6 +2,7 @@ import { getBookmarksAction } from '@/actions/tweet.action'
 import { getUserAction } from '@/actions/user.action'
 import Topbar from '@/components/bookmarks/Topbar'
 import TweetsList from '@/components/home/TweetsList'
+import ButtonCreatePostMobile from '@/components/sharing/ButtonCreatePostMobile'
 import { currentUser } from '@clerk/nextjs'
 import { redirect } from 'next/navigation'
 import React from 'react'
@@ -30,7 +31,8 @@ const Page = async () => {
   }
 
   return (
-    <div className="relative">
+    <section className="relative">
+      <ButtonCreatePostMobile />
       <Topbar username={user.username} userId={user.id} isBookmarksEmpty={isBookmarksEmpty} />
       {isBookmarksEmpty
         ? savePostsForLater()
@@ -39,7 +41,7 @@ const Page = async () => {
             userId={user.id}
           />
       }
-    </div>
+    </section>
   )
 }
 

@@ -5,6 +5,7 @@ import { getTweetsAction } from "@/actions/tweet.action";
 import { currentUser } from "@clerk/nextjs";
 import { getUserAction } from "@/actions/user.action";
 import { redirect } from "next/navigation";
+import ButtonCreatePostMobile from "@/components/sharing/ButtonCreatePostMobile";
 
 interface Props {
     searchParams: {
@@ -26,6 +27,7 @@ const Page = async ({ searchParams }: Props) => {
 
     return (
         <>
+            <ButtonCreatePostMobile />
             <Topbar
                 isFollowing={isFollowing}
                 user={user}
