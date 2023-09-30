@@ -2,7 +2,7 @@
 
 import { useTabsPosts } from '@/hooks/useTabsPosts'
 import { cn } from '@/lib/utils';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
 import MobileSidebar from './MobileSidebar';
 import { UserWithFollowers } from '@/interfaces/user.interface';
@@ -10,16 +10,17 @@ import Image from 'next/image';
 
 interface TabsProps {
     title: string;
-    isFollowing: boolean;
 }
 interface TopbarProps {
-    isFollowing: boolean;
     user: UserWithFollowers;
 }
 
-const Tabs = ({ title, isFollowing }: TabsProps) => {
+const Tabs = ({ title }: TabsProps) => {
     const router = useRouter()
     const tabsPosts = useTabsPosts()
+    const searchParams = useSearchParams()
+
+    const isFollowing = searchParams.get('filter') === "following"
 
     // Initial Value
     useEffect(() => {
@@ -55,7 +56,7 @@ const Tabs = ({ title, isFollowing }: TabsProps) => {
     )
 }
 
-const Topbar = ({ isFollowing, user }: TopbarProps) => {
+const Topbar = ({ user }: TopbarProps) => {
     return (
         <nav className="sticky top-0 z-10 backdrop-blur bg-black/80 border-b border-gray-300">
             <div className="px-3 py-4">
@@ -79,8 +80,8 @@ const Topbar = ({ isFollowing, user }: TopbarProps) => {
             </div>
 
             <div className="flex justify-evenly">
-                <Tabs title="For You" isFollowing={isFollowing} />
-                <Tabs title="Following" isFollowing={isFollowing} />
+                <Tabs title="For You" />
+                <Tabs title="Following" />
             </div>
         </nav>
     )
