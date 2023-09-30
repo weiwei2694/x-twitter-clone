@@ -6,11 +6,9 @@ import { cn } from '@/lib/utils'
 import { Like as Liked } from '@prisma/client'
 import { Heart } from 'lucide-react'
 import Image from 'next/image'
-import { TransitionStartFunction } from 'react'
+import { useTransition } from 'react'
 
 interface Props {
-  isPending: boolean;
-  startTransition: TransitionStartFunction;
   liked: Liked;
   userId: string;
   path: string;
@@ -18,7 +16,9 @@ interface Props {
   totalLikes: number;
 }
 
-const Like = ({isPending, startTransition, liked, userId, path, threadId, totalLikes }: Props) => {
+const Like = ({ liked, userId, path, threadId, totalLikes }: Props) => {
+  const [isPending, startTransition] = useTransition()
+
   return (
     <Button
       variant="icon"

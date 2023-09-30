@@ -9,28 +9,28 @@ import {
 import { copyLinkTweet, toggleBookmarkTweet } from "@/lib/tweet";
 import { Bookmark } from "@prisma/client";
 import { BookmarkMinus, BookmarkPlus, LinkIcon, Share as ShareIcon } from "lucide-react";
-import { TransitionStartFunction } from "react";
 import toast from "react-hot-toast";
+import { useTransition } from "react";
 
 interface Props {
-  isPending: boolean,
-  startTransition: TransitionStartFunction;
   userId: string;
   tweetId: string;
   username: string;
   bookmark: Bookmark;
   path: string;
+  isDetailTweet?: boolean;
 }
 
 const Share = ({
-  isPending,
-  startTransition,
   userId,
   tweetId,
   username,
   bookmark,
-  path
+  path,
+  isDetailTweet
 }: Props) => {
+  const [isPending, startTransition] = useTransition()
+  
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -49,20 +49,22 @@ const Share = ({
           <LinkIcon size="20" />
           Copy Link
         </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => toggleBookmarkTweet({
-            isPending,
-            startTransition,
-            toast,
-            path,
-            bookmark,
-            userId,
-            threadId: tweetId,
-          })}
-        >
-          {bookmark ? <BookmarkMinus size="20" /> : <BookmarkPlus size="20" />}
-          {bookmark ? "Delete From Bookmarks" : "Bookmark"}
-        </DropdownMenuItem>
+        {!isDetailTweet && (
+          <DropdownMenuItem
+            onClick={() => toggleBookmarkTweet({
+              isPending,
+              startTransition,
+              toast,
+              path,
+              bookmark,
+              userId,
+              threadId: tweetId,
+            })}
+          >
+            {bookmark ? <BookmarkMinus size="20" /> : <BookmarkPlus size="20" />}
+            {bookmark ? "Delete From Bookmarks" : "Bookmark"}
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )

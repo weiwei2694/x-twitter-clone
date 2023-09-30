@@ -3,17 +3,13 @@
 import { DataTweet, MultipleTweetWithConnection } from '@/interfaces/tweet.interface'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useState, useTransition } from 'react'
+import { useEffect, useState } from 'react'
 import { customDatePost } from '@/lib/utils'
 import { useTweetModal } from '@/hooks/useTweetModal'
 import { useReplyTweet } from '@/hooks/useReplyTweet'
 import { renderText } from '@/lib/tweet'
-import Comment from './Comment'
-import Like from './Like'
-import Share from './Share'
-import Menu from './Menu'
+import { Like, Share, Comment, Menu } from "./"
 
-// userId is from current user
 interface Props {
   tweet: MultipleTweetWithConnection
   userId: string;
@@ -36,18 +32,6 @@ const Tweets = ({ tweet, userId }: Props) => {
   const [isMounted, setIsMounted] = useState(false)
   const setDataTweet = useReplyTweet(state => state.setDataTweet);
   const setOnOpenReplyTweetModal = useTweetModal(state => state.onOpen);
-
-  /**
-   * @Mutation
-   * Like
-   * Follow or Unfollow
-   * Bookmark
-   * Tweet
-   */
-  const [isPendingLike, startTransitionLike] = useTransition()
-  const [isPendingFollowUser, startTransitionFollowUser] = useTransition()
-  const [isPendingBookmark, startTransitionBookmark] = useTransition()
-  const [isPendingTweet, startTransitionTweet] = useTransition();
 
   /**
    * @liked
@@ -152,10 +136,6 @@ const Tweets = ({ tweet, userId }: Props) => {
               tweetId={tweet.id}
               path={pathname}
               isOwnTweet={isOwnTweet}
-              isPendingFollowUser={isPendingFollowUser}
-              startTransitionFollowUser={startTransitionFollowUser}
-              isPendingTweet={isPendingTweet}
-              startTransitionTweet={startTransitionTweet}
               followed={followed!}
               userId={tweet.user.id}
               currentUserId={userId}
@@ -191,8 +171,6 @@ const Tweets = ({ tweet, userId }: Props) => {
               replyTweet={replyTweet}
             />
             <Like
-              isPending={isPendingLike}
-              startTransition={startTransitionLike}
               liked={liked!}
               path={pathname}
               userId={userId}
@@ -205,8 +183,6 @@ const Tweets = ({ tweet, userId }: Props) => {
              */}
             <div className="flex-1 flex justify-end">
               <Share
-                isPending={isPendingBookmark}
-                startTransition={startTransitionBookmark}
                 path={pathname}
                 userId={userId}
                 tweetId={tweet.id}

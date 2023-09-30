@@ -1,23 +1,14 @@
 "use client";
 
 import { DataTweet, SingleTweetWithConnection } from '@/interfaces/tweet.interface'
-import { Heart, Link as LinkIcon, MessageCircle, MoreHorizontal, Share, Trash, UserPlus2, UserX2 } from 'lucide-react'
 import Image from 'next/image'
-import { Button } from '../ui/button'
 import { usePathname, useRouter } from 'next/navigation'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { useEffect, useState, useTransition } from 'react'
-import { cn, formatDateTime } from '@/lib/utils'
-import toast from 'react-hot-toast';
+import { useEffect, useState } from 'react'
+import { formatDateTime } from '@/lib/utils'
 import { useTweetModal } from '@/hooks/useTweetModal'
-import { copyLinkTweet, deleteTweet, renderText, toggleBookmarkTweet, toggleLikeTweet } from '@/lib/tweet';
-import { toggleFollowUser } from '@/lib/user';
+import { renderText } from '@/lib/tweet';
 import { useReplyTweet } from '@/hooks/useReplyTweet';
+import { Share, Bookmark, Like, Menu, Comment } from "../cards/tweets"
 
 interface Props {
   tweet: SingleTweetWithConnection;
@@ -25,30 +16,43 @@ interface Props {
 }
 
 const DetailTweet = ({ tweet, userId }: Props) => {
-  // handle hydration ui
-  const [isMounted, setIsMounted] = useState(false)
-  // router
+  /**
+   * @router
+   * @pathname
+   */
   const router = useRouter();
-  // current pathname
   const pathname = usePathname();
-  // state from useTweetModal
+
+  /**
+   * @state
+   * isMounted ( handle hydration UI )
+   * setDataTweet
+   * setOnReplyTweetModal
+   */
+  const [isMounted, setIsMounted] = useState(false)
   const setOnOpenReplyTweetModal = useTweetModal(state => state.onOpen);
   const setDataTweet = useReplyTweet(state => state.setDataTweet);
 
-  // mutation
-  // like
-  const [isPendingLike, startTransitionLike] = useTransition()
-  // follow user
-  const [isPendingFollowUser, startTransitionFollowUser] = useTransition()
-  // bookmark
-  const [isPendingBookmark, startTransitionBookmark] = useTransition()
-  // delete tweet
-  const [isPendingTweet, startTransitionTweet] = useTransition();
-
+  /**
+   * @liked
+   * @followed
+   * @bookmark
+   * 
+   * Check current user engagement,
+   * whether they have followed,
+   * bookmarked,
+   * or liked this post,
+   * or vice versa
+   */
   const liked = tweet.likes.find(like => like.userId === userId);
   const followed = tweet.user.followers.find(({ followingId }) => followingId === userId)
   const bookmark = tweet.bookmarks.find(item => item.userId === userId);
 
+  /**
+   * @replyTweet
+   * 
+   * communication to createTweetForm
+   */
   const replyTweet = (isForModal: boolean) => {
     const dataTweet: DataTweet = {
       id: tweet.id,
@@ -72,10 +76,19 @@ const DetailTweet = ({ tweet, userId }: Props) => {
     }
   };
 
-  // basic validation
+  /**
+   * @isOwnTweet
+   * 
+   * for validation on the menu side
+   * if false, display follow user action
+   */
   const isOwnTweet = tweet.userId === userId
 
-  // display tweet image
+  /**
+   * @displayTweetImage
+   * 
+   * If the image from the tweet exists, display it
+   */
   const displayTweetImage = () => {
     if (!tweet.imageUrl) return null;
 
@@ -91,17 +104,24 @@ const DetailTweet = ({ tweet, userId }: Props) => {
     )
   }
 
-  // handle hydration ui
+  /**
+   * handle hydration ui
+   */
   useEffect(() => {
     setIsMounted(true)
   }, [])
-
   if (!isMounted) return null;
 
   return (
-    <div className="flex flex-col py-4 px-3 space-y-4">
-      {/* Header -> User Image URL, Name, Username, Menu */}
-      <div className="flex items-center justify-between gap-x-10">
+    <section className="flex flex-col py-4 px-3 space-y-4">
+      {/**
+       * @Header
+       * User Image Url
+       * Name
+       * Username
+       * Menu
+       */}
+      <section className="flex items-center justify-between gap-x-10">
         <div className="flex items-start justify-start gap-x-5">
           <Image
             src={tweet.user.imageUrl}
@@ -123,52 +143,24 @@ const DetailTweet = ({ tweet, userId }: Props) => {
           </div>
         </div>
         <div>
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              className="!outline-none text-white bg-transparent hover:bg-blue/20 hover:text-blue transition p-2 rounded-full"
-            >
-              <MoreHorizontal />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent side="bottom" align="end">
-              {isOwnTweet ? (
-                <DropdownMenuItem
-                  onClick={() => deleteTweet({
-                    isPending: isPendingTweet,
-                    startTransition: startTransitionTweet,
-                    toast,
-                    path: pathname,
-                    id: tweet.id
-                  })}
-                >
-                  <Trash size="20" />
-                  Delete
-                </DropdownMenuItem>
-              ) : (
-                <DropdownMenuItem
-                  onClick={() => toggleFollowUser({
-                    isPending: isPendingFollowUser,
-                    startTransition: startTransitionFollowUser,
-                    toast,
-                    path: pathname,
-                    username: tweet.user.username,
-                    followed,
-                    userId: tweet.user.id,
-                    currentUserId: userId,
-                  })}
-                >
-                  {followed ? <UserX2 size="20" /> : <UserPlus2 size="20" />}
-                  {followed ? "Unfollow" : "Follow"}
-                  <span className="max-w-[150px] overflow-hidden whitespace-nowrap text-ellipsis">
-                    @{tweet.user.username}
-                  </span>
-                </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Menu
+            username={tweet.user.username}
+            tweetId={tweet.id}
+            path={pathname}
+            isOwnTweet={isOwnTweet}
+            followed={followed!}
+            userId={tweet.user.id}
+            currentUserId={userId}
+          />
         </div>
-      </div>
-      {/* Body -> Text as Description, Image Url, Date Post */}
-      <div className="flex-1 flex flex-col space-y-10">
+      </section>
+      {/**
+       * @Body
+       * Tweet Text
+       * Image
+       * When tweet created
+      */}
+      <section className="flex-1 flex flex-col space-y-10">
         <div className="flex flex-col space-y-3">
           <p className="whitespace-break-spaces">
             {renderText(tweet.text)}
@@ -178,107 +170,57 @@ const DetailTweet = ({ tweet, userId }: Props) => {
             {formatDateTime(tweet.createdAt)}
           </p>
         </div>
-      </div>
-      {/* Footer -> Comment, Like, Share */}
-      <div className="py-1 border-t border-b border-gray-300">
+      </section>
+      {/**
+       * @Footer
+       * Comment
+       * Like
+       * Bookmark
+       * Share
+       */}
+      <section className="py-1 border-t border-b border-gray-300">
         <div className="flex items-center justify-between gap-x-8">
-          {/* Comment Dekstop */}
-          <Button
-            variant="icon"
-            size="icon"
-            className="flex items-center gap-x-2 text-gray-200 transition hover:text-blue !outline-none max-sm:hidden"
-            onClick={() => replyTweet(true)}
-          >
-            <MessageCircle size="20px" />
-            <span className="text-sm font-extrabold">
-              {tweet.replies.length}
-            </span>
-          </Button>
-          {/* Comment Mobile */}
-          <Button
-            variant="icon"
-            size="icon"
-            className="flex items-center gap-x-2 text-gray-200 transition hover:text-blue !outline-none sm:hidden"
-            onClick={() => replyTweet(false)}
-          >
-            <MessageCircle size="20px" />
-            <span className="text-sm font-extrabold">
-              {tweet.replies.length}
-            </span>
-          </Button>
-          {/* Like */}
-          <Button
-            variant="icon"
-            size="icon"
-            className={cn("flex items-center gap-x-2 transition", liked ? "text-red-500" : "text-gray-200 hover:text-red-500")}
-            onClick={() => toggleLikeTweet({
-              isPending: isPendingLike,
-              startTransition: startTransitionLike,
-              toast,
-              liked,
-              userId,
-              threadId: tweet.id,
-              path: pathname
-            })}
-            disabled={isPendingLike}
-          >
-            {liked
-              ? <Image src="/assets/heart-fill-icon.png" alt="Heart Fill" width={20} height={20} className="object-contain" />
-              : <Heart size="20" />
-            }
-            <span className="text-sm font-extrabold">
-              {tweet.likes.length}
-            </span>
-          </Button>
-          {/* Bookmark */}
-          <Button
-            variant="icon"
-            size="icon"
-            className={cn("flex items-center gap-x-2 transition", bookmark ? "text-blue" : "text-gray-200 hover:text-blue")}
-            onClick={() => toggleBookmarkTweet({
-              isPending: isPendingBookmark,
-              startTransition: startTransitionBookmark,
-              toast,
-              path: pathname,
-              bookmark,
-              userId,
-              threadId: tweet.id
-            })}
-            disabled={isPendingBookmark}
-          >
-            {bookmark
-              ? <Image src="/assets/bookmark-fill-icon.png" alt="Bookmark Fill" width={20} height={20} className="object-contain" />
-              : <Image src="/assets/bookmark-icon.png" alt="Bookmark Fill" width={20} height={20} className="object-contain" />
-            }
-            <span className="text-sm font-extrabold">
-              {tweet.bookmarks.length}
-            </span>
-          </Button>
-          {/* Share */}
-          <div>
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                className="!outline-none p-2 text-gray-200 transition hover:text-blue"
-              >
-                <Share size="20px" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent side="bottom" align="end">
-                <DropdownMenuItem
-                  onClick={() => copyLinkTweet({
-                    toast,
-                    username: tweet.user.username,
-                    tweetId: tweet.id
-                  })}
-                >
-                  <LinkIcon size="20" />
-                  Copy Link
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+          {/**
+           * @Comment
+           */}
+          <Comment
+            totalReplies={tweet.replies.length}
+            replyTweet={replyTweet}
+          />
+          {/**
+           * @Like
+           */}
+          <Like
+            liked={liked!}
+            path={pathname}
+            userId={userId}
+            threadId={tweet.id}
+            totalLikes={tweet.likes.length}
+          />
+          {/**
+           * @Bookmark
+           */}
+          <Bookmark
+            userId={userId}
+            path={pathname}
+            threadId={tweet.id}
+            bookmark={bookmark!}
+            totalBookmarks={tweet.bookmarks.length}
+          />
+          {/**
+             * @CopyLink
+             */}
+          <Share
+            path={pathname}
+            userId={userId}
+            tweetId={tweet.id}
+            bookmark={bookmark!}
+            username={tweet.user.username}
+            isDetailTweet
+          />
         </div>
-      </div>
-    </div>
+      </section>
+    </section>
   )
 }
 

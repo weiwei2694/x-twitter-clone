@@ -11,17 +11,13 @@ import { toggleFollowUser } from "@/lib/user"
 import { Follower } from "@prisma/client"
 import { ArrowUpRight, MoreHorizontal, Trash, UserPlus2, UserX2 } from "lucide-react"
 import Link from "next/link"
-import { TransitionStartFunction } from "react"
+import { TransitionStartFunction, useTransition } from "react"
 import toast from "react-hot-toast"
 
 interface Props {
   username: string;
   tweetId: string;
   isOwnTweet: boolean;
-  isPendingFollowUser: boolean;
-  startTransitionFollowUser: TransitionStartFunction;
-  isPendingTweet: boolean;
-  startTransitionTweet: TransitionStartFunction;
   path: string;
   followed: Follower;
   userId: string;
@@ -32,15 +28,14 @@ const Menu = ({
   username,
   tweetId,
   isOwnTweet,
-  isPendingFollowUser,
-  startTransitionFollowUser,
-  isPendingTweet,
-  startTransitionTweet,
   path,
   userId,
   currentUserId,
   followed
 }: Props) => {
+  const [isPendingTweet, startTransitionTweet] = useTransition()
+  const [isPendingFollowUser, startTransitionFollowUser] = useTransition()
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
