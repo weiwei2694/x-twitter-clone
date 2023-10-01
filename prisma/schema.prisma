@@ -21,11 +21,12 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  threads    Thread[]
-  followers  Follower[] @relation("UserFollowers")
-  followings Follower[] @relation("UserFollowing")
-  likes      Like[]
-  bookmarks  Bookmark[]
+  threads       Thread[]
+  followers     Follower[]     @relation("UserFollowers")
+  followings    Follower[]     @relation("UserFollowing")
+  likes         Like[]
+  bookmarks     Bookmark[]
+  notifications Notification[]
 }
 
 model Follower {
@@ -34,6 +35,15 @@ model Follower {
 
   user      User @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
   following User @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  userId      String?
+  title       String   @db.Char(50)
+  description String   @db.Char(100)
+  createdAt   DateTime @default(now())
+  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Thread {
