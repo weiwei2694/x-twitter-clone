@@ -22,7 +22,7 @@ import { Label } from "../ui/label";
 import { cn, toastOptions } from "@/lib/utils";
 import toast from "react-hot-toast";
 import { User } from "@prisma/client";
-import validator from "validator"
+import isURL from "validator/lib/isURL"
 import { ArrowLeft, Camera, X } from "lucide-react";
 import { updateUserAction } from "@/actions/user.action";
 
@@ -110,7 +110,7 @@ const EditProfileForm = ({ user, isModal, setIsOpen }: Props) => {
       }
 
       // validations
-      const isValidURL = validator.isURL(values.website)
+      const isValidURL = isURL(values.website)
       if (values.website && !isValidURL) {
         toast("Url Is Not Valid", toastOptions);
         return;
