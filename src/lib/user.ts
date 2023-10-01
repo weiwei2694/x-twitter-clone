@@ -20,7 +20,7 @@ export const toggleFollowUser = ({
 	startTransition(() => {
 		if (followed) {
 			toggleFollowUserAction({
-				id: followed.id,
+				userId: followed.followerId,
 				path,
 			});
 			toast(`You unfollowed ${username}`, toastOptions);
