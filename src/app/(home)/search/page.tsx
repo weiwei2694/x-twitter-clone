@@ -55,7 +55,7 @@ const Page = async ({ searchParams }: Props) => {
       case "latest":
         return <Latest userId={user.id} tweets={tweets} />
       case "people":
-        return <People people={people} currentUser={user} />
+        return <People queryQ={queryQ} people={people} currentUser={user} />
       case "media":
         return <Media tweets={tweets} userId={user.id} />
     }
