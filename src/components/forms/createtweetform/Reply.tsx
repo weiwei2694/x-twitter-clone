@@ -4,16 +4,14 @@ import { DataTweet } from '@/interfaces/tweet.interface';
 import { renderText } from '@/lib/tweet';
 import { customDatePost } from '@/lib/utils';
 import Image from 'next/image';
-import Link from 'next/link';
 
 interface Props {
   isReply: boolean;
   dataTweet: DataTweet | null;
-  htmlForId: string;
 }
 
-const Reply = ({ isReply, dataTweet, htmlForId }: Props) => {
-  if (!isReply || !dataTweet || htmlForId === "tweetId") return null;
+const Reply = ({ isReply, dataTweet }: Props) => {
+  if (!isReply || !dataTweet) return null;
 
   const formattedCreatedAt = customDatePost(dataTweet.createdAt.getTime());
 

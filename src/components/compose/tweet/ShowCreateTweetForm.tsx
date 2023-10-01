@@ -13,7 +13,6 @@ const ShowCreateTweetForm = ({ userId, imageUrl }: Props) => {
 
   return (
     <CreateTweetForm
-      dataTweet={dataTweet}
       isReply={dataTweet ? true : false}
       userId={userId}
       imageUrl={imageUrl}

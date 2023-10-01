@@ -47,7 +47,6 @@ const CreateTweet = ({ userId, imageUrl }: Props) => {
                         imageUrl={imageUrl}
                         htmlForId="createtweet"
                         isReply
-                        dataTweet={dataTweet}
                     />
                 </div>
             </DialogContent>

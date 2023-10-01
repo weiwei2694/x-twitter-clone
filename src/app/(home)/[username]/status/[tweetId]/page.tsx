@@ -7,6 +7,7 @@ import { currentUser as clerkCurrentUser } from '@clerk/nextjs';
 import NotFound from '@/components/sharing/404';
 import { redirect } from 'next/navigation';
 import { DataTweet } from '@/interfaces/tweet.interface';
+import ButtonCreatePostMobile from '@/components/sharing/ButtonCreatePostMobile';
 
 interface Props {
   params: {
@@ -48,20 +49,15 @@ const Page = async ({ params }: Props) => {
 
   return (
     <>
+      <ButtonCreatePostMobile
+        isMobile
+        dataTweet={dataReplyTweet}
+      />
       <Topbar />
       <DetailTweet
         tweet={dataTweet}
         userId={currentUser.id}
       />
-      {/* <section className="border-b border-gray-300">
-        <CreateTweetForm
-          userId={currentUser.id}
-          imageUrl={currentUser.imageUrl}
-          isReply
-          htmlForId="tweetId"
-          dataTweet={dataReplyTweet}
-        />
-      </section> */}
       {
         dataTweet.replies.map(tweet => (
           <Tweets

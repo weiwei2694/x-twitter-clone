@@ -10,11 +10,7 @@ const Page = async () => {
   const user = await getUserAction(clerkUser.id);
   if (!user || "message" in user) redirect('/');
 
-  return (
-    <>
-      <ShowCreateTweetForm userId={user.id} imageUrl={user.imageUrl} />
-    </>
-  )
+  return <ShowCreateTweetForm userId={user.id} imageUrl={user.imageUrl} />
 }
 
 export default Page
