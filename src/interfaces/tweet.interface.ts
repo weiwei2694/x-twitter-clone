@@ -78,6 +78,11 @@ export interface CreateTweetActionProps {
 	path: string;
 }
 
+export interface GetTweetsBySearchActionProps {
+	size?: number;
+	searchQuery: string;
+}
+
 export interface ToggleLikeActionProps {
 	likeId?: string;
 	userId?: string;

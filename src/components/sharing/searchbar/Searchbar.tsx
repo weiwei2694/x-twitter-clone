@@ -58,7 +58,7 @@ const Searchbar = ({ currentUser }: Props) => {
         }
 
     return (
-        <div className="relative">
+        <div className="relative w-full">
             <div className="relative">
                 <div className="absolute left-0 top-0 bottom-0 px-4 py-2.5">
                     <Search size="20px" className={cn("", isFocused ? "text-blue" : "text-white")} />

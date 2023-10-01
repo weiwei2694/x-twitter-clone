@@ -83,14 +83,35 @@ export async function getUsersAction({
 		if (isOnSearch) {
 			if (!searchQuery) return [];
 
+			const test = await prisma.user.findMany({
+				where: {
+					OR: [
+						{
+							name: {
+								equals: searchQuery
+							}
+						}
+					]
+				}
+			})
+
 			const users = await prisma.user.findMany({
 				where: {
 					id: {
 						not: userId,
 					},
-					username: {
-						contains: searchQuery,
-					},
+					OR: [
+						{
+							username: {
+								contains: searchQuery,
+							},
+						},
+						{
+							name: {
+								contains: searchQuery
+							},
+						}
+					]
 				},
 				take: size,
 			});

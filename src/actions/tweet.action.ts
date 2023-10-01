@@ -5,6 +5,7 @@ import {
 	GetTweetsActionProps,
 	ToggleLikeActionProps,
 	ToggleBookmarkActionProps,
+	GetTweetsBySearchActionProps,
 } from "@/interfaces/tweet.interface";
 import prisma from "@/lib/prismadb";
 import { getErrorMessage } from "@/lib/utils";
@@ -247,6 +248,67 @@ export async function getTweetsByUserIdAction(
 		return {
 			message: getErrorMessage(error),
 		};
+	}
+}
+
+export async function getTweetsBySearchAction({
+	size = 5,
+	searchQuery = "",
+}: GetTweetsBySearchActionProps) {
+	try {
+		const results = await prisma.thread.findMany({
+			where: {
+				parentId: null,
+				OR: [
+					{
+						text: {
+							contains: searchQuery,
+						},
+					},
+					{
+						user: {
+							OR: [
+								{
+									name: {
+										contains: searchQuery,
+									},
+								},
+								{
+									username: {
+										contains: searchQuery,
+									},
+								},
+							],
+						},
+					},
+				],
+			},
+			include: {
+				user: {
+					include: {
+						followers: true,
+						followings: true,
+					},
+				},
+				likes: true,
+				bookmarks: true,
+				replies: {
+					select: {
+						id: true,
+					},
+				},
+			},
+			orderBy: {
+				likes: {
+					_count: "desc",
+				},
+			},
+			take: size,
+		});
+
+		return results;
+	} catch (error) {
+		console.info("[ERROR_GET_TWEETS_BY_SEARCH_ACTION]", error);
 	}
 }
 
