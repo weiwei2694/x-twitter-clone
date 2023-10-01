@@ -98,6 +98,9 @@ const CreateTweetForm = ({
                 onCloseModal()
             }
 
+            form.reset();
+            setPreviewImage("");
+
             await createTweetAction({
                 ...values,
                 path
@@ -108,9 +111,6 @@ const CreateTweetForm = ({
             } else if (isMobile) {
                 window.location.href = "/home";
             }
-
-            form.reset();
-            setPreviewImage("");
         } catch (error: any) {
             console.log("[ERROR_CREATE_TWEET_FORM]", error.message)
         }
