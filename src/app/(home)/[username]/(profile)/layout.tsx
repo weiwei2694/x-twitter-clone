@@ -23,10 +23,10 @@ const Layout = async ({ children, params }: Props) => {
   if (!clerkUser) return null;
 
   const currentUser = await getUserAction(clerkUser.id);
-  if (!currentUser || "message" in currentUser) redirect('/');
+  if (!currentUser) redirect('/');
 
   const user = await getUserByUsernameAction(username);
-  if (!user || "message" in user) return <NotFound />;
+  if (!user) return <NotFound />;
 
   return (
     <>

@@ -7,7 +7,6 @@ import {
 	UpdateUserActionProps,
 } from "@/interfaces/user.interface";
 import prisma from "@/lib/prismadb";
-import { getErrorMessage } from "@/lib/utils";
 import { User } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
@@ -64,9 +63,6 @@ export async function saveUserAction({
 		return newUser;
 	} catch (error) {
 		console.log("[ERROR_SAVE_USER_ACTION]", error);
-		return {
-			message: getErrorMessage(error),
-		};
 	}
 }
 
@@ -83,18 +79,6 @@ export async function getUsersAction({
 		if (isOnSearch) {
 			if (!searchQuery) return [];
 
-			const test = await prisma.user.findMany({
-				where: {
-					OR: [
-						{
-							name: {
-								equals: searchQuery
-							}
-						}
-					]
-				}
-			})
-
 			const users = await prisma.user.findMany({
 				where: {
 					id: {
@@ -108,10 +92,10 @@ export async function getUsersAction({
 						},
 						{
 							name: {
-								contains: searchQuery
+								contains: searchQuery,
 							},
-						}
-					]
+						},
+					],
 				},
 				take: size,
 			});
@@ -153,16 +137,13 @@ export async function getUsersAction({
 						},
 					},
 				},
-				take: size
-			})
+				take: size,
+			});
 		}
 
 		return dataUsers;
 	} catch (error) {
 		console.log("[ERROR_GET_USERS_ACTION]", error);
-		return {
-			message: getErrorMessage(error),
-		};
 	}
 }
 
@@ -181,9 +162,6 @@ export async function getUserAction(id: string) {
 		return result;
 	} catch (error) {
 		console.log("[ERROR_USER_ACTION]", error);
-		return {
-			message: getErrorMessage(error),
-		};
 	}
 }
 
@@ -217,9 +195,6 @@ export async function updateUserAction({
 		return updateUser;
 	} catch (error) {
 		console.log("[ERROR_UPDATE_USER_ACTION]", error);
-		return {
-			message: getErrorMessage(error),
-		};
 	} finally {
 		revalidatePath(path || "");
 	}
@@ -239,9 +214,7 @@ export async function getUserByUsernameAction(username: string) {
 
 		return user;
 	} catch (error) {
-		return {
-			message: getErrorMessage(error),
-		};
+		console.info("[ERROR_GET_USER_BY_USERNAME_ACTION]", error);
 	}
 }
 
@@ -277,9 +250,6 @@ export const toggleFollowUserAction = async ({
 		return result;
 	} catch (error) {
 		console.log("[ERROR_TOGGLE_FOLLOW_USER_ACTION]", error);
-		return {
-			message: getErrorMessage(error),
-		};
 	} finally {
 		revalidatePath(path || "/home");
 	}

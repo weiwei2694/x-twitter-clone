@@ -16,7 +16,7 @@ const layout = async ({ children }: Props) => {
   if (!clerkUser) return null;
 
   const user = await getUserAction(clerkUser.id)
-  if (!user || "message" in user) redirect('/');
+  if (!user) redirect('/');
 
   return (
     <>

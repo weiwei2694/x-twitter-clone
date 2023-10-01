@@ -97,11 +97,7 @@ const OnBoarding = ({ initialValue }: OnBoardingProps) => {
         }
 
         try {
-            const responsed = await saveUserAction(newUser);
-
-            if ("message" in responsed) return toast.error(responsed.message, {
-                duration: 2000,
-            });
+            await saveUserAction(newUser);
 
             window.location.href = "/home";
         } catch (error) {

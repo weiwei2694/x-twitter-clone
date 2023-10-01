@@ -30,7 +30,7 @@ const Searchbar = ({ currentUser }: Props) => {
             isOnSearch: true
         })
 
-        if (!data || "message" in data) return toast.error(data.message, { duration: 2000 })
+        if (!data?.length) return toast.error("Something went wrong", { duration: 2000 })
 
         setUsers(data)
     }

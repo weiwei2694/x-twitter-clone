@@ -16,10 +16,10 @@ const Layout = async ({ children }: Props) => {
   if (!clerkUser) return null;
 
   const user = await getUserAction(clerkUser.id)
-  if (!user || "message" in user) redirect("/")
+  if (!user) redirect("/")
 
   let bookmarks = await getBookmarksAction(user.id)
-  if (!bookmarks || "message" in bookmarks) bookmarks = []
+  if (!bookmarks?.length) bookmarks = []
 
   const isBookmarksEmpty = !bookmarks.length;
 

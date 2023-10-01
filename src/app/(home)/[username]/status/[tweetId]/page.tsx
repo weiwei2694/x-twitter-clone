@@ -20,16 +20,16 @@ const Page = async ({ params }: Props) => {
   const { tweetId, username } = params;
 
   const dataTweet = await getTweetAction(tweetId);
-  if (!dataTweet || "message" in dataTweet) return <NotFound />
+  if (!dataTweet) return <NotFound />
 
   const clerkUser = await clerkCurrentUser()
   if (!clerkUser) return null
 
   const currentUser = await getUserAction(clerkUser.id)
-  if (!currentUser || "message" in currentUser) redirect('/')
+  if (!currentUser) redirect('/')
 
   const user = await getUserByUsernameAction(username)
-  if (!user || "message" in user) return <NotFound />;
+  if (!user) return <NotFound />;
 
   const isValidUsername = user.username === username;
   if (!isValidUsername) return <NotFound />
