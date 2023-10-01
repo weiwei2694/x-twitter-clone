@@ -1,11 +1,8 @@
 import { getBookmarksAction } from '@/actions/tweet.action'
 import { getUserAction } from '@/actions/user.action'
-import Topbar from '@/components/bookmarks/Topbar'
-import TweetsList from '@/components/home/TweetsList'
-import ButtonCreatePostMobile from '@/components/sharing/ButtonCreatePostMobile'
+import Tweets from '@/components/cards/tweets/Tweets'
 import { currentUser } from '@clerk/nextjs'
 import { redirect } from 'next/navigation'
-import React from 'react'
 
 const Page = async () => {
   const clerkUser = await currentUser()
@@ -21,27 +18,24 @@ const Page = async () => {
 
   const savePostsForLater = () => {
     return (
-      <div className="flex justify-center mt-6">
+      <section className="flex justify-center mt-6">
         <div className="flex flex-col items-start">
           <h1 className="text-3xl font-extrabold tracking-wide">Save posts for later</h1>
           <p className="font-normal text-gray-200">Bookmark posts to easily find them again in the future.</p>
         </div>
-      </div>
+      </section>
     )
   }
 
   return (
-    <section className="relative">
-      <ButtonCreatePostMobile />
-      <Topbar username={user.username} userId={user.id} isBookmarksEmpty={isBookmarksEmpty} />
-      {isBookmarksEmpty
-        ? savePostsForLater()
-        : <TweetsList
-            dataTweets={bookmarks}
-            userId={user.id}
-          />
-      }
-    </section>
+    isBookmarksEmpty
+      ? savePostsForLater()
+      : bookmarks.map(tweet => (
+        <Tweets
+          tweet={tweet}
+          userId={user.id}
+        />
+      ))
   )
 }
 

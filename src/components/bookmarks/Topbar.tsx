@@ -1,13 +1,8 @@
 "use client"
 
 import { BookX, MoreHorizontal } from 'lucide-react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu'
-import { deleteBookmarksAction } from '@/actions/tweet.action';
-import { useTransition } from 'react';
-import toast from 'react-hot-toast';
-import { toastOptions } from '@/lib/utils';
-import { Button } from '../ui/button';
 import ClearAllBookmarks from './ClearAllBookmarks';
 
 interface Props {
@@ -29,7 +24,7 @@ const Topbar = ({ userId, username, isBookmarksEmpty }: Props) => {
             </h2>
             <p className="text-sm font-normal text-gray-200">@{username}</p>
           </div>
-          {!isBookmarksEmpty && 
+          {!isBookmarksEmpty &&
             <DropdownMenu>
               <DropdownMenuTrigger className="!outline-none rounded-full hover:bg-gray-300/30 p-2">
                 <MoreHorizontal size={30} />
