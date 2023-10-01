@@ -9,12 +9,12 @@ import { getUsersAction } from '@/actions/user.action';
 import Loading from '../sharing/Loading';
 
 interface Props {
-  users: User[] | null;
+  initialDataUsers: User[] | null;
   user: UserWithFollowers;
 }
 
-const ShowUsersData = ({ users, user }: Props) => {
-  const [dataUsers, setDataUsers] = useState(users);
+const ShowUsersData = ({ initialDataUsers, user }: Props) => {
+  const [dataUsers, setDataUsers] = useState(initialDataUsers);
   const [isUsersDataMaxed, setIsUsersDataMaxed] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [sectionLoadingRef, inView] = useInView();
@@ -36,7 +36,7 @@ const ShowUsersData = ({ users, user }: Props) => {
       ...(prev?.length ? prev : []),
       ...newDataUsers
     ]);
-    setCurrentPage(currentPage + 1);
+    setCurrentPage(prev => prev + 1);
   }
 
   useEffect(() => {
