@@ -141,12 +141,3 @@ body {
 .profile__textarea-success {
 	@apply ring-gray-300 focus-within:!ring-blue py-8;
 }
-
-/* ==== Modals ==== */
-.modals__clear-content {
-	@apply w-[320px] outline-none border-none bg-black-100 select-none p-8 rounded-xl !important;
-}
-
-.modals__clear-header {
-	@apply flex flex-col space-y-7;
-}

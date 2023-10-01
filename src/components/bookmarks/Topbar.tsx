@@ -1,9 +1,14 @@
 "use client"
 
 import { BookX, MoreHorizontal } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useTransition } from 'react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu'
-import ClearAllBookmarks from './ClearAllBookmarks';
+import { deleteBookmarksAction } from '@/actions/tweet.action';
+import { usePathname } from 'next/navigation';
+import toast from 'react-hot-toast';
+import { toastOptions } from '@/lib/utils';
+import DeleteModal from '../modals/DeleteModal';
+import { Button } from '../ui/button';
 
 interface Props {
   userId: string;
@@ -12,7 +17,21 @@ interface Props {
 }
 
 const Topbar = ({ userId, username, isBookmarksEmpty }: Props) => {
+  const path = usePathname()
+  const [isPending, startTransition] = useTransition()
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const clearAllBookmarks = () => {
+    startTransition(() => {
+      deleteBookmarksAction(userId, path);
+      setIsDialogOpen(false);
+
+      toast("Deleted Succesfully All bookmarks have been deleted", {
+        ...toastOptions,
+        duration: 5000
+      });
+    })
+  }
 
   return (
     <>
@@ -43,10 +62,21 @@ const Topbar = ({ userId, username, isBookmarksEmpty }: Props) => {
         </div>
       </nav>
 
-      <ClearAllBookmarks
-        isDialogOpen={isDialogOpen}
+      <DeleteModal
+        title="Clear all Bookmarks?"
+        description="This can’t be undone and you’ll remove all posts you’ve added to your Bookmarks."
         setIsDialogOpen={setIsDialogOpen}
-        userId={userId}
+        isDialogOpen={isDialogOpen}
+        ButtonAction={
+          <Button
+            variant="primary"
+            className="bg-red-600 hover:bg-red-600/90 rounded-full font-extrabold text-sm"
+            onClick={clearAllBookmarks}
+            disabled={isPending}
+          >
+            Clear
+          </Button>
+        }
       />
     </>
   )
