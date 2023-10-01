@@ -4,7 +4,6 @@ import DetailTweet from '@/components/tweetId/DetailTweet';
 import Tweets from '@/components/cards/tweets/Tweets';
 import Topbar from '@/components/tweetId/Topbar'
 import { currentUser as clerkCurrentUser } from '@clerk/nextjs';
-import CreateTweetForm from '@/components/forms/createtweetform/CreateTweetForm';
 import NotFound from '@/components/sharing/404';
 import { redirect } from 'next/navigation';
 import { DataTweet } from '@/interfaces/tweet.interface';
@@ -17,8 +16,7 @@ interface Props {
 }
 
 const Page = async ({ params }: Props) => {
-  const tweetId = params.tweetId;
-  const username = params.username
+  const { tweetId, username } = params;
 
   const dataTweet = await getTweetAction(tweetId);
   if (!dataTweet || "message" in dataTweet) return <NotFound />
@@ -31,7 +29,7 @@ const Page = async ({ params }: Props) => {
 
   const user = await getUserByUsernameAction(username)
   if (!user || "message" in user) return <NotFound />;
-  
+
   const isValidUsername = user.username === username;
   if (!isValidUsername) return <NotFound />
 
@@ -55,7 +53,7 @@ const Page = async ({ params }: Props) => {
         tweet={dataTweet}
         userId={currentUser.id}
       />
-      <div className="border-b border-gray-300">
+      {/* <section className="border-b border-gray-300">
         <CreateTweetForm
           userId={currentUser.id}
           imageUrl={currentUser.imageUrl}
@@ -63,8 +61,7 @@ const Page = async ({ params }: Props) => {
           htmlForId="tweetId"
           dataTweet={dataReplyTweet}
         />
-      </div>
-      {/* Create Infinite Scroll -> if required */}
+      </section> */}
       {
         dataTweet.replies.map(tweet => (
           <Tweets
