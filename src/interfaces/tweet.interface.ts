@@ -53,6 +53,7 @@ export interface ToggleBookmarkTweetProps extends InitialProps {
 export interface ToggleLikeTweetProps extends InitialProps {
 	liked: Like | undefined;
 	userId: string;
+	currentUserId: string;
 	threadId: string;
 	path: string;
 }

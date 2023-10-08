@@ -11,6 +11,7 @@ import {
 	ToggleLikeTweetProps,
 } from "@/interfaces/tweet.interface";
 import { toastOptions } from "./utils";
+import { likePostNotification } from "@/actions/notification.action";
 
 export const deleteTweet = ({
 	isPending,
@@ -75,6 +76,7 @@ export const toggleLikeTweet = ({
 	startTransition,
 	liked,
 	userId,
+	currentUserId,
 	threadId,
 	path,
 }: ToggleLikeTweetProps) => {
@@ -88,10 +90,17 @@ export const toggleLikeTweet = ({
 			});
 		} else {
 			toggleLikeAction({
-				userId,
+				userId: currentUserId,
 				threadId,
 				path,
 			});
+
+			likePostNotification({
+				userId,
+				sourceId: currentUserId,
+				parentIdPost: threadId,
+				path
+			})
 		}
 	});
 };

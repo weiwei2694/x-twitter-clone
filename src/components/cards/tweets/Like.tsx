@@ -11,12 +11,13 @@ import { useTransition } from 'react'
 interface Props {
   liked: Liked;
   userId: string;
+  currentUserId: string;
   path: string;
   threadId: string;
   totalLikes: number;
 }
 
-const Like = ({ liked, userId, path, threadId, totalLikes }: Props) => {
+const Like = ({ liked, userId, currentUserId, path, threadId, totalLikes }: Props) => {
   const [isPending, startTransition] = useTransition()
 
   return (
@@ -29,6 +30,7 @@ const Like = ({ liked, userId, path, threadId, totalLikes }: Props) => {
         startTransition,
         liked,
         userId,
+        currentUserId,
         threadId,
         path
       })}
