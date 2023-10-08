@@ -48,6 +48,7 @@ model Notification {
   parentIdPost String?
   parentIdUser String?
   parentType   ParentType
+  createdAt    DateTime    @default(now())
   user         User        @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
   sourceUser   User        @relation("SourceUserNotifications", fields: [sourceId], references: [id], onDelete: Cascade)
   parentUser   User?       @relation("ParentUserNotifications", fields: [parentIdUser], references: [id], onDelete: Cascade)
