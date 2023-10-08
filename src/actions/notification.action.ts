@@ -1,6 +1,7 @@
 "use server";
 
 import {
+	CommentPostNotificationProps,
 	FollowUserNotificationActionProps,
 	LikePostNotificationProps,
 } from "@/interfaces/notification.interface";
@@ -53,6 +54,34 @@ export const likePostNotification = async ({
 		});
 	} catch (error) {
 		console.info("[ERROR_LIKE_POST_NOTIFICATION]", error);
+	} finally {
+		revalidatePath(path);
+	}
+};
+
+export const commentPostNotification = async ({
+	userId,
+	sourceId,
+	parentIdPost,
+	path,
+}: CommentPostNotificationProps) => {
+	if (!userId) throw new Error("userId required");
+	if (!sourceId) throw new Error("sourceId required");
+	if (!parentIdPost) throw new Error("parentIdPost required");
+	if (!path) throw new Error("path required");
+
+	try {
+		await prisma.notification.create({
+			data: {
+				userId,
+				sourceId,
+				parentIdPost,
+				parentType: "Post",
+				activityType: "Comment",
+			},
+		});
+	} catch (error) {
+		console.info("[ERROR_COMMENT_POST_NOTIFICATION]", error);
 	} finally {
 		revalidatePath(path);
 	}

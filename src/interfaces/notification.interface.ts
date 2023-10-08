@@ -12,3 +12,10 @@ export interface LikePostNotificationProps {
   parentIdPost: string;
   path: string;
 }
+
+export interface CommentPostNotificationProps {
+  userId: string;
+  sourceId: string;
+  parentIdPost: string;
+  path: string;
+}
