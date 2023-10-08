@@ -61,6 +61,7 @@ const Tweets = ({ tweet, userId }: Props) => {
       createdAt: tweet.createdAt,
       parentId: tweet.id,
       user: {
+        id: tweet.user.id,
         name: tweet.user.name,
         username: tweet.user.username,
         imageUrl: tweet.user.imageUrl,

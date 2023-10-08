@@ -41,6 +41,7 @@ const Page = async ({ params }: Props) => {
     createdAt: dataTweet.createdAt,
     parentId: dataTweet.id,
     user: {
+      id: dataTweet.user.id,
       name: dataTweet.user.name,
       username: dataTweet.user.username,
       imageUrl: dataTweet.user.imageUrl

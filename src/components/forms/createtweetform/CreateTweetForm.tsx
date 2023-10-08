@@ -28,6 +28,7 @@ import PreviewImage from "./PreviewImage";
 import Reply from "./Reply";
 import { uploadFile } from "@/lib/cloudinary";
 import toast from "react-hot-toast";
+import { commentPostNotification } from "@/actions/notification.action";
 
 interface Props {
     isModal?: boolean;
@@ -105,6 +106,15 @@ const CreateTweetForm = ({
                 ...values,
                 path
             })
+
+            if (dataTweet && dataTweet.parentId) {
+                await commentPostNotification({
+                    userId: dataTweet.user.id,
+                    sourceId: userId,
+                    parentIdPost: dataTweet.id,
+                    path,
+                })
+            }
 
             if (isMobile && isReply) {
                 window.location.href = `/${dataTweet?.user?.username}/status/${dataTweet?.id}`;
