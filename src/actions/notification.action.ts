@@ -1,9 +1,9 @@
 "use server";
 
 import {
-	CommentPostNotificationProps,
+	CommentPostNotificationActionProps,
 	FollowUserNotificationActionProps,
-	LikePostNotificationProps,
+	LikePostNotificationActionProps,
 } from "@/interfaces/notification.interface";
 import prisma from "@/lib/prismadb";
 import { revalidatePath } from "next/cache";
@@ -36,12 +36,12 @@ export const followUserNotificationAction = async ({
 	}
 };
 
-export const likePostNotification = async ({
+export const likePostNotificationAction = async ({
 	userId,
 	sourceId,
 	parentIdPost,
 	path,
-}: LikePostNotificationProps) => {
+}: LikePostNotificationActionProps) => {
 	if (!userId) throw new Error("userId required");
 	if (!sourceId) throw new Error("sourceId required");
 	if (!parentIdPost) throw new Error("parentIdPost required");
@@ -64,12 +64,12 @@ export const likePostNotification = async ({
 	}
 };
 
-export const commentPostNotification = async ({
+export const commentPostNotificationAction = async ({
 	userId,
 	sourceId,
 	parentIdPost,
 	path,
-}: CommentPostNotificationProps) => {
+}: CommentPostNotificationActionProps) => {
 	if (!userId) throw new Error("userId required");
 	if (!sourceId) throw new Error("sourceId required");
 	if (!parentIdPost) throw new Error("parentIdPost required");

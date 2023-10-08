@@ -1,21 +1,19 @@
 // actions/notification.action.ts
-export interface FollowUserNotificationActionProps {
+interface ParentTypeUserProps {
   userId: string;
-  sourceId: string;
   parentIdUser: string;
+  sourceId: string;
   path: string;
 }
 
-export interface LikePostNotificationProps {
+interface ParentTypePostProps {
   userId: string;
   sourceId: string;
   parentIdPost: string;
   path: string;
 }
 
-export interface CommentPostNotificationProps {
-  userId: string;
-  sourceId: string;
-  parentIdPost: string;
-  path: string;
-}
+export interface FollowUserNotificationActionProps extends ParentTypeUserProps {}
+export interface LikePostNotificationActionProps extends ParentTypePostProps {}
+export interface CommentPostNotificationActionProps extends ParentTypePostProps {}
+export interface ReplyCommentPostNotificationActionProps extends ParentTypePostProps {}
