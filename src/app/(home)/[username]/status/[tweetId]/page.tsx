@@ -40,6 +40,7 @@ const Page = async ({ params }: Props) => {
     imageUrl: dataTweet.imageUrl,
     createdAt: dataTweet.createdAt,
     parentId: dataTweet.id,
+    isParentIdExist: Boolean(dataTweet.parentId),
     user: {
       id: dataTweet.user.id,
       name: dataTweet.user.name,

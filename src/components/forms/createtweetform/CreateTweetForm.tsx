@@ -28,7 +28,7 @@ import PreviewImage from "./PreviewImage";
 import Reply from "./Reply";
 import { uploadFile } from "@/lib/cloudinary";
 import toast from "react-hot-toast";
-import { commentPostNotificationAction } from "@/actions/notification.action";
+import { commentPostNotificationAction, replyCommentPostNotificationAction } from "@/actions/notification.action";
 
 interface Props {
     isModal?: boolean;
@@ -107,13 +107,15 @@ const CreateTweetForm = ({
                 path
             })
 
-            if (dataTweet && dataTweet.parentId) {
-                await commentPostNotificationAction({
+            if (dataTweet && dataTweet.user.id !== userId) {
+                const notificationType = dataTweet.isParentIdExist ? replyCommentPostNotificationAction : commentPostNotificationAction;
+
+                await notificationType({
                     userId: dataTweet.user.id,
                     sourceId: userId,
                     parentIdPost: dataTweet.id,
                     path,
-                })
+                });
             }
 
             if (isMobile && isReply) {

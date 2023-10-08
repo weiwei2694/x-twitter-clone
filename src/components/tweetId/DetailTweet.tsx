@@ -60,6 +60,7 @@ const DetailTweet = ({ tweet, userId }: Props) => {
       imageUrl: tweet.imageUrl,
       createdAt: tweet.createdAt,
       parentId: tweet.id,
+      isParentIdExist: Boolean(tweet.parentId),
       user: {
         id: tweet.user.id,
         name: tweet.user.name,
