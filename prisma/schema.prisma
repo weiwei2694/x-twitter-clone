@@ -21,12 +21,14 @@ model User {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  threads       Thread[]
-  followers     Follower[]     @relation("UserFollowers")
-  followings    Follower[]     @relation("UserFollowing")
-  likes         Like[]
-  bookmarks     Bookmark[]
-  notifications Notification[]
+  threads                 Thread[]
+  followers               Follower[]     @relation("UserFollowers")
+  followings              Follower[]     @relation("UserFollowing")
+  likes                   Like[]
+  bookmarks               Bookmark[]
+  notifications           Notification[] @relation("UserNotifications")
+  sourceUserNotifications Notification[] @relation("SourceUserNotifications")
+  parentUserNotifications Notification[] @relation("ParentUserNotifications")
 }
 
 model Follower {
@@ -38,26 +40,33 @@ model Follower {
 }
 
 model Notification {
-  id          String   @id @default(uuid())
-  userId      String?
-  title       String   @db.Char(50)
-  description String   @db.Char(100)
-  createdAt   DateTime @default(now())
-  user        User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           String      @id @default(uuid())
+  isRead       Boolean     @default(false)
+  userId       String
+  activityType ActionType?
+  sourceId     String
+  parentIdPost String?
+  parentIdUser String?
+  parentType   ParentType
+  user         User        @relation("UserNotifications", fields: [userId], references: [id], onDelete: Cascade)
+  sourceUser   User        @relation("SourceUserNotifications", fields: [sourceId], references: [id], onDelete: Cascade)
+  parentUser   User?       @relation("ParentUserNotifications", fields: [parentIdUser], references: [id], onDelete: Cascade)
+  post         Thread?     @relation("PostNotifications", fields: [parentIdPost], references: [id], onDelete: Cascade)
 }
 
 model Thread {
-  id        String     @id @default(uuid())
-  text      String     @db.Char(255)
-  parentId  String?
-  userId    String
-  imageUrl  String?
-  createdAt DateTime   @default(now())
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  parent    Thread?    @relation("RepliesTo", fields: [parentId], references: [id], onDelete: Cascade)
-  replies   Thread[]   @relation("RepliesTo")
-  likes     Like[]     @relation("PostLikes")
-  bookmarks Bookmark[]
+  id            String         @id @default(uuid())
+  text          String         @db.Char(255)
+  parentId      String?
+  userId        String
+  imageUrl      String?
+  createdAt     DateTime       @default(now())
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent        Thread?        @relation("RepliesTo", fields: [parentId], references: [id], onDelete: Cascade)
+  replies       Thread[]       @relation("RepliesTo")
+  likes         Like[]         @relation("PostLikes")
+  bookmarks     Bookmark[]
+  notifications Notification[] @relation("PostNotifications")
 }
 
 model Like {
@@ -74,4 +83,16 @@ model Bookmark {
   threadId String
   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   thread   Thread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+}
+
+enum ActionType {
+  Follow
+  Like
+  Comment
+  Reply
+}
+
+enum ParentType {
+  User
+  Post
 }
