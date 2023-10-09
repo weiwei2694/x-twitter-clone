@@ -9,6 +9,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import Unread from "./Unread";
+import Menu from "./Menu";
 
 interface Props {
   dataNotification: DataNotification
@@ -20,12 +21,19 @@ const PostNotification = ({ dataNotification }: Props) => {
   const router = useRouter()
   const path = usePathname()
   const childLink = useRef<HTMLAnchorElement | null>(null);
+  const menuFeed = useRef<HTMLDivElement | null>(null)
 
   const handleNavigation = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
-    if (e.target !== childLink.current) {
-      if (!dataNotification.isRead) await markAsReadNotification(dataNotification.id, path)
-      router.push(`/${dataNotification.sourceUser?.username}/status/${dataNotification.post?.id}`)
-    }
+    e.stopPropagation()
+
+    if (!dataNotification.isRead) await markAsReadNotification(dataNotification.id, path)
+    router.push(`/${dataNotification.sourceUser?.username}/status/${dataNotification.post?.id}`)
+  }
+
+  const redirectToSourceId = (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+    e.stopPropagation();
+
+    router.push(`/${dataNotification.sourceUser?.username}`)
   }
 
   const showActivityImage = (activityType: string) => {
@@ -70,9 +78,9 @@ const PostNotification = ({ dataNotification }: Props) => {
           />
 
           <div className="flex justify-start items-start flex-wrap gap-x-2">
-            <Link ref={childLink} href={`/${dataNotification.sourceUser?.username}`} className="font-bold tracking-wide">
+            <h5 onClick={redirectToSourceId} className="font-bold tracking-wide">
               {dataNotification.sourceUser?.username}.
-            </Link>
+            </h5>
             <p>{showActivityText(dataNotification.activityType ?? "")}</p>
             ∙
             <p className="font-normal text-gray-200">
@@ -95,10 +103,11 @@ const PostNotification = ({ dataNotification }: Props) => {
             )}
           </div>
         </div>
-        <div className="flex justify-end items-start">
+        <div ref={menuFeed} className="flex justify-end items-start">
           {!dataNotification.isRead && (
             <Unread />
           )}
+          <Menu isRead={dataNotification.isRead} notificationId={dataNotification.id} />
         </div>
       </div>
     </div>
