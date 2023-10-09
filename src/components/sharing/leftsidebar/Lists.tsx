@@ -11,9 +11,10 @@ import { usePathname } from 'next/navigation';
 
 interface Props {
   username: string;
+  totalNotifications: number;
 }
 
-const Lists = ({ username }: Props) => {
+const Lists = ({ username, totalNotifications }: Props) => {
   const pathname = usePathname()
   const openTweetModal = useTweetModal(state => state.onOpen)
 
@@ -22,8 +23,8 @@ const Lists = ({ username }: Props) => {
       {links.map(link => {
         if (!link.href) link.href = `/${username}`
 
-        const isNotLogo = link.title !== "X Logo";
-        const isSamePath = isNotLogo && link.href === pathname;
+        const isLogo = link.title === "X Logo";
+        const isSamePath = !isLogo && link.href === pathname;
 
         return (
           <li
@@ -33,14 +34,22 @@ const Lists = ({ username }: Props) => {
             <Link
               href={link.href}
               className="flex flex-row items-center gap-x-6 tracking-wider text-xl max-xl:p-3 xl:py-3 xl:px-5 hover:bg-black-200 transition">
-              <Image
-                src={link.icon}
-                alt={link.title}
-                width={30}
-                height={30}
-                className="object-contain w-[30px] h-[30px]"
-              />
-              {isNotLogo && (
+                <div className="relative">
+                  <Image
+                    src={link.icon}
+                    alt={link.title}
+                    width={30}
+                    height={30}
+                    className="object-contain w-[30px] h-[30px]"
+                  />
+
+                  {link.href === '/notifications' && Boolean(totalNotifications) && (
+                    <span className="w-[20px] h-[20px] grid place-items-center bg-blue text-white rounded-full absolute text-xs -top-1 -right-1">
+                      {totalNotifications}
+                    </span>
+                  )}
+                </div>
+              {!isLogo && (
                 <span className="max-xl:hidden xl:inline">
                   {link.title}
                 </span>
