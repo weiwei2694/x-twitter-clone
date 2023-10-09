@@ -39,22 +39,26 @@ export const links = [
 
 export const linksMobile = [
     {
-        icon: "/assets/home-icon.svg",
+        icon: "/assets/home-icon.png",
+        activeIcon: "/assets/home-fill-icon.png",
         title: "Home",
         href: "/home"
     },
     {
-        icon: "/assets/profile-icon.svg",
+        icon: "/assets/profile-icon.png",
+        activeIcon: "/assets/profile-fill-icon.png",
         title: "Profile",
         href: ''
     },
     {
-        icon: "/assets/search-icon.svg",
+        icon: "/assets/explore-icon.png",
+        activeIcon: "/assets/explore-fill-icon.png",
         title: "Explore",
         href: "/explore"
     },
     {
-        icon: "/assets/notifications-icon.svg",
+        icon: "/assets/notif-icon.png",
+        activeIcon: "/assets/notif-fill-icon.png",
         title: "Notifications",
         href: "/notifications"
     },
