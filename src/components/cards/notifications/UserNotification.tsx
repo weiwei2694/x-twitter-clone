@@ -13,7 +13,7 @@ interface Props {
   dataNotification: DataNotification
 }
 
-const FollowNotification = ({ dataNotification }: Props) => {
+const UserNotification = ({ dataNotification }: Props) => {
   const router = useRouter()
   const path = usePathname()
   const childLink = useRef<HTMLAnchorElement | null>(null);
@@ -31,9 +31,9 @@ const FollowNotification = ({ dataNotification }: Props) => {
         <Image
           src="/assets/user-notification-icon.png"
           alt="Profile Icon"
-          width={25}
-          height={25}
-          className="object-contain w-[25px] h-[25px]"
+          width={20}
+          height={20}
+          className="object-contain"
         />
       </div>
       <div className="flex flex-col space-y-2">
@@ -55,13 +55,15 @@ const FollowNotification = ({ dataNotification }: Props) => {
               {customDatePost(dataNotification.createdAt.getTime())}
             </span>
           </div>
-          {!dataNotification.isRead && (
-            <Unread />
-          )}
+          <div className="flex justify-end items-start">
+            {!dataNotification.isRead && (
+              <Unread />
+            )}
+          </div>
         </div>
       </div>
     </div>
   )
 }
 
-export default FollowNotification
+export default UserNotification

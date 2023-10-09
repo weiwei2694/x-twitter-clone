@@ -14,7 +14,7 @@ interface Props {
   dataNotification: DataNotification
 }
 
-const LikeNotification = ({ dataNotification }: Props) => {
+const PostNotification = ({ dataNotification }: Props) => {
   const [isMounted, setIsMounted] = useState(false);
 
   const router = useRouter()
@@ -28,6 +28,26 @@ const LikeNotification = ({ dataNotification }: Props) => {
     }
   }
 
+  const showActivityImage = (activityType: string) => {
+    const options:any = {
+      "Reply": <Image src="/assets/reply-notification-icon.png" alt="Reply Icon" width={20} height={20} />,
+      "Comment": <Image src="/assets/comment-notification-icon.png" alt="Comment Icon" width={20} height={20} />,
+      "Like": <Image src="/assets/heart-fill-icon.png" alt="Heart Fill Icon" width={20} height={20} />,
+    }
+
+    return options[activityType];
+  }
+
+  const showActivityText = (activityType: string) => {
+    const options:any = {
+      "Reply": "replied your Comment",
+      "Comment": "commented on your Tweet",
+      "Like": "liked your Tweet",
+    }
+
+    return options[activityType]
+  }
+
   useEffect(() => {
     setIsMounted(true)
   }, [])
@@ -37,13 +57,7 @@ const LikeNotification = ({ dataNotification }: Props) => {
   return (
     <div onClick={(e) => handleNavigation(e)} className="notifications__component">
       <div className="flex justify-center items-center w-[40px] h-[40px]">
-        <Image
-          src="/assets/heart-fill-icon.png"
-          alt="Heart Fill Icon"
-          width={25}
-          height={25}
-          className="object-contain w-[25px] h-[25px]"
-        />
+        {showActivityImage(dataNotification.activityType ?? "")}
       </div>
       <div className="notifications__component-body">
         <div className="flex flex-col space-y-2 flex-1">
@@ -59,7 +73,7 @@ const LikeNotification = ({ dataNotification }: Props) => {
             <Link ref={childLink} href={`/${dataNotification.sourceUser?.username}`} className="font-bold tracking-wide">
               {dataNotification.sourceUser?.username}.
             </Link>
-            <p>liked your Tweet</p>
+            <p>{showActivityText(dataNotification.activityType ?? "")}</p>
             ∙
             <p className="font-normal text-gray-200">
               {customDatePost(dataNotification.createdAt.getTime())}
@@ -81,12 +95,14 @@ const LikeNotification = ({ dataNotification }: Props) => {
             )}
           </div>
         </div>
-        {!dataNotification.isRead && (
-          <Unread />
-        )}
+        <div className="flex justify-end items-start">
+          {!dataNotification.isRead && (
+            <Unread />
+          )}
+        </div>
       </div>
     </div>
   )
 }
 
-export default LikeNotification
+export default PostNotification
