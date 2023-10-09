@@ -1,6 +1,8 @@
 "use client";
 
-import { markAsReadNotification } from "@/actions/notification.action";
+import { deleteNotificationAction, markAsReadNotification } from "@/actions/notification.action";
+import DeleteModal from "@/components/modals/DeleteModal";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +12,7 @@ import {
 import { BookX, MoreHorizontal } from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { MouseEvent, useTransition } from "react";
+import { MouseEvent, useState, useTransition } from "react";
 
 interface Props {
   notificationId: string;
@@ -20,6 +22,7 @@ interface Props {
 const Menu = ({ notificationId, isRead }: Props) => {
   const path = usePathname()
   const [isPending, startTransition] = useTransition()
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const markAsReadHandler = (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     e.stopPropagation();
@@ -31,47 +34,77 @@ const Menu = ({ notificationId, isRead }: Props) => {
     })
   }
 
-  const deleteNotification = (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+  const deleteNotification = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
     e.stopPropagation();
+
+    if (isPending) return;
+
+    startTransition(() => {
+      deleteNotificationAction(notificationId, path)
+    })
+  }
+
+  const handlerSetIsDialog = (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+    e.stopPropagation()
+    setIsDialogOpen(true)
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        className="!outline-none text-white bg-transparent hover:bg-blue/20 hover:text-blue transition p-2 rounded-full"
-      >
-        <MoreHorizontal />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent side="bottom" align="end">
-        {!isRead && (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          className="!outline-none text-white bg-transparent hover:bg-blue/20 hover:text-blue transition p-2 rounded-full"
+        >
+          <MoreHorizontal />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent side="bottom" align="end">
+          {!isRead && (
+            <DropdownMenuItem
+              onClick={markAsReadHandler}
+              className="text-[#f4212e]"
+              disabled={isPending}
+            >
+              <div className="w-7 flex items-center justify-center">
+                <BookX className="object-contain w-4 h-4" />
+              </div>
+              Mark as read
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
-            onClick={markAsReadHandler}
+            onClick={handlerSetIsDialog}
             className="text-[#f4212e]"
-            disabled={isPending}
           >
             <div className="w-7 flex items-center justify-center">
-              <BookX className="object-contain w-4 h-4" />
+              <Image
+                src="/assets/delete.png"
+                alt="Delete"
+                width={30}
+                height={30}
+                className="object-contain"
+              />
             </div>
-            Mark as read
+            Delete Notification
           </DropdownMenuItem>
-        )}
-        <DropdownMenuItem
-          onClick={deleteNotification}
-          className="text-[#f4212e]"
-        >
-          <div className="w-7 flex items-center justify-center">
-            <Image
-              src="/assets/delete.png"
-              alt="Delete"
-              width={30}
-              height={30}
-              className="object-contain"
-            />
-          </div>
-          Delete Notification
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <DeleteModal
+        title="Delete post?"
+        description="This can’t be undone and it will be removed from your profile, the timeline of any accounts that follow you, and from search results. "
+        ButtonAction={
+          <Button
+            variant="primary"
+            className="bg-red-600 hover:bg-red-600/90 rounded-full font-extrabold text-sm"
+            onClick={deleteNotification}
+            disabled={isPending}
+          >
+            Delete
+          </Button>
+        }
+        isDialogOpen={isDialogOpen}
+        setIsDialogOpen={setIsDialogOpen}
+      />
+    </>
   )
 }
 

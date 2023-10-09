@@ -5,7 +5,6 @@ import { DataNotification } from "@/interfaces/notification.interface";
 import { renderText } from "@/lib/tweet";
 import { customDatePost } from "@/lib/utils";
 import Image from "next/image";
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import Unread from "./Unread";
@@ -20,7 +19,6 @@ const PostNotification = ({ dataNotification }: Props) => {
 
   const router = useRouter()
   const path = usePathname()
-  const childLink = useRef<HTMLAnchorElement | null>(null);
   const menuFeed = useRef<HTMLDivElement | null>(null)
 
   const handleNavigation = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {

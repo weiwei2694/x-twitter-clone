@@ -182,3 +182,16 @@ export const markAllNotificationsAsReadAction = async (userId: string, path: str
 		revalidatePath(path)
 	}
 }
+
+export const deleteNotificationAction = async (notificationId: string, path: string) => {
+	if (!notificationId) throw new Error("notificationId required");
+	try {
+		await prisma.notification.delete({
+			where: { id: notificationId },
+		});
+	} catch (error) {
+		console.info("[ERROR_DELETE_NOTIFICATION_ACTION]", error);
+	} finally {
+		revalidatePath(path);
+	}
+}

@@ -29,7 +29,10 @@ const DeleteModal = ({ title, description, ButtonAction, isDialogOpen, setIsDial
               <Button
                 variant="ghost"
                 className="bg-transparent hover:bg-gray-300/30 hover:text-white border border-gray-200 rounded-full font-extrabold text-sm"
-                onClick={() => setIsDialogOpen(false)}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setIsDialogOpen(false)
+                }}
               >
                 Cancel
               </Button>
