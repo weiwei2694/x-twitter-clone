@@ -36,8 +36,8 @@ const LikeNotification = ({ dataNotification }: Props) => {
     <div onClick={(e) => handleNavigation(e)} className="notifications__component">
       <div className="flex justify-center items-center w-[40px] h-[40px]">
         <Image
-          src="/assets/comment-icon.svg"
-          alt="Comment Icon"
+          src="/assets/heart-fill-icon.png"
+          alt="Heart Fill Icon"
           width={25}
           height={25}
           className="object-contain w-[25px] h-[25px]"

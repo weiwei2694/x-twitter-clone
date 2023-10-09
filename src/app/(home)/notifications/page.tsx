@@ -4,7 +4,6 @@ import CommentNotification from "@/components/cards/notifications/CommentNotific
 import FollowNotification from "@/components/cards/notifications/FollowNotification";
 import LikeNotification from "@/components/cards/notifications/LikeNotification";
 import ReplyNotification from "@/components/cards/notifications/ReplyNotification";
-import Topbar from "@/components/notifications/Topbar"
 import { DataNotification } from "@/interfaces/notification.interface";
 import { currentUser } from "@clerk/nextjs"
 import { redirect } from "next/navigation";
@@ -34,8 +33,6 @@ const Page = async () => {
 
   return (
     <>
-      <Topbar />
-
       <section className="flex flex-col">
         {!notifications?.length ? null : (
           notifications.map(notification => (

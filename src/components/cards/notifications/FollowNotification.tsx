@@ -28,7 +28,7 @@ const FollowNotification = ({ dataNotification }: Props) => {
     <div onClick={(e) => handleNavigation(e)} className="notifications__component">
       <div className="flex justify-center items-center w-[40px] h-[40px]">
         <Image
-          src="/assets/profile-icon.svg"
+          src="/assets/user-notification-icon.png"
           alt="Profile Icon"
           width={25}
           height={25}
