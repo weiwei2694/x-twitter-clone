@@ -139,7 +139,7 @@ export const getNotifications = async (userId: string) => {
 				},
 			},
 			orderBy: {
-				createdAt: "asc",
+				createdAt: "desc",
 			},
 		});
 	} catch (error) {
