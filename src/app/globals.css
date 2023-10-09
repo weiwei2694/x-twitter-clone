@@ -141,3 +141,8 @@ body {
 .profile__textarea-success {
 	@apply ring-gray-300 focus-within:!ring-blue py-8;
 }
+
+/* ==== Notifications ==== */
+.notifications__component {
+	@apply flex flex-row justify-start items-start gap-x-1 px-3 py-4 hover:bg-gray-300/90 border-b border-gray-300 cursor-pointer;
+}

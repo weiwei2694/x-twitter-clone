@@ -1,3 +1,29 @@
+interface SourceUser {
+  id: string;
+  username: string;
+  imageUrl: string;
+}
+
+interface Post {
+  id: string;
+  text: string;
+  imageUrl: string | null;
+}
+
+export interface DataNotification {
+  id: string;
+  isRead: boolean;
+  userId: string;
+  activityType: string | null;
+  sourceId: string;
+  parentIdPost: string | null;
+  parentIdUser: string | null;
+  parentType: string;
+  createdAt: Date;
+  sourceUser: SourceUser | null;
+  post: Post | null;
+}
+
 // actions/notification.action.ts
 interface ParentTypeUserProps {
   userId: string;

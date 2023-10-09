@@ -115,3 +115,52 @@ export const replyCommentPostNotificationAction = async ({
 		revalidatePath(path);
 	}
 };
+
+export const getNotifications = async (userId: string) => {
+	if (!userId) throw new Error("userId required");
+
+	try {
+		return await prisma.notification.findMany({
+			where: { userId },
+			include: {
+				sourceUser: {
+					select: {
+						id: true,
+						username: true,
+						imageUrl: true,
+					},
+				},
+				post: {
+					select: {
+						id: true,
+						text: true,
+						imageUrl: true,
+					},
+				},
+			},
+			orderBy: {
+				createdAt: "asc",
+			},
+		});
+	} catch (error) {
+		console.info("[ERROR_GET_NOTIFICATIONS]", error);
+	}
+};
+
+export const markAsReadNotification = async (notificationId: string, path: string) => {
+	if (!notificationId) throw new Error("notificationId required")
+	if (!path) throw new Error("path required")
+
+	try {
+		await prisma.notification.update({
+			where: { id: notificationId },
+			data: {
+				isRead: true
+			}
+		})
+	} catch (error) {
+		console.info("[ERROR_MARK_AS_READ_NOTIFICATION]", error);
+	} finally {
+		revalidatePath(path)
+	}
+}
