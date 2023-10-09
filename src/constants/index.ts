@@ -1,31 +1,37 @@
 export const links = [
     {
         icon: "/assets/small-x-logo.png",
+        activeIcon: "/assets/small-x-logo.png",
         title: "X Logo",
         href: "/home"
     },
     {
-        icon: "/assets/home-icon.svg",
+        icon: "/assets/home-icon.png",
+        activeIcon: "/assets/home-fill-icon.png",
         title: "Home",
         href: "/home"
     },
     {
-        icon: "/assets/search-icon.svg",
+        icon: "/assets/explore-icon.png",
+        activeIcon: "/assets/explore-fill-icon.png",
         title: "Explore",
         href: "/explore"
     },
     {
-        icon: "/assets/notifications-icon.svg",
+        icon: "/assets/notif-icon.png",
+        activeIcon: "/assets/notif-fill-icon.png",
         title: "Notifications",
         href: "/notifications"
     },
     {
-        icon: "/assets/bookmarks-icon.svg",
+        icon: "/assets/bookmark-icon.png",
+        activeIcon: "/assets/bookmark-fill-icon.png",
         title: "Bookmarks",
         href: "/bookmarks"
     },
     {
-        icon: "/assets/profile-icon.svg",
+        icon: "/assets/profile-icon.png",
+        activeIcon: "/assets/profile-fill-icon.png",
         title: "Profile",
         href: ''
     },

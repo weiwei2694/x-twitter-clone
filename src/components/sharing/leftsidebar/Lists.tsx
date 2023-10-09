@@ -24,19 +24,19 @@ const Lists = ({ username, totalNotifications }: Props) => {
         if (!link.href) link.href = `/${username}`
 
         const isLogo = link.title === "X Logo";
-        const isSamePath = !isLogo && link.href === pathname;
+        const isSamePath = !isLogo && (link.href === pathname);
 
         return (
           <li
             key={link.title}
-            className={cn("w-fit rounded-full overflow-hidden", isSamePath && "bg-black-200 font-bold")}
+            className={cn("w-fit rounded-full overflow-hidden", isSamePath && "font-bold")}
           >
             <Link
               href={link.href}
               className="flex flex-row items-center gap-x-6 tracking-wider text-xl max-xl:p-3 xl:py-3 xl:px-5 hover:bg-black-200 transition">
                 <div className="relative">
                   <Image
-                    src={link.icon}
+                    src={isSamePath ? link.activeIcon : link.icon}
                     alt={link.title}
                     width={30}
                     height={30}
