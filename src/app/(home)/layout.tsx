@@ -31,14 +31,14 @@ const layout = async ({ children}: Props) => {
     return (
         <main className="max-h-screen overflow-hidden">
             <Modal imageUrl={user.imageUrl} userId={user.id} />
-            <section className="h-full max-w-7xl mx-auto flex">
+            <section className="h-full max-w-7xl mx-auto flex justify-center">
                 <LeftSidebar
                     totalNotifications={notifications?.length ?? 0}
                     username={user.username}
                     name={user.name}
                     imageUrl={user.imageUrl}
                 />
-                <section className="hide-scrollbar border-l border-r border-gray-300 w-full max-h-screen overflow-y-auto max-sm:pb-32 sm:pb-0">
+                <section className="hide-scrollbar max-sm:border-none border-l border-r border-gray-300 max-h-screen overflow-y-auto max-sm:pb-32 sm:pb-0 w-full max-sm:max-w-full max-w-[600px]">
                     {children}
                 </section>
                 <RightSidebar
