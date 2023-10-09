@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { MouseEvent, useEffect, useRef, useState } from "react";
+import Unread from "./Unread";
 
 interface Props {
   dataNotification: DataNotification
@@ -44,7 +45,7 @@ const ReplyNotificaation = ({ dataNotification }: Props) => {
           className="object-contain w-[20px] h-[20px]"
         />
       </div>
-      <div className="w-full flex flex-row items-center justify-between gap-x-8">
+      <div className="notifications__component-body">
         <div className="flex flex-col space-y-2 flex-1">
           <Image
             src={dataNotification.sourceUser?.imageUrl ?? "/assets/small-x-logo.svg"}
@@ -80,6 +81,9 @@ const ReplyNotificaation = ({ dataNotification }: Props) => {
             )}
           </div>
         </div>
+        {!dataNotification.isRead && (
+          <Unread />
+        )}
       </div>
     </div>
   )

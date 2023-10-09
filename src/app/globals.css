@@ -146,3 +146,11 @@ body {
 .notifications__component {
 	@apply flex flex-row justify-start items-start gap-x-1 px-3 py-4 hover:bg-gray-300/90 border-b border-gray-300 cursor-pointer;
 }
+
+.notifications__component-body {
+	@apply w-full flex flex-row items-start justify-between gap-x-8;
+}
+
+.notifications__component-body__unread {
+	@apply w-[8px] h-[8px] bg-blue rounded-full;
+}
