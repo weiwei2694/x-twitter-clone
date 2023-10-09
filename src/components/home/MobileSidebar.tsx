@@ -74,14 +74,14 @@ const MobileSidebar = ({ user }: Props) => {
             return (
               <li
                 key={link.title}
-                className={cn("w-full", isSamePath && "bg-black-200")}
+                className="w-full"
               >
                 <Link
                   href={link.href}
                   className="flex w-full flex-row items-center gap-x-6 tracking-wider text-xl font-bold p-3 hover:bg-black-200 transition-all"
                 >
                   <Image
-                    src={link.icon}
+                    src={isSamePath ? link.activeIcon : link.icon}
                     alt={link.title}
                     width={23}
                     height={23}

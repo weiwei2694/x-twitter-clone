@@ -66,12 +66,14 @@ export const linksMobile = [
 
 export const mobileSidebarLinks = [
     {
-        icon: "/assets/profile-icon.svg",
+        icon: "/assets/profile-icon.png",
+        activeIcon: "/assets/profile-fill-icon.png",
         title: "Profile",
         href: ''
     },
     {
-        icon: "/assets/bookmarks-icon.svg",
+        icon: "/assets/bookmark-icon.png",
+        activeIcon: "/assets/bookmark-fill-icon.png",
         title: "Bookmarks",
         href: "/bookmarks"
     },
