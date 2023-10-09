@@ -7,6 +7,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { MouseEvent } from "react";
 import Unread from "./Unread";
+import Menu from "./Menu";
 
 interface Props {
   dataNotification: DataNotification
@@ -40,15 +41,15 @@ const UserNotification = ({ dataNotification }: Props) => {
           className="object-contain"
         />
       </div>
-      <div className="flex flex-col space-y-2">
-        <Image
-          src={dataNotification.sourceUser?.imageUrl ?? "/assets/small-x-logo.svg"}
-          alt={dataNotification.sourceUser?.username ?? "Logo Twitter"}
-          width={40}
-          height={40}
-          className="object-cover rounded-full w-[40px] h-[40px]"
-        />
-        <div className="notifications__component-body">
+      <div className="notifications__component-body">
+        <div className="flex flex-col space-y-2">
+          <Image
+            src={dataNotification.sourceUser?.imageUrl ?? "/assets/small-x-logo.svg"}
+            alt={dataNotification.sourceUser?.username ?? "Logo Twitter"}
+            width={40}
+            height={40}
+            className="object-cover rounded-full w-[40px] h-[40px]"
+          />
           <div className="flex justify-start items-start gap-x-2">
             <h5 onClick={redirectToSourceId} className="font-bold tracking-wide">
               {dataNotification.sourceUser?.username}.
@@ -59,11 +60,12 @@ const UserNotification = ({ dataNotification }: Props) => {
               {customDatePost(dataNotification.createdAt.getTime())}
             </span>
           </div>
-          <div className="flex justify-end items-start">
-            {!dataNotification.isRead && (
-              <Unread />
-            )}
-          </div>
+        </div>
+        <div className="flex justify-end items-start">
+          {!dataNotification.isRead && (
+            <Unread />
+          )}
+          <Menu notificationId={dataNotification.id} isRead={dataNotification.isRead} />
         </div>
       </div>
     </div>
