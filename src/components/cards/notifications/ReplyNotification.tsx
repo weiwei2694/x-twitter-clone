@@ -2,6 +2,7 @@
 
 import { markAsReadNotification } from "@/actions/notification.action";
 import { DataNotification } from "@/interfaces/notification.interface";
+import { renderText } from "@/lib/tweet";
 import { customDatePost } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -63,18 +64,22 @@ const ReplyNotificaation = ({ dataNotification }: Props) => {
               {customDatePost(dataNotification.createdAt.getTime())}
             </p>
           </div>
-        </div>
-        {dataNotification.post?.imageUrl && (
-          <div className="">
-            <Image
-              src={dataNotification.post?.imageUrl}
-              alt={dataNotification.post?.text}
-              width={300}
-              height={300}
-              className="object-cover w-[60px] h-[60px]"
-            />
+
+          <div className="flex flex-col space-y-2">
+            <p className="font-normal text-gray-200">
+              {renderText(dataNotification.post?.text!)}
+            </p>
+            {dataNotification.post?.imageUrl && (
+              <Image
+                src={dataNotification.post?.imageUrl}
+                alt={dataNotification.post?.text}
+                width={300}
+                height={300}
+                className="object-cover w-[50px] h-[50px]"
+              />
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   )
