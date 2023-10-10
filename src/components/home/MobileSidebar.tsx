@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/sheet"
 import { UserWithFollowers } from "@/interfaces/user.interface";
 import { mobileSidebarLinks } from "@/constants";
-import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {

@@ -6,11 +6,8 @@ import { Search } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getUsersAction } from '@/actions/user.action';
 import { User } from '@prisma/client';
-import Users from '../../cards/Users';
 import { UserWithFollowers } from '@/interfaces/user.interface';
-import toast from 'react-hot-toast';
 import { useDebounce } from "@uidotdev/usehooks";
-import Link from 'next/link';
 import Focused from './Focused';
 
 interface Props {

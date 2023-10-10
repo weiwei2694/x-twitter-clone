@@ -20,7 +20,6 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "../ui/textarea";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import { toastOptions } from "@/lib/utils";
 import axios from "axios";
 import { Camera } from "lucide-react";
 
@@ -113,7 +112,7 @@ const OnBoarding = ({ initialValue }: OnBoardingProps) => {
                 <FormField
                     control={form.control}
                     name="imageUrl"
-                    render={({ field }) => (
+                    render={() => (
                         <FormItem>
                             <div className="relative w-[80px] h-[80px] rounded-full overflow-hidden">
                                 <Image

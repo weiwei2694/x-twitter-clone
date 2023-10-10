@@ -2,7 +2,6 @@
 
 import {
 	CommentPostNotificationActionProps,
-	DataNotification,
 	FollowUserNotificationActionProps,
 	GetNotificationsActionProps,
 	LikePostNotificationActionProps,

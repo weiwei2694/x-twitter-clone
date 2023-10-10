@@ -5,7 +5,6 @@ import {
 } from "@/actions/tweet.action";
 import {
 	CopyLinkTweetProps,
-	DataTweet,
 	DeleteTweetProps,
 	ToggleBookmarkTweetProps,
 	ToggleLikeTweetProps,
