@@ -17,7 +17,9 @@ const layout = async ({ children }: Props) => {
   const user = await getUserAction(clerkUser.id)
   if (!user) redirect('/');
 
-  let notifications = await getNotifications(user.id);
+  let notifications = await getNotifications({
+    userId: user.id
+  });
   if (!notifications) notifications = []
 
   const isNotificationEmpty = !Boolean(notifications.length);

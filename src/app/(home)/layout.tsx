@@ -25,7 +25,9 @@ const layout = async ({ children}: Props) => {
     let users = await getUsersAction({ userId: user.id });
     if (!users?.length) users = [];
 
-    let notifications = await getNotifications(user.id);
+    let notifications = await getNotifications({
+        userId: user.id
+    });
     notifications = notifications?.filter(notification => notification.isRead === false);
 
     return (

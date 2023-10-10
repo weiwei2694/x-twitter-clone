@@ -2,7 +2,9 @@
 
 import {
 	CommentPostNotificationActionProps,
+	DataNotification,
 	FollowUserNotificationActionProps,
+	GetNotificationsActionProps,
 	LikePostNotificationActionProps,
 	ReplyCommentPostNotificationActionProps,
 } from "@/interfaces/notification.interface";
@@ -116,10 +118,43 @@ export const replyCommentPostNotificationAction = async ({
 	}
 };
 
-export const getNotifications = async (userId: string) => {
-	if (!userId) throw new Error("userId required");
-
+export const getNotifications = async ({
+	userId,
+	size = 20,
+	page = 0,
+}: GetNotificationsActionProps) => {
 	try {
+		if (!userId) throw new Error("userId required");
+
+		const skip = size * page;
+
+		if (skip) {
+			return await prisma.notification.findMany({
+				where: { userId },
+				include: {
+					sourceUser: {
+						select: {
+							id: true,
+							username: true,
+							imageUrl: true,
+						},
+					},
+					post: {
+						select: {
+							id: true,
+							text: true,
+							imageUrl: true,
+						},
+					},
+				},
+				orderBy: {
+					createdAt: "desc",
+				},
+				skip,
+				take: size,
+			});
+		}
+
 		return await prisma.notification.findMany({
 			where: { userId },
 			include: {
@@ -141,49 +176,59 @@ export const getNotifications = async (userId: string) => {
 			orderBy: {
 				createdAt: "desc",
 			},
+			take: size,
 		});
 	} catch (error) {
 		console.info("[ERROR_GET_NOTIFICATIONS]", error);
 	}
 };
 
-export const markAsReadNotification = async (notificationId: string, path: string) => {
-	if (!notificationId) throw new Error("notificationId required")
-	if (!path) throw new Error("path required")
+export const markAsReadNotification = async (
+	notificationId: string,
+	path: string
+) => {
+	if (!notificationId) throw new Error("notificationId required");
+	if (!path) throw new Error("path required");
 
 	try {
 		await prisma.notification.update({
 			where: { id: notificationId },
 			data: {
-				isRead: true
-			}
-		})
+				isRead: true,
+			},
+		});
 	} catch (error) {
 		console.info("[ERROR_MARK_AS_READ_NOTIFICATION]", error);
 	} finally {
-		revalidatePath(path)
+		revalidatePath(path);
 	}
-}
+};
 
-export const markAllNotificationsAsReadAction = async (userId: string, path: string) => {
-	if (!userId) throw new Error("userId required")
-	if (!path) throw new Error("path required")
+export const markAllNotificationsAsReadAction = async (
+	userId: string,
+	path: string
+) => {
+	if (!userId) throw new Error("userId required");
+	if (!path) throw new Error("path required");
 
 	try {
 		await prisma.notification.updateMany({
 			where: { userId },
 			data: {
-				isRead: true
-			}
-		})
+				isRead: true,
+			},
+		});
 	} catch (error) {
 		console.info("[ERROR_MARK_ALL_NOTIFICATIONS_AS_READ_ACTION]", error);
 	} finally {
-		revalidatePath(path)
+		revalidatePath(path);
 	}
-}
+};
 
-export const deleteNotificationAction = async (notificationId: string, path: string) => {
+export const deleteNotificationAction = async (
+	notificationId: string,
+	path: string
+) => {
 	if (!notificationId) throw new Error("notificationId required");
 	try {
 		await prisma.notification.delete({
@@ -194,4 +239,4 @@ export const deleteNotificationAction = async (notificationId: string, path: str
 	} finally {
 		revalidatePath(path);
 	}
-}
+};

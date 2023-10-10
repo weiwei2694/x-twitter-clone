@@ -43,3 +43,8 @@ export interface FollowUserNotificationActionProps extends ParentTypeUserProps {
 export interface LikePostNotificationActionProps extends ParentTypePostProps {}
 export interface CommentPostNotificationActionProps extends ParentTypePostProps {}
 export interface ReplyCommentPostNotificationActionProps extends ParentTypePostProps {}
+export interface GetNotificationsActionProps {
+  userId: string;
+  size?: number;
+  page?: number;
+}
