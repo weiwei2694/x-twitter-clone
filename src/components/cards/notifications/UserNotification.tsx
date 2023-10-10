@@ -5,7 +5,7 @@ import { DataNotification } from "@/interfaces/notification.interface";
 import { customDatePost } from "@/lib/utils";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { MouseEvent } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import Unread from "./Unread";
 import Menu from "./Menu";
 
@@ -14,6 +14,8 @@ interface Props {
 }
 
 const UserNotification = ({ dataNotification }: Props) => {
+  const [isMounted, setIsMounted] = useState(false);
+
   const router = useRouter()
   const path = usePathname()
 
@@ -29,6 +31,12 @@ const UserNotification = ({ dataNotification }: Props) => {
 
     router.push(`/${dataNotification.sourceUser?.username}`)
   }
+
+  useEffect(() => {
+    setIsMounted(true)
+  })
+
+  if (!isMounted) return null;
 
   return (
     <div onClick={(e) => handleNavigation(e)} className="notifications__component">
