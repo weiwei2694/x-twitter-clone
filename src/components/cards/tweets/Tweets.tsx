@@ -9,6 +9,7 @@ import { useTweetModal } from '@/hooks/useTweetModal'
 import { useReplyTweet } from '@/hooks/useReplyTweet'
 import { renderText } from '@/lib/tweet'
 import { Like, Share, Comment, Menu } from "./"
+import TweetText from '@/components/sharing/TweetText'
 
 interface Props {
   tweet: MultipleTweetWithConnection
@@ -129,7 +130,7 @@ const Tweets = ({ tweet, userId }: Props) => {
               </p>
             </div>
             <p className="whitespace-break-spaces">
-              {renderText(tweet.text)}
+              <TweetText content={renderText(tweet.text)} />
             </p>
           </div>
           <div>
