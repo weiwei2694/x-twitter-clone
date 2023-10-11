@@ -6,7 +6,7 @@ import { ArrowLeft } from "lucide-react"
 const NotFound = () => {
   return (
     <div
-      className="p-3 space-y-32"
+      className="p-3 space-y-20"
     >
       <div>
         <Button
