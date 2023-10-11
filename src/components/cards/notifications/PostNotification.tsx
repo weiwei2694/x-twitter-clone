@@ -88,7 +88,7 @@ const PostNotification = ({ dataNotification }: Props) => {
 
           <div className="flex flex-col space-y-2">
             <p className="font-normal text-gray-200">
-              {renderText(dataNotification.post?.text!)}
+              {renderText(dataNotification.post?.text ?? "This post is no longer available")}
             </p>
             {dataNotification.post?.imageUrl && (
               <Image
