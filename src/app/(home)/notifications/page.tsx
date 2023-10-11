@@ -15,7 +15,7 @@ const Page = async () => {
     userId: user.id
   });
 
-  return <ShowNotificationsData initialDataNotifications={notifications!} userId={user.id} />
+  return <ShowNotificationsData currentUsername={user.username} initialDataNotifications={notifications!} userId={user.id} />
 }
 
 export default Page

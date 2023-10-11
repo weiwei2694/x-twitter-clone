@@ -6,26 +6,35 @@ import { renderText } from "@/lib/tweet";
 import { customDatePost } from "@/lib/utils";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { MouseEvent, useEffect, useRef, useState } from "react";
+import { MouseEvent, useEffect, useRef, useState, useTransition } from "react";
 import Unread from "./Unread";
 import Menu from "./Menu";
 
 interface Props {
-  dataNotification: DataNotification
+  dataNotification: DataNotification;
+  currentUsername: string;
 }
 
-const PostNotification = ({ dataNotification }: Props) => {
+const PostNotification = ({ dataNotification, currentUsername }: Props) => {
   const [isMounted, setIsMounted] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const router = useRouter()
   const path = usePathname()
   const menuFeed = useRef<HTMLDivElement | null>(null)
 
-  const handleNavigation = async (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+  const handleNavigation = (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     e.stopPropagation()
 
-    if (!dataNotification.isRead) await markAsReadNotification(dataNotification.id, path)
-    router.push(`/${dataNotification.sourceUser?.username}/status/${dataNotification.post?.id}`)
+    if (isPending) return;
+
+    window.location.href = `/${currentUsername}/status/${dataNotification.post?.id}`;
+
+    if (!dataNotification.isRead) {
+      startTransition(() => {
+        markAsReadNotification(dataNotification.id, path)
+      })
+    }
   }
 
   const redirectToSourceId = (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
@@ -35,7 +44,7 @@ const PostNotification = ({ dataNotification }: Props) => {
   }
 
   const showActivityImage = (activityType: string) => {
-    const options:any = {
+    const options: any = {
       "Reply": <Image src="/assets/reply-notification-icon.png" alt="Reply Icon" width={20} height={20} />,
       "Comment": <Image src="/assets/comment-notification-icon.png" alt="Comment Icon" width={20} height={20} />,
       "Like": <Image src="/assets/heart-fill-icon.png" alt="Heart Fill Icon" width={20} height={20} />,
@@ -45,7 +54,7 @@ const PostNotification = ({ dataNotification }: Props) => {
   }
 
   const showActivityText = (activityType: string) => {
-    const options:any = {
+    const options: any = {
       "Reply": "replied your Comment",
       "Comment": "commented on your Tweet",
       "Like": "liked your Tweet",

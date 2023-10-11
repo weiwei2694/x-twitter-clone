@@ -28,6 +28,7 @@
     "axios": "^1.5.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "create-next-app": "13.5",
     "lucide-react": "^0.279.0",
     "next": "13.5.1",
     "postcss": "8.4.30",

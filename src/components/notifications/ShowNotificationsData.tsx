@@ -11,9 +11,10 @@ import PostNotification from '../cards/notifications/PostNotification';
 interface Props {
   initialDataNotifications: DataNotification[];
   userId: string;
+  currentUsername: string;
 }
 
-const ShowNotificationsData = ({ initialDataNotifications, userId }: Props) => {
+const ShowNotificationsData = ({ initialDataNotifications, userId, currentUsername }: Props) => {
   const [dataNotifications, setDataNotifications] = useState(initialDataNotifications);
   const [isNotificationDataMaxed, setIsNotificationDataMaxed] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -54,7 +55,7 @@ const ShowNotificationsData = ({ initialDataNotifications, userId }: Props) => {
 
     const options: any = {
       "User": <UserNotification dataNotification={data} />,
-      "Post": <PostNotification dataNotification={data} />,
+      "Post": <PostNotification currentUsername={currentUsername} dataNotification={data} />,
     }
 
     return options[data.parentType]
