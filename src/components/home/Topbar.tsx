@@ -2,57 +2,42 @@
 
 import { useTabsPosts } from '@/hooks/useTabsPosts'
 import { cn } from '@/lib/utils';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 import MobileSidebar from './MobileSidebar';
 import { UserWithFollowers } from '@/interfaces/user.interface';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface TabsProps {
     title: string;
+    href: string;
 }
 interface TopbarProps {
     user: UserWithFollowers;
 }
 
-const Tabs = ({ title }: TabsProps) => {
-    const router = useRouter()
+const Tabs = ({ title, href }: TabsProps) => {
+    const path = usePathname();
     const tabsPosts = useTabsPosts()
-    const searchParams = useSearchParams()
-
-    const isFollowing = searchParams.get('filter') === "following"
 
     // Initial Value
     useEffect(() => {
-        if (isFollowing) tabsPosts.setStatus("Following");
-    }, []);
+        if (path === '/home/following') tabsPosts.setStatus("Following");
+        else tabsPosts.setStatus("For You");
+    }, [path]);
 
     const isTitleEqualToStatus = title === tabsPosts.status;
 
-    const handleSearchParams = () => {
-        const isStatusFollowing = tabsPosts.status === "Following"
-
-        if (tabsPosts.status === title) return;
-
-        if (!isStatusFollowing) {
-            tabsPosts.setStatus("Following");
-            router.push("/home?filter=following");
-            return;
-        }
-
-        tabsPosts.setStatus("For You");
-        router.push("/home");
-    }
-
     return (
-        <div
+        <Link
             className="flex-1 flex justify-center cursor-pointer hover:bg-gray-300 transition"
-            onClick={handleSearchParams}
+            href={href}
         >
             <p className={cn("py-3.5", isTitleEqualToStatus ? "border-b-[3px] border-b-blue font-bold text-white" : "text-gray-200 font-normal")}>
                 {title}
             </p>
-        </div>
+        </Link>
     )
 }
 
@@ -80,8 +65,8 @@ const Topbar = ({ user }: TopbarProps) => {
             </div>
 
             <div className="flex justify-evenly">
-                <Tabs title="For You" />
-                <Tabs title="Following" />
+                <Tabs title="For You" href="/home" />
+                <Tabs title="Following" href="/home/following" />
             </div>
         </nav>
     )

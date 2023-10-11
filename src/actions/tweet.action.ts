@@ -97,22 +97,53 @@ export async function getTweetAction(id: string) {
 }
 
 export async function getTweetsAction({
-	take = 20,
+	size = 20,
+	page = 0,
 	userId,
 	isFollowing,
 }: GetTweetsActionProps) {
 	try {
-		if (isFollowing) {
-			const results = await prisma.thread.findMany({
-				where: {
-					parentId: null,
-					user: {
-						followers: {
-							some: {
-								followingId: userId,
+		const skip = size * page;
+
+		if (skip) {
+			if (isFollowing) {
+				return await prisma.thread.findMany({
+					where: {
+						parentId: null,
+						user: {
+							followers: {
+								some: {
+									followingId: userId,
+								},
 							},
 						},
 					},
+					include: {
+						user: {
+							include: {
+								followers: true,
+								followings: true,
+							},
+						},
+						bookmarks: true,
+						likes: true,
+						replies: {
+							select: {
+								id: true,
+							},
+						},
+					},
+					orderBy: {
+						createdAt: "desc",
+					},
+					skip,
+					take: size,
+				});
+			}
+
+			return await prisma.thread.findMany({
+				where: {
+					parentId: null,
 				},
 				include: {
 					user: {
@@ -132,38 +163,69 @@ export async function getTweetsAction({
 				orderBy: {
 					createdAt: "desc",
 				},
-				take,
+				skip,
+				take: size,
 			});
-
-			return results;
-		}
-
-		const results = await prisma.thread.findMany({
-			where: {
-				parentId: null,
-			},
-			include: {
-				user: {
+		} else {
+			if (isFollowing) {
+				return await prisma.thread.findMany({
+					where: {
+						parentId: null,
+						user: {
+							followers: {
+								some: {
+									followingId: userId,
+								},
+							},
+						},
+					},
 					include: {
-						followers: true,
-						followings: true,
+						user: {
+							include: {
+								followers: true,
+								followings: true,
+							},
+						},
+						bookmarks: true,
+						likes: true,
+						replies: {
+							select: {
+								id: true,
+							},
+						},
 					},
-				},
-				bookmarks: true,
-				likes: true,
-				replies: {
-					select: {
-						id: true,
+					orderBy: {
+						createdAt: "desc",
 					},
-				},
-			},
-			orderBy: {
-				createdAt: "desc",
-			},
-			take,
-		});
+					take: size,
+				});
+			}
 
-		return results;
+			return await prisma.thread.findMany({
+				where: {
+					parentId: null,
+				},
+				include: {
+					user: {
+						include: {
+							followers: true,
+							followings: true,
+						},
+					},
+					bookmarks: true,
+					likes: true,
+					replies: {
+						select: {
+							id: true,
+						},
+					},
+				},
+				orderBy: {
+					createdAt: "desc",
+				},
+				take: size,
+			});
+		}
 	} catch (error) {
 		console.log("[GET_TWEETS_ACTION]", error);
 	}
@@ -311,7 +373,7 @@ export async function deleteTweetAction(id: string, path: string) {
 	} catch (error) {
 		console.log("[ERROR_DELETE_TWEET_ACTION]", error);
 	} finally {
-		revalidatePath(path || "/home");
+		revalidatePath(path);
 	}
 }
 

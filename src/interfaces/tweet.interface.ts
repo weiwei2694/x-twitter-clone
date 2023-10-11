@@ -68,7 +68,8 @@ export interface CopyLinkTweetProps {
 
 // action
 export interface GetTweetsActionProps {
-	take?: number;
+	size?: number;
+	page?: number;
 	userId: string;
 	isFollowing: boolean;
 }
