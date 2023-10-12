@@ -219,38 +219,145 @@ export async function getUserByUsernameAction(username: string) {
 }
 
 export const toggleFollowUserAction = async ({
-	id,
 	userId,
 	currentUserId,
 	path,
 }: ToggleFollowUserActionProps) => {
 	try {
 		if (userId && !currentUserId) {
-			const result = await prisma.follower.delete({
+			const existingUser = await prisma.follower.findFirst({
 				where: {
-					followerId: userId,
+					followerId: userId
+				}
+			})
+	
+			if (!existingUser) return;
+
+			return await prisma.follower.delete({
+				where: {
+					id: existingUser.id,
 				},
 			});
-
-			return result;
 		}
 
-		// userId and currentUserId is required, to create new follower
 		if (!userId) throw new Error("userId required");
 		if (!currentUserId) throw new Error("currentUserId");
 
-		// create
-		const result = await prisma.follower.create({
+		const existingUser = await prisma.follower.findFirst({
+			where: {
+				followerId: userId,
+				followingId: currentUserId
+			}
+		})
+
+		if (existingUser) return;
+
+		return await prisma.follower.create({
 			data: {
 				followerId: userId,
 				followingId: currentUserId,
 			},
 		});
-
-		return result;
 	} catch (error) {
 		console.log("[ERROR_TOGGLE_FOLLOW_USER_ACTION]", error);
 	} finally {
-		revalidatePath(path || "/home");
+		revalidatePath(path);
 	}
+};
+
+// Just to create fake user data
+export const createManyUser = async () => {
+	await prisma.user.createMany({
+		data: [
+			{
+				id: "3fb1263a-f92e-4a04-a678-cb5f7acfc0b5",
+				name: "John Doe",
+				username: "johndoe",
+				email: "john.doe@example.com",
+				imageUrl: "johndoe.jpg",
+				bannerUrl: "banner_johndoe.jpg",
+				location: "New York",
+				website: "www.johndoe.com",
+				bio: "Hello, I'm John Doe.",
+			},
+			{
+				id: "d5e04c90-8d14-43a9-850d-0a4ebe9e24dd",
+				name: "Jane Smith",
+				username: "janesmith",
+				email: "jane.smith@example.com",
+				imageUrl: "janesmith.jpg",
+				bannerUrl: "banner_janesmith.jpg",
+				location: "Los Angeles",
+				website: "www.janesmith.com",
+				bio: "Hi there, I'm Jane Smith.",
+			},
+			{
+				id: "2a899f90-9aa5-49d4-8752-18012f40e57c",
+				name: "James Johnson",
+				username: "jamesjohnson",
+				email: "james.johnson@example.com",
+				imageUrl: "jamesjohnson.jpg",
+				bannerUrl: "banner_jamesjohnson.jpg",
+				location: "Chicago",
+				website: "www.jamesjohnson.com",
+				bio: "Hey, I'm James Johnson.",
+			},
+			{
+				id: "14b2a6a6-22a4-4ca1-8964-9b88a34d9df2",
+				name: "Emily Wilson",
+				username: "emilywilson",
+				email: "emily.wilson@example.com",
+				imageUrl: "emilywilson.jpg",
+				bannerUrl: "banner_emilywilson.jpg",
+				location: "Houston",
+				website: "www.emilywilson.com",
+				bio: "Greetings, I'm Emily Wilson.",
+			},
+			{
+				id: "9a1b1406-422a-4bc5-8ea0-4af286f3b4ce",
+				name: "William Jones",
+				username: "williamjones",
+				email: "william.jones@example.com",
+				imageUrl: "williamjones.jpg",
+				bannerUrl: "banner_williamjones.jpg",
+				location: "Phoenix",
+				website: "www.williamjones.com",
+				bio: "Hello, I'm William Jones.",
+			},
+			{
+				id: "76878ac9-c09e-4e87-86ea-1a9a273207bf",
+				name: "Sophia Brown",
+				username: "sophiabrown",
+				email: "sophia.brown@example.com",
+				imageUrl: "sophiabrown.jpg",
+				bannerUrl: "banner_sophiabrown.jpg",
+				location: "Philadelphia",
+				website: "www.sophiabrown.com",
+				bio: "Hey, I'm Sophia Brown.",
+			},
+			{
+				id: "3d1b8466-3a7e-4f2c-911a-e437d62dcaea",
+				name: "Liam Harris",
+				username: "liamharris",
+				email: "liam.harris@example.com",
+				imageUrl: "liamharris.jpg",
+				bannerUrl: "banner_liamharris.jpg",
+				location: "San Antonio",
+				website: "www.liamharris.com",
+				bio: "Hi there, I'm Liam Harris.",
+			},
+			{
+				id: "cbb3012d-cd3e-4013-ae8d-10ec81d780fb",
+				name: "Olivia Lewis",
+				username: "olivialewis",
+				email: "olivia.lewis@example.com",
+				imageUrl: "olivialewis.jpg",
+				bannerUrl: "banner_olivialewis.jpg",
+				location: "San Diego",
+				website: "www.olivialewis.com",
+				bio: "Hello, I'm Olivia Lewis.",
+			},
+		],
+		skipDuplicates: true,
+	});
 };

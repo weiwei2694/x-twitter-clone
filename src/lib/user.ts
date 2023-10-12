@@ -16,7 +16,7 @@ export const toggleFollowUser = ({
 	userId,
 	currentUserId,
 }: toggleFollowUserProps) => {
-	if (isPending) return;
+	if (isPending || (userId === currentUserId)) return;
 
 	startTransition(() => {
 		if (followed) {
