@@ -1,6 +1,6 @@
 import { getTweetsAction } from '@/actions/tweet.action';
 import { getUserAction } from '@/actions/user.action';
-import ShowRepliesData from '@/components/tweetId/ShowRepliesData';
+import ShowTweetsData from '@/components/home/ShowTweetsData';
 import { currentUser } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';
 
@@ -19,7 +19,7 @@ const Page = async ({ params }: Props) => {
   const user = await getUserAction(clerkUser.id);
   if (!user) redirect('/')
 
-  let initialRepliesData = await getTweetsAction({
+  let initialDataTweets = await getTweetsAction({
     userId: user.id,
     parentId: tweetId,
     isFollowing: false
@@ -28,10 +28,10 @@ const Page = async ({ params }: Props) => {
   return (
     <>
       {
-        initialRepliesData
+        initialDataTweets
           ? (
-            <ShowRepliesData
-              initialRepliesData={initialRepliesData}
+            <ShowTweetsData
+              initialDataTweets={initialDataTweets}
               isFollowing={false}
               parentId={tweetId}
               userId={user.id}

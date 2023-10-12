@@ -11,9 +11,10 @@ interface Props {
   initialDataTweets: MultipleTweetWithConnection[] | null;
   userId: string;
   isFollowing: boolean;
+  parentId?: string;
 }
 
-const ShowTweetsData = ({ initialDataTweets, userId, isFollowing }: Props) => {
+const ShowTweetsData = ({ initialDataTweets, userId, isFollowing, parentId }: Props) => {
   const [dataTweets, setDataTweets] = useState(initialDataTweets);
 
   const [isTweetsDataMaxed, setIsTweetsDataMaxed] = useState(false);
@@ -24,7 +25,8 @@ const ShowTweetsData = ({ initialDataTweets, userId, isFollowing }: Props) => {
     const newDataTweets = await getTweetsAction({
       userId,
       page: currentPage,
-      isFollowing
+      isFollowing,
+      parentId
     })
 
     if (!newDataTweets?.length) {
