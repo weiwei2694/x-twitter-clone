@@ -40,22 +40,17 @@ export const toggleBookmarkTweet = ({
 	if (isPending) return;
 
 	startTransition(() => {
-		if (bookmark) {
-			toggleBookmarkAction({
-				bookmarkId: bookmark.id,
-				path,
-			});
+		toggleBookmarkAction({
+			userId,
+			threadId,
+			path,
+		});
 
-			toast("Removed from your Bookmarks", toastOptions);
-		} else {
-			toggleBookmarkAction({
-				userId,
-				threadId,
-				path,
-			});
+		const message = bookmark
+			? "Removed from your Bookmarks"
+			: "Added to your Bookmarks";
 
-			toast("Added to your Bookmarks", toastOptions);
-		}
+		toast(message, toastOptions);
 	});
 };
 
@@ -88,7 +83,7 @@ export const toggleLikeTweet = ({
 			path,
 		});
 
-		if (liked || (currentUserId === userId)) return;
+		if (liked || currentUserId === userId) return;
 
 		likePostNotificationAction({
 			userId,
