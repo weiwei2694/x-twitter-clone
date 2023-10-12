@@ -57,8 +57,8 @@ export async function getTweetAction(id: string) {
 		if (!id) throw new Error("id required");
 
 		const existingTweet = await prisma.thread.findFirst({
-			where: { id }
-		})
+			where: { id },
+		});
 
 		if (!existingTweet) return null;
 
@@ -105,11 +105,12 @@ export async function getTweetsAction({
 	page = 0,
 	userId,
 	isFollowing,
+	parentId = "",
 }: GetTweetsActionProps) {
 	try {
 		const skip = size * page;
 
-		if (skip) {
+		if (Boolean(skip)) {
 			if (isFollowing) {
 				return await prisma.thread.findMany({
 					where: {
@@ -120,6 +121,37 @@ export async function getTweetsAction({
 									followingId: userId,
 								},
 							},
+						},
+					},
+					include: {
+						user: {
+							include: {
+								followers: true,
+								followings: true,
+							},
+						},
+						bookmarks: true,
+						likes: true,
+						replies: {
+							select: {
+								id: true,
+							},
+						},
+					},
+					orderBy: {
+						createdAt: "desc",
+					},
+					skip,
+					take: size,
+				});
+			}
+
+			if (parentId) {
+				return await prisma.thread.findMany({
+					where: {
+						parentId: {
+							equals: parentId,
+							not: null,
 						},
 					},
 					include: {
@@ -170,44 +202,19 @@ export async function getTweetsAction({
 				skip,
 				take: size,
 			});
-		} else {
-			if (isFollowing) {
-				return await prisma.thread.findMany({
-					where: {
-						parentId: null,
-						user: {
-							followers: {
-								some: {
-									followingId: userId,
-								},
-							},
-						},
-					},
-					include: {
-						user: {
-							include: {
-								followers: true,
-								followings: true,
-							},
-						},
-						bookmarks: true,
-						likes: true,
-						replies: {
-							select: {
-								id: true,
-							},
-						},
-					},
-					orderBy: {
-						createdAt: "desc",
-					},
-					take: size,
-				});
-			}
+		}
 
+		if (isFollowing) {
 			return await prisma.thread.findMany({
 				where: {
 					parentId: null,
+					user: {
+						followers: {
+							some: {
+								followingId: userId,
+							},
+						},
+					},
 				},
 				include: {
 					user: {
@@ -230,6 +237,61 @@ export async function getTweetsAction({
 				take: size,
 			});
 		}
+
+		if (parentId) {
+			return await prisma.thread.findMany({
+				where: {
+					parentId: {
+						equals: parentId,
+						not: null,
+					},
+				},
+				include: {
+					user: {
+						include: {
+							followers: true,
+							followings: true,
+						},
+					},
+					bookmarks: true,
+					likes: true,
+					replies: {
+						select: {
+							id: true,
+						},
+					},
+				},
+				orderBy: {
+					createdAt: "desc",
+				},
+				take: size,
+			});
+		}
+
+		return await prisma.thread.findMany({
+			where: {
+				parentId: null,
+			},
+			include: {
+				user: {
+					include: {
+						followers: true,
+						followings: true,
+					},
+				},
+				bookmarks: true,
+				likes: true,
+				replies: {
+					select: {
+						id: true,
+					},
+				},
+			},
+			orderBy: {
+				createdAt: "desc",
+			},
+			take: size,
+		});
 	} catch (error) {
 		console.log("[GET_TWEETS_ACTION]", error);
 	}
