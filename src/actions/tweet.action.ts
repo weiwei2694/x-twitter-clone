@@ -378,41 +378,33 @@ export async function deleteTweetAction(id: string, path: string) {
 }
 
 export async function toggleLikeAction({
-	likeId = "",
-	userId,
-	threadId,
+	userId = "",
+	threadId = "",
 	path,
 }: ToggleLikeActionProps) {
 	try {
-		// unlike
-		const exits = await prisma.like.findUnique({
-			where: { id: likeId },
-		});
-
-		if (exits) {
-			const result = await prisma.like.delete({
-				where: { id: likeId },
-			});
-
-			return result;
-		}
-
-		// like
-		if (!userId) throw new Error("userId required");
-		if (!threadId) throw new Error("threadId required");
-
-		const result = await prisma.like.create({
-			data: {
+		const existingLike = await prisma.like.findFirst({
+			where: {
 				userId,
 				threadId,
 			},
 		});
 
-		return result;
+		if (existingLike)
+			return await prisma.like.delete({
+				where: { id: existingLike.id },
+			});
+
+		return await prisma.like.create({
+			data: {
+				userId,
+				threadId,
+			},
+		});
 	} catch (error) {
 		console.log("[ERROR_TOGGLE_LIKE_ACTION]", error);
 	} finally {
-		revalidatePath(path || "/home");
+		revalidatePath(path);
 	}
 }
 

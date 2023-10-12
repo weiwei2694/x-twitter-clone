@@ -88,9 +88,8 @@ export interface GetTweetsBySearchActionProps {
 }
 
 export interface ToggleLikeActionProps {
-	likeId?: string;
-	userId?: string;
-	threadId?: string;
+	userId: string;
+	threadId: string;
 	path: string;
 }
 

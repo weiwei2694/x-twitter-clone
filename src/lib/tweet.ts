@@ -82,37 +82,30 @@ export const toggleLikeTweet = ({
 	if (isPending) return;
 
 	startTransition(() => {
-		if (liked) {
-			toggleLikeAction({
-				likeId: liked.id,
-				path,
-			});
-		} else {
-			toggleLikeAction({
-				userId: currentUserId,
-				threadId,
-				path,
-			});
+		toggleLikeAction({
+			userId: currentUserId,
+			threadId,
+			path,
+		});
 
-			likePostNotificationAction({
-				userId,
-				sourceId: currentUserId,
-				parentIdPost: threadId,
-				path
-			})
-		}
+		if (liked || (currentUserId === userId)) return;
+
+		likePostNotificationAction({
+			userId,
+			sourceId: currentUserId,
+			parentIdPost: threadId,
+			path,
+		});
 	});
 };
 
 // generate by chatGPT
 export const renderText = (text: string) => {
 	const textWithoutEmptyLines = text.replace(/^\s*$/gm, " ");
-	const textWithSingleLineBreaks = textWithoutEmptyLines.replace(
-		/\n+/g,
-		"\n"
-	);
+	const textWithSingleLineBreaks = textWithoutEmptyLines.replace(/\n+/g, "\n");
 	return textWithSingleLineBreaks;
 };
 
 // https://github.com/timdereaper1/caching-forms-in-react
-export const URL_REGEX = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
+export const URL_REGEX =
+	/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
