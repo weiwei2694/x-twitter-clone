@@ -29,14 +29,19 @@ model User {
   notifications           Notification[] @relation("UserNotifications")
   sourceUserNotifications Notification[] @relation("SourceUserNotifications")
   parentUserNotifications Notification[] @relation("ParentUserNotifications")
+
+  @@index([username, name])
 }
 
 model Follower {
-  followerId  String @unique
-  followingId String @unique
+  id          String @id @default(uuid())
+  followerId  String
+  followingId String
 
   user      User @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
   following User @relation("UserFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@index([followerId, followingId])
 }
 
 model Notification {
@@ -76,6 +81,8 @@ model Like {
   threadId String
   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   thread   Thread @relation("PostLikes", fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@index([userId, threadId])
 }
 
 model Bookmark {
@@ -84,6 +91,8 @@ model Bookmark {
   threadId String
   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   thread   Thread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@index([userId, threadId])
 }
 
 enum ActionType {
