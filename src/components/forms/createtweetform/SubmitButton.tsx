@@ -12,10 +12,10 @@ interface Props {
 const SubmitButton = ({ isMobile, title, isLoading }: Props) => {
   return (
     <Button
-      disabled={isLoading}
       variant="primary"
       className={cn("px-6 py-1.5 w-fit", isMobile && "text-base")}
       type="submit"
+      disabled={isLoading}
     >
       {title}
     </Button>
