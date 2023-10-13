@@ -49,8 +49,6 @@ const Menu = ({
       path,
       id: tweetId
     })
-
-    setIsDialogOpen(false);
   }
 
   return (
