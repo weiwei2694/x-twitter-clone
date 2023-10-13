@@ -39,18 +39,18 @@ export const toggleBookmarkTweet = ({
 }: ToggleBookmarkTweetProps) => {
 	if (isPending) return;
 
+	const message = bookmark
+		? "Removed from your Bookmarks"
+		: "Added to your Bookmarks";
+
+	toast(message, toastOptions);
+
 	startTransition(() => {
 		toggleBookmarkAction({
 			userId,
 			threadId,
 			path,
 		});
-
-		const message = bookmark
-			? "Removed from your Bookmarks"
-			: "Added to your Bookmarks";
-
-		toast(message, toastOptions);
 	});
 };
 

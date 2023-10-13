@@ -11,6 +11,7 @@ import { Bookmark } from "@prisma/client";
 import { BookmarkMinus, BookmarkPlus, LinkIcon, Share as ShareIcon } from "lucide-react";
 import toast from "react-hot-toast";
 import { useTransition } from "react";
+import { cn } from "@/lib/utils";
 
 interface Props {
   userId: string;
@@ -30,7 +31,7 @@ const Share = ({
   isDetailTweet
 }: Props) => {
   const [isPending, startTransition] = useTransition()
-  
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -61,9 +62,21 @@ const Share = ({
               userId,
               threadId: tweetId,
             })}
+            disabled={isPending}
+            className={cn(isPending && "opacity-50 cursor-not-allowed")}
           >
-            {bookmark ? <BookmarkMinus size="20" /> : <BookmarkPlus size="20" />}
-            {bookmark ? "Delete From Bookmarks" : "Bookmark"}
+            {bookmark ? (
+              <>
+                <BookmarkMinus size="20" />
+                Delete From Bookmarks
+              </>
+            ) : (
+              <>
+                <BookmarkPlus size="20" />
+                Bookmark
+              </>
+            )}
+
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>
