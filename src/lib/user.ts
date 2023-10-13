@@ -16,29 +16,23 @@ export const toggleFollowUser = ({
 	userId,
 	currentUserId,
 }: toggleFollowUserProps) => {
-	if (isPending || (userId === currentUserId)) return;
+	if (isPending || userId === currentUserId) return;
 
 	startTransition(() => {
-		if (followed) {
-			toggleFollowUserAction({
-				userId: followed.followerId,
-				path,
-			});
+		toggleFollowUserAction({ userId, currentUserId, path });
+		followUserNotificationAction({
+			userId,
+			sourceId: currentUserId,
+			parentIdUser: currentUserId,
+			path,
+		});
+	})
 
-			toast(`You unfollowed ${username}`, toastOptions);
-		} else {
-			toggleFollowUserAction({ userId, currentUserId, path });
+	const message = followed
+		? `You unfollowed ${username}`
+		: `You followed ${username}`
 
-			toast(`You followed ${username}`, toastOptions);
-
-			followUserNotificationAction({
-				userId,
-				sourceId: currentUserId,
-				parentIdUser: currentUserId,
-				path,
-			});
-		}
-	});
+	toast(message, toastOptions);
 };
 
 export const copyLinkUser = ({ toast, username }: CopyLinkUserProps) => {

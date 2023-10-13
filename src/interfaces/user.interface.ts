@@ -50,7 +50,7 @@ export interface UpdateUserActionProps {
 }
 
 export interface ToggleFollowUserActionProps {
-	userId?: string;
-	currentUserId?: string;
+	userId: string;
+	currentUserId: string;
 	path: string;
 }
