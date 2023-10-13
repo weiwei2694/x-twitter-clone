@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { deleteTweet } from "@/lib/tweet"
 import { toggleFollowUser } from "@/lib/user"
+import { cn } from "@/lib/utils"
 import { Follower } from "@prisma/client"
 import { MoreHorizontal } from "lucide-react"
 import Image from "next/image"
@@ -75,7 +76,8 @@ const Menu = ({
           {isOwnTweet ? (
             <DropdownMenuItem
               onClick={() => setIsDialogOpen(true)}
-              className="text-[#f4212e]"
+              className={cn("text-[#f4212e]", isPendingTweet && "opacity-50 cursor-not-allowed")}
+              disabled={isPendingTweet}
             >
               <Image
                 src="/assets/delete.png"
@@ -98,6 +100,8 @@ const Menu = ({
                 userId,
                 currentUserId,
               })}
+              disabled={isPendingFollowUser}
+              className={cn(isPendingFollowUser && "opacity-50 cursor-not-allowed")}
             >
               {followed ? (
                 <Image
