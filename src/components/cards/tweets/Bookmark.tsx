@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { toggleBookmarkTweet } from '@/lib/tweet'
 import { cn } from '@/lib/utils'
 import { Bookmark } from '@prisma/client'
+import { Bookmark as BookmarkIcon } from "lucide-react"
 import Image from 'next/image'
 import { useTransition } from 'react'
 import toast from 'react-hot-toast'
@@ -42,8 +43,10 @@ const Bookmark = ({
       disabled={isPending}
     >
       {bookmark
-        ? <Image src="/assets/bookmark-fill-icon.png" alt="Bookmark Fill" width={20} height={20} className="object-contain" />
-        : <Image src="/assets/bookmark-icon.png" alt="Bookmark Fill" width={20} height={20} className="object-contain" />
+        ? (
+            <Image src="/assets/tweet-bookmark-fill-icon.png" alt="Bookmark Fill Icon" width={20} height={20} className="object-contain" />
+          )
+        : <BookmarkIcon size="20" />
       }
       <span className="text-sm font-extrabold">
         {totalBookmarks}
