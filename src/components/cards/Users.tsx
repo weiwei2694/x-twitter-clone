@@ -22,14 +22,13 @@ interface UsersProps {
 }
 
 const Users = ({ username, name, imageUrl, userId, currentUser, isOnSearch, setIsFocused }: UsersProps) => {
-    // path
     const path = usePathname();
-    // router
     const router = useRouter();
-    // mutation for toggle follow and unfollow user
     const [isPending, startTransition] = useTransition()
 
-    const followed = currentUser.followings.find(({ followingId }) => followingId === userId)
+    const followed = currentUser.followings.find(({ followingId, followerId }) => {
+        return followingId === currentUser.id && followerId === userId
+    })
 
     const isFollowed = () => {
         if (isPending) return "..."

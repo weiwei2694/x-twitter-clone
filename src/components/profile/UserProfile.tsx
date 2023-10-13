@@ -20,7 +20,7 @@ interface Props {
   currentUser: {
     id: string;
     username: string;
-  };
+  }
 }
 
 const UserProfile = ({ user, isMyProfile, currentUser }: Props) => {
@@ -28,7 +28,9 @@ const UserProfile = ({ user, isMyProfile, currentUser }: Props) => {
   const [isOpen, setIsOpen] = useState(false)
   const path = usePathname()
 
-  const followed = user.followers.find(({ followingId }) => followingId === currentUser.id)
+  const followed = user.followers.find(({ followingId, followerId }) => {
+    return followingId === currentUser.id && followerId === user.id
+  })
 
   const isFollowed = () => {
     if (isPending) return "..."
