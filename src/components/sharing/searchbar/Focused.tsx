@@ -1,4 +1,5 @@
 import Users from '@/components/cards/Users';
+import { usePrevious } from '@/hooks/usePrevious';
 import { UserWithFollowers } from '@/interfaces/user.interface';
 import { cn } from '@/lib/utils';
 import { User } from '@prisma/client'
@@ -13,6 +14,8 @@ interface Props {
 }
 
 const Focused = ({ users, currentUser, setIsFocused, searchTerm }: Props) => {
+  const { addToNavigationHistory } = usePrevious()
+
   const renderSearchResults = () => {
     return <ul>
       {
@@ -57,6 +60,7 @@ const Focused = ({ users, currentUser, setIsFocused, searchTerm }: Props) => {
                     q: searchTerm,
                   }
                 }}
+                onClick={() => addToNavigationHistory(window.location.href)}
                 className="font-normal hover:underline"
               >
                 Search for {searchTerm}
@@ -70,6 +74,7 @@ const Focused = ({ users, currentUser, setIsFocused, searchTerm }: Props) => {
               <div className="p-3 my-1 w-full hover:bg-black-200 transition-all">
                 <Link
                   href={`/${searchTerm}`}
+                  onClick={() => addToNavigationHistory(window.location.href)}
                   className="font-normal hover:underline"
                 >
                   Go to @{searchTerm}

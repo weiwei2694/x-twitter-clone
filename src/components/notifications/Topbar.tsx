@@ -7,8 +7,9 @@ import { useState, useTransition } from "react";
 import DeleteModal from "../modals/DeleteModal";
 import toast from "react-hot-toast";
 import { toastOptions } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { markAllNotificationsAsReadAction } from "@/actions/notification.action";
+import { usePrevious } from "@/hooks/usePrevious";
 
 interface Props {
   isNotificationEmpty: boolean;
@@ -17,7 +18,9 @@ interface Props {
 
 const Topbar = ({ isNotificationEmpty, userId }: Props) => {
   const path = usePathname();
-  const [isPending, startTransition] = useTransition()
+  const router = useRouter();
+  const { navigationHistory, goBack } = usePrevious();
+  const [isPending, startTransition] = useTransition();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const markAllNotificationsAsRead = () => {
@@ -32,6 +35,12 @@ const Topbar = ({ isNotificationEmpty, userId }: Props) => {
     })
   }
 
+  const redirectToPreviousPage = () => {
+    const len = navigationHistory.length - 1;
+    router.push(navigationHistory[len]);
+    goBack();
+  }
+
   return (
     <>
       <nav className="sticky top-0 z-10 backdrop-blur bg-black/80">
@@ -41,7 +50,7 @@ const Topbar = ({ isNotificationEmpty, userId }: Props) => {
               className="rounded-full hover:bg-gray-300/50 transition"
               variant="icon"
               size="icon"
-              onClick={() => history.back()}
+              onClick={redirectToPreviousPage}
             >
               <ArrowLeft size="16" />
             </Button>

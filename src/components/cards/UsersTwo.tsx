@@ -9,6 +9,7 @@ import { UserWithFollowers } from "@/interfaces/user.interface";
 import { toggleFollowUser } from "@/lib/user";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { usePrevious } from "@/hooks/usePrevious";
 
 interface UsersProps {
   username: string;
@@ -21,6 +22,7 @@ interface UsersProps {
 
 const UsersTwo = ({ username, name, imageUrl, userId, bio, currentUser }: UsersProps) => {
   const path = usePathname();
+  const { addToNavigationHistory } = usePrevious()
   const [isPending, startTransition] = useTransition()
 
   const followed = currentUser.followings.find(({ followerId }) => followerId === userId)
@@ -48,6 +50,7 @@ const UsersTwo = ({ username, name, imageUrl, userId, bio, currentUser }: UsersP
             <div className="flex items-start flex-col -space-y-1">
               <Link
                 href={`/${username}`}
+                onClick={() => addToNavigationHistory(`/${username}`)}
                 className={cn("font-bold text-white whitespace-nowrap hover:underline")}
               >
                 {name}

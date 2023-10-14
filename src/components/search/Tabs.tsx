@@ -1,5 +1,6 @@
 "use client"
 
+import { usePrevious } from '@/hooks/usePrevious';
 import { cn } from '@/lib/utils'
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -8,7 +9,8 @@ interface TabProps {
   title: string;
 }
 
-const Tab = ({ title  }: TabProps) => {
+const Tab = ({ title }: TabProps) => {
+  const { addToNavigationHistory } = usePrevious()
   const searchParams = useSearchParams()
   const queryQ = searchParams?.get("q");
   const queryF = searchParams?.get("f");
@@ -27,6 +29,7 @@ const Tab = ({ title  }: TabProps) => {
   return (
     <Link
       href={optionLink}
+      onClick={() => addToNavigationHistory(window.location.href)}
       className="flex-1 flex justify-center cursor-pointer hover:bg-gray-300 transition"
     >
       <p className={cn("py-3.5", currentPathIsTop || isSamePath ? "border-b-[3px] border-b-blue font-bold text-white" : "text-gray-200 font-normal")}>

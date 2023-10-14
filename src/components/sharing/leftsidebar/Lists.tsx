@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { links } from '@/constants';
+import { usePrevious } from '@/hooks/usePrevious';
 import { useTweetModal } from '@/hooks/useTweetModal';
 import { cn } from '@/lib/utils';
 import { Plus } from 'lucide-react';
@@ -16,7 +17,10 @@ interface Props {
 
 const Lists = ({ username, totalNotifications }: Props) => {
   const pathname = usePathname()
+  const { addToNavigationHistory, navigationHistory } = usePrevious();
   const openTweetModal = useTweetModal(state => state.onOpen)
+
+  console.info(navigationHistory)
 
   return (
     <ul className="flex flex-col space-y-6">
@@ -33,22 +37,29 @@ const Lists = ({ username, totalNotifications }: Props) => {
           >
             <Link
               href={link.href}
+              onClick={() => {
+                const isNotifications = link.href === "/notifications"
+                const isProfile = link.href === `/${username}`
+                if (isNotifications || isProfile) {
+                  addToNavigationHistory(window.location.href)
+                };
+              }}
               className="flex flex-row items-center gap-x-6 tracking-wider text-xl max-xl:p-3 xl:py-3 xl:px-5 hover:bg-black-200 transition">
-                <div className="relative">
-                  <Image
-                    src={isSamePath ? link.activeIcon : link.icon}
-                    alt={link.title}
-                    width={30}
-                    height={30}
-                    className="object-contain w-[30px] h-[30px]"
-                  />
+              <div className="relative">
+                <Image
+                  src={isSamePath ? link.activeIcon : link.icon}
+                  alt={link.title}
+                  width={30}
+                  height={30}
+                  className="object-contain w-[30px] h-[30px]"
+                />
 
-                  {link.href === '/notifications' && Boolean(totalNotifications) && (
-                    <span className="w-[20px] h-[20px] grid place-items-center bg-blue text-white rounded-full absolute text-xs -top-1 -right-1">
-                      {totalNotifications}
-                    </span>
-                  )}
-                </div>
+                {link.href === '/notifications' && Boolean(totalNotifications) && (
+                  <span className="w-[20px] h-[20px] grid place-items-center bg-blue text-white rounded-full absolute text-xs -top-1 -right-1">
+                    {totalNotifications}
+                  </span>
+                )}
+              </div>
               {!isLogo && (
                 <span className="max-xl:hidden xl:inline">
                   {link.title}

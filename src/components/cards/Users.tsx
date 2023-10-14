@@ -10,6 +10,7 @@ import { toggleFollowUser } from "@/lib/user";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import { User } from "lucide-react";
+import { usePrevious } from "@/hooks/usePrevious";
 
 interface UsersProps {
     username: string;
@@ -24,6 +25,7 @@ interface UsersProps {
 const Users = ({ username, name, imageUrl, userId, currentUser, isOnSearch, setIsFocused }: UsersProps) => {
     const path = usePathname();
     const router = useRouter();
+    const { addToNavigationHistory } = usePrevious()
     const [isPending, startTransition] = useTransition()
 
     const followed = currentUser.followings.find(({ followingId, followerId }) => {
@@ -59,6 +61,7 @@ const Users = ({ username, name, imageUrl, userId, currentUser, isOnSearch, setI
                 <div className="flex items-start flex-col -space-y-1">
                     <Link
                         href={`/${username}`}
+                        onClick={() => addToNavigationHistory(window.location.href)}
                         className={cn("font-normal text-white whitespace-nowrap hover:underline")}
                     >
                         {name}
