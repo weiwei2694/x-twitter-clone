@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { useForm } from 'react-hook-form'
@@ -20,7 +20,6 @@ import Image from "next/image";
 import { Image as ImageIcon } from "lucide-react"
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
-import { createTweetAction } from "@/actions/tweet.action";
 import { cn } from "@/lib/utils";
 import SubmitButton from "./SubmitButton";
 import Topbar from "./Topbar";
@@ -28,7 +27,7 @@ import PreviewImage from "./PreviewImage";
 import Reply from "./Reply";
 import { uploadFile } from "@/lib/cloudinary";
 import toast from "react-hot-toast";
-import { commentPostNotificationAction, replyCommentPostNotificationAction } from "@/actions/notification.action";
+import axios from "axios";
 
 interface Props {
     isModal?: boolean;
@@ -50,6 +49,7 @@ const CreateTweetForm = ({
     const onCloseModal = useTweetModal(state => state.onClose);
     const { dataTweet, setDataTweet } = useReplyTweet();
     const path = usePathname();
+    const router = useRouter()
 
     const [isLoading, setIsLoading] = useState(false);
     const [file, setFile] = useState<File>();
@@ -86,7 +86,10 @@ const CreateTweetForm = ({
     };
 
     /**
-     * @onSubmit
+     * Submits the form with the provided values.
+     *
+     * @param {z.infer<typeof tweetSchema>} values - The values to be submitted.
+     * @return {Promise<void>} A promise that resolves when the form is submitted.
      */
     async function onSubmit(values: z.infer<typeof tweetSchema>) {
         try {
@@ -97,28 +100,25 @@ const CreateTweetForm = ({
                 values.imageUrl = imageUrl
             }
 
-            if (isModal) {
-                setDataTweet(null)
-                onCloseModal()
-            }
-
-            form.reset();
-            setPreviewImage("");
-
-            await createTweetAction({
+            await axios.post('/api/thread', {
                 ...values,
                 path
             })
 
             if (dataTweet && dataTweet.user.id !== userId) {
-                const notificationType = dataTweet.isParentIdExist ? replyCommentPostNotificationAction : commentPostNotificationAction;
-
-                await notificationType({
+                const dataNotification = {
                     userId: dataTweet.user.id,
                     sourceId: userId,
                     parentIdPost: dataTweet.id,
                     path,
-                });
+                }
+
+                const notificationTypeUrl =
+                    dataTweet.isParentIdExist
+                        ? "/api/notifications/reply"
+                        : "/api/notifications/comment";
+
+                await axios.post(notificationTypeUrl, dataNotification);
             }
 
             if (isMobile && isReply) {
@@ -126,10 +126,17 @@ const CreateTweetForm = ({
             } else if (isMobile) {
                 window.location.href = "/home";
             }
-        } catch (error: any) {
-            console.log("[ERROR_CREATE_TWEET_FORM]", error.message)
+        } catch (error) {
+            console.info("[ERROR_CREATE_TWEET_FORM]", error)
         } finally {
             setIsLoading(false);
+
+            // RESET
+            setDataTweet(null);
+            onCloseModal();
+            form.reset();
+            setPreviewImage("");
+            router.refresh()
         }
     }
 

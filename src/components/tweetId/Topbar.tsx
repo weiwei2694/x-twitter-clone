@@ -2,8 +2,13 @@
 
 import { ArrowLeft } from "lucide-react";
 import { Button } from "../ui/button";
+import { useRouter } from "next/navigation";
 
 const Topbar = () => {
+  const router = useRouter()
+
+  // console.info(window.history)
+  
   return (
     <nav className="sticky top-0 z-10 backdrop-blur bg-black/80">
       <div className="px-3 py-4">
