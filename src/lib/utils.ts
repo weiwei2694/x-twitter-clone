@@ -92,3 +92,15 @@ export function convertToHttps(url: string) {
 		};
 	}
 }
+
+/**
+ * Gets the current path and search parameters of the window location.
+ *
+ * @return {string} The current path and search parameters.
+ */
+export const getCurrentPath = () => {
+	const path = window.location.pathname;
+	const searchParams = window.location.search;
+	
+	return `${path}${searchParams}`
+}

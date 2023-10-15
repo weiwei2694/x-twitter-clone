@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { usePathname } from "next/navigation"
 import { useTransition } from "react";
-import { cn } from "@/lib/utils";
+import { cn, getCurrentPath } from "@/lib/utils";
 import { UserWithFollowers } from "@/interfaces/user.interface";
 import { toggleFollowUser } from "@/lib/user";
 import toast from "react-hot-toast";
@@ -50,7 +50,7 @@ const UsersTwo = ({ username, name, imageUrl, userId, bio, currentUser }: UsersP
             <div className="flex items-start flex-col -space-y-1">
               <Link
                 href={`/${username}`}
-                onClick={() => addToNavigationHistory(`/${username}`)}
+                onClick={() => addToNavigationHistory(getCurrentPath())}
                 className={cn("font-bold text-white whitespace-nowrap hover:underline")}
               >
                 {name}

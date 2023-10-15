@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation"
 import { Dispatch, SetStateAction, useTransition } from "react";
-import { cn } from "@/lib/utils";
+import { cn, getCurrentPath } from "@/lib/utils";
 import { UserWithFollowers } from "@/interfaces/user.interface";
 import { toggleFollowUser } from "@/lib/user";
 import toast from "react-hot-toast";
@@ -61,7 +61,7 @@ const Users = ({ username, name, imageUrl, userId, currentUser, isOnSearch, setI
                 <div className="flex items-start flex-col -space-y-1">
                     <Link
                         href={`/${username}`}
-                        onClick={() => addToNavigationHistory(window.location.href)}
+                        onClick={() => addToNavigationHistory(getCurrentPath())}
                         className={cn("font-normal text-white whitespace-nowrap hover:underline")}
                     >
                         {name}

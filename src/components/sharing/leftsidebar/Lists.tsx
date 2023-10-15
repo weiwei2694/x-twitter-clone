@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { links } from '@/constants';
 import { usePrevious } from '@/hooks/usePrevious';
 import { useTweetModal } from '@/hooks/useTweetModal';
-import { cn } from '@/lib/utils';
+import { cn, getCurrentPath } from '@/lib/utils';
 import { Plus } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -17,10 +17,8 @@ interface Props {
 
 const Lists = ({ username, totalNotifications }: Props) => {
   const pathname = usePathname()
-  const { addToNavigationHistory, navigationHistory } = usePrevious();
+  const { addToNavigationHistory } = usePrevious();
   const openTweetModal = useTweetModal(state => state.onOpen)
-
-  console.info(navigationHistory)
 
   return (
     <ul className="flex flex-col space-y-6">
@@ -41,7 +39,7 @@ const Lists = ({ username, totalNotifications }: Props) => {
                 const isNotifications = link.href === "/notifications"
                 const isProfile = link.href === `/${username}`
                 if (isNotifications || isProfile) {
-                  addToNavigationHistory(window.location.href)
+                  addToNavigationHistory(getCurrentPath())
                 };
               }}
               className="flex flex-row items-center gap-x-6 tracking-wider text-xl max-xl:p-3 xl:py-3 xl:px-5 hover:bg-black-200 transition">

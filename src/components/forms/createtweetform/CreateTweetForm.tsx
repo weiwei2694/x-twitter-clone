@@ -28,6 +28,7 @@ import Reply from "./Reply";
 import { uploadFile } from "@/lib/cloudinary";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { createTweetAction } from "@/actions/tweet.action";
 
 interface Props {
     isModal?: boolean;
@@ -100,10 +101,7 @@ const CreateTweetForm = ({
                 values.imageUrl = imageUrl
             }
 
-            await axios.post('/api/thread', {
-                ...values,
-                path
-            })
+            await createTweetAction({...values,path})
 
             if (dataTweet && dataTweet.user.id !== userId) {
                 const dataNotification = {

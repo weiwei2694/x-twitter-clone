@@ -11,7 +11,7 @@ import {
 import { usePrevious } from "@/hooks/usePrevious"
 import { deleteTweet } from "@/lib/tweet"
 import { toggleFollowUser } from "@/lib/user"
-import { cn } from "@/lib/utils"
+import { cn, getCurrentPath } from "@/lib/utils"
 import { Follower } from "@prisma/client"
 import { MoreHorizontal } from "lucide-react"
 import Image from "next/image"
@@ -55,7 +55,7 @@ const Menu = ({
   }
 
   const redirectToDetailPost = () => {
-    addToNavigationHistory(window.location.href);
+    addToNavigationHistory(getCurrentPath());
     router.push(`/${username}/status/${tweetId}`);
   }
 
