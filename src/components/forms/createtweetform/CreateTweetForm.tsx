@@ -27,8 +27,8 @@ import PreviewImage from "./PreviewImage";
 import Reply from "./Reply";
 import { uploadFile } from "@/lib/cloudinary";
 import toast from "react-hot-toast";
-import axios from "axios";
 import { createTweetAction } from "@/actions/tweet.action";
+import { commentPostNotificationAction, replyCommentPostNotificationAction } from "@/actions/notification.action";
 
 interface Props {
     isModal?: boolean;
@@ -50,7 +50,6 @@ const CreateTweetForm = ({
     const onCloseModal = useTweetModal(state => state.onClose);
     const { dataTweet, setDataTweet } = useReplyTweet();
     const path = usePathname();
-    const router = useRouter()
 
     const [isLoading, setIsLoading] = useState(false);
     const [file, setFile] = useState<File>();
@@ -101,7 +100,7 @@ const CreateTweetForm = ({
                 values.imageUrl = imageUrl
             }
 
-            await createTweetAction({...values,path})
+            await createTweetAction({...values, path})
 
             if (dataTweet && dataTweet.user.id !== userId) {
                 const dataNotification = {
@@ -111,12 +110,12 @@ const CreateTweetForm = ({
                     path,
                 }
 
-                const notificationTypeUrl =
+                const notificationType =
                     dataTweet.isParentIdExist
-                        ? "/api/notifications/reply"
-                        : "/api/notifications/comment";
+                        ? replyCommentPostNotificationAction
+                        : commentPostNotificationAction;
 
-                await axios.post(notificationTypeUrl, dataNotification);
+                await notificationType(dataNotification);
             }
 
             if (isMobile && isReply) {
@@ -134,7 +133,6 @@ const CreateTweetForm = ({
             onCloseModal();
             form.reset();
             setPreviewImage("");
-            router.refresh()
         }
     }
 
