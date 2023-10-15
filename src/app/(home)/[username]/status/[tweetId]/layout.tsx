@@ -18,6 +18,29 @@ interface Props {
   }
 }
 
+export const generateMetadata = async ({ params }: Props) => {
+  const { tweetId, username } = params;
+
+  const [dataTweet, clerkUser, user] = await Promise.all([
+    getTweetAction(tweetId),
+    clerkCurrentUser(),
+    getUserByUsernameAction(username),
+  ]);
+  if (!dataTweet || !clerkUser || !user) return;
+
+  return {
+    title: `${dataTweet.user.name} on X: "${dataTweet.text}"`,
+    description: dataTweet.text,
+    openGraph: {
+      title: `${dataTweet.user.name} on X`,
+      description: dataTweet.text,
+      url: `/${dataTweet.user.username}/status/${tweetId}`,
+      images: [dataTweet.imageUrl],
+      type: 'article'
+    }
+  }
+}
+
 const Layout = async ({ children, params }: Props) => {
   const { tweetId, username } = params;
 
@@ -31,9 +54,6 @@ const Layout = async ({ children, params }: Props) => {
 
   const currentUser = await getUserAction(clerkUser.id)
   if (!currentUser) redirect('/')
-
-  const isValidUsername = user?.username === username;
-  if (!isValidUsername) return <NotFound />;
 
   const dataReplyTweet: DataTweet = {
     id: dataTweet.id,

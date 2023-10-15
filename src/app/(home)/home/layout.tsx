@@ -4,8 +4,17 @@ import Topbar from '@/components/home/Topbar';
 import ButtonCreatePostMobile from '@/components/sharing/ButtonCreatePostMobile';
 import Loading from '@/components/sharing/Loading';
 import { currentUser } from '@clerk/nextjs';
+import { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { ReactNode, Suspense } from 'react'
+
+export const metadata: Metadata = {
+  title: 'Home',
+  openGraph: {
+    title: 'Home',
+    siteName: 'X (formerly Twitter)'
+  }
+}
 
 interface Props {
   children: ReactNode

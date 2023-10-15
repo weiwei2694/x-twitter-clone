@@ -15,6 +15,28 @@ interface Props {
   },
 }
 
+export const generateMetadata = async ({ params }: Props) => {
+  const { username } = params;
+  const user = await getUserByUsernameAction(username);
+
+  if (!user) {
+    return {
+      title: "Profile"
+    }
+  }
+
+  return {
+    description: user.bio,
+    openGraph: {
+      description: user.bio,
+      type: 'profile',
+      images: [user.imageUrl],
+      siteName: "X (formerly Twitter)",
+      url: `${process.env.NEXT_PUBLIC_NEXT_URL}/${user.username}`
+    }
+  }
+}
+
 const Layout = async ({ children, params }: Props) => {
   const username = params.username;
 

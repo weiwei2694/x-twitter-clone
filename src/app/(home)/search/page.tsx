@@ -16,6 +16,18 @@ interface Props {
   }
 }
 
+export const generateMetadata = async ({ searchParams }: Props) => {
+  const { q: queryQ } = searchParams;
+
+  return {
+    title: `${queryQ} - Search`,
+    openGraph: {
+      title: `${queryQ} - Search`,
+      siteName: "X (formerly Twitter)"
+    }
+  }
+}
+
 const Page = async ({ searchParams }: Props) => {
   const { q: queryQ, f: queryF } = searchParams;
   if (!queryQ) redirect('/explore');

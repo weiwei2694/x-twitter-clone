@@ -11,6 +11,25 @@ interface Props {
   }
 }
 
+export const generateMetadata = async ({ params }: Props) => {
+  const { username } = params;
+  const user = await getUserByUsernameAction(username);
+
+  if (!user) {
+    return {
+      title: "Profile"
+    }
+  }
+
+  return {
+    title: `Posts with liked by ${user.name} (${user.username})`,
+    openGraph: {
+      title: `Posts with liked by ${user.name} (${user.username})`
+    }
+  }
+}
+
+
 const Page = async ({ params }: Props) => {
   const username = params.username;
 

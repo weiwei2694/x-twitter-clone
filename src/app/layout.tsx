@@ -8,8 +8,18 @@ import { Toaster } from 'react-hot-toast'
 const font = Lato({ subsets: ['latin'], weight: ["300", "400", "700", "900"] })
 
 export const metadata: Metadata = {
-  title: 'X Twitter',
-  description: 'Create your own thread',
+  title: {
+    default: 'X',
+    template: '%s / X'
+  },
+  themeColor: 'black',
+  openGraph: {
+    title: {
+      default: 'X',
+      template: '%s / X'
+    },
+    siteName: 'X (formerly Twitter)'
+  }
 }
 
 export default function RootLayout({

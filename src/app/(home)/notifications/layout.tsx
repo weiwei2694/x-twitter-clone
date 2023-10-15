@@ -3,8 +3,17 @@ import { getUserAction } from '@/actions/user.action'
 import Topbar from '@/components/notifications/Topbar'
 import Loading from '@/components/sharing/Loading'
 import { currentUser } from '@clerk/nextjs'
+import { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { ReactNode, Suspense } from 'react'
+
+export const metadata: Metadata = {
+  title: "Notifications",
+  openGraph: {
+    title: "Notifications",
+    siteName: "X (formerly Twitter)"
+  }
+}
 
 interface Props {
   children: ReactNode
