@@ -53,8 +53,8 @@ const Lists = ({ username, totalNotifications }: Props) => {
                 />
 
                 {link.href === '/notifications' && Boolean(totalNotifications) && (
-                  <span className="w-[20px] h-[20px] grid place-items-center bg-blue text-white rounded-full absolute text-xs -top-1 -right-1">
-                    {totalNotifications}
+                  <span className="w-[12px] h-[12px] grid place-items-center bg-blue text-white rounded-full absolute text-xs top-0 right-0">
+                    
                   </span>
                 )}
               </div>
