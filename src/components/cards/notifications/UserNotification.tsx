@@ -2,12 +2,13 @@
 
 import { markAsReadNotification } from "@/actions/notification.action";
 import { DataNotification } from "@/interfaces/notification.interface";
-import { customDatePost } from "@/lib/utils";
+import { cn, customDatePost, getCurrentPath } from "@/lib/utils";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { MouseEvent, useEffect, useState, useTransition } from "react";
 import Unread from "./Unread";
 import Menu from "./Menu";
+import { usePrevious } from "@/hooks/usePrevious";
 
 interface Props {
   dataNotification: DataNotification
@@ -15,23 +16,26 @@ interface Props {
 
 const UserNotification = ({ dataNotification }: Props) => {
   const [isMounted, setIsMounted] = useState(false);
-  const [isPending, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition();
+  const { addToNavigationHistory } = usePrevious();
 
-  const router = useRouter()
-  const path = usePathname()
+  const router = useRouter();
+  const path = usePathname();
 
   const handleNavigation = (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
     e.stopPropagation()
 
     if (isPending) return;
 
-    window.location.href = `/${dataNotification.sourceUser?.username}`
-
-    if (!dataNotification.isRead) {
-      startTransition(() => {
+    startTransition(() => {
+      if (!dataNotification.isRead) {
         markAsReadNotification(dataNotification.id, path)
-      })
-    }
+      }
+
+      const targetPath = `/${dataNotification.sourceUser?.username}`
+      router.push(targetPath);
+      addToNavigationHistory(getCurrentPath());
+    })
   }
 
   const redirectToSourceId = (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
@@ -47,7 +51,10 @@ const UserNotification = ({ dataNotification }: Props) => {
   if (!isMounted) return null;
 
   return (
-    <div onClick={(e) => handleNavigation(e)} className="notifications__component">
+    <div
+      onClick={(e) => handleNavigation(e)}
+      className={cn("notifications__component", isPending && 'notifications__component-disabled')}
+    >
       <div className="flex justify-center items-center w-[40px] h-[40px]">
         <Image
           src="/assets/user-notification-icon.png"

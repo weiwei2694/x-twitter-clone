@@ -154,3 +154,9 @@ body {
 .notifications__component-body__unread {
 	@apply w-[8px] h-[8px] bg-blue rounded-full;
 }
+
+.notifications__component-disabled {
+	pointer-events: none;
+  opacity: 0.6;
+	cursor: not-allowed;
+}

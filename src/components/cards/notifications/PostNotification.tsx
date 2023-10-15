@@ -3,12 +3,13 @@
 import { markAsReadNotification } from "@/actions/notification.action";
 import { DataNotification } from "@/interfaces/notification.interface";
 import { renderText } from "@/lib/tweet";
-import { customDatePost } from "@/lib/utils";
+import { cn, customDatePost, getCurrentPath } from "@/lib/utils";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { MouseEvent, useEffect, useRef, useState, useTransition } from "react";
 import Unread from "./Unread";
 import Menu from "./Menu";
+import { usePrevious } from "@/hooks/usePrevious";
 
 interface Props {
   dataNotification: DataNotification;
@@ -18,6 +19,7 @@ interface Props {
 const PostNotification = ({ dataNotification, currentUsername }: Props) => {
   const [isMounted, setIsMounted] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const { addToNavigationHistory } = usePrevious();
 
   const router = useRouter()
   const path = usePathname()
@@ -28,13 +30,15 @@ const PostNotification = ({ dataNotification, currentUsername }: Props) => {
 
     if (isPending) return;
 
-    window.location.href = `/${currentUsername}/status/${dataNotification.post?.id}`;
+    startTransition(() => {
+      if (!dataNotification.isRead) {
+        markAsReadNotification(dataNotification.id, path);
+      }
 
-    if (!dataNotification.isRead) {
-      startTransition(() => {
-        markAsReadNotification(dataNotification.id, path)
-      })
-    }
+      const targetPath = `/${currentUsername}/status/${dataNotification.post?.id}`;
+      router.push(targetPath);
+      addToNavigationHistory(getCurrentPath());
+    })
   }
 
   const redirectToSourceId = (e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
@@ -70,7 +74,10 @@ const PostNotification = ({ dataNotification, currentUsername }: Props) => {
   if (!isMounted) return null;
 
   return (
-    <div onClick={(e) => handleNavigation(e)} className="notifications__component">
+    <div
+      onClick={(e) => handleNavigation(e)}
+      className={cn("notifications__component", isPending && 'notifications__component-disabled')}
+    >
       <div className="flex justify-center items-center w-[40px] h-[40px]">
         {showActivityImage(dataNotification.activityType ?? "")}
       </div>
