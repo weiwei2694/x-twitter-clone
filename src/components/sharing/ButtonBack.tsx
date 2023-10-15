@@ -4,15 +4,22 @@ import { ArrowLeft } from 'lucide-react'
 import { Button } from '../ui/button'
 import { useRouter } from 'next/navigation'
 import { usePrevious } from '@/hooks/usePrevious'
+import { useTransition } from 'react'
 
 const ButtonBack = () => {
-  const router = useRouter()
-  const { navigationHistory, goBack } = usePrevious()
+  const router = useRouter();
+  const { navigationHistory, goBack } = usePrevious();
+  const [isPending, startTransition] = useTransition();
 
   const redirectToPreviousPage = () => {
+    if (isPending) return;
+
     const len = navigationHistory.length - 1;
     router.push(navigationHistory[len]);
-    goBack();
+
+    startTransition(() => {
+      goBack();
+    })
   }
 
   return (
@@ -28,4 +35,4 @@ const ButtonBack = () => {
   )
 }
 
-export default ButtonBack
+export default ButtonBack;
