@@ -1,10 +1,5 @@
 import { Bookmark, Follower, Like, Thread } from "@prisma/client";
-import { UserWithFollowers } from "./user.interface";
 import { InitialProps } from "./interface";
-
-interface RepliesId {
-	id: string;
-}
 
 interface User {
 	id: string;
@@ -13,13 +8,6 @@ interface User {
 	name: string;
 	followings: Follower[];
 	followers: Follower[];
-}
-
-interface Replies extends Thread {
-	likes: Like[];
-	user: UserWithFollowers;
-	replies: RepliesId[];
-	bookmarks: Bookmark[];
 }
 
 export interface DetailTweet extends Thread {
