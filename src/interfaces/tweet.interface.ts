@@ -22,13 +22,6 @@ interface Replies extends Thread {
 	bookmarks: Bookmark[];
 }
 
-export interface MultipleTweetWithConnection extends Thread {
-	replies: RepliesId[];
-	user: UserWithFollowers;
-	bookmarks: Bookmark[];
-	likes: Like[];
-}
-
 export interface DetailTweet extends Thread {
 	user: User;
 	likes: Like[];

@@ -1,9 +1,9 @@
-import { MultipleTweetWithConnection } from "@/interfaces/tweet.interface";
+import { DetailTweet } from "@/interfaces/tweet.interface";
 import Tweets from "../cards/tweets/Tweets";
 
 interface Props {
   userId: string;
-  tweets: MultipleTweetWithConnection[] | undefined;
+  tweets: DetailTweet[] | undefined;
 }
 
 const Latest = ({ userId, tweets }: Props) => {

@@ -1,4 +1,4 @@
-import { MultipleTweetWithConnection } from "@/interfaces/tweet.interface"
+import { DetailTweet } from "@/interfaces/tweet.interface"
 import Tweets from "../cards/tweets/Tweets"
 import { UserWithFollowers } from "@/interfaces/user.interface";
 import { User } from "@prisma/client";
@@ -6,7 +6,7 @@ import UsersTwo from "../cards/UsersTwo";
 import Link from "next/link";
 
 interface Props {
-  tweets: MultipleTweetWithConnection[] | undefined;
+  tweets: DetailTweet[] | undefined;
   people: User[] | undefined;
   currentUser: UserWithFollowers;
   queryQ: string;

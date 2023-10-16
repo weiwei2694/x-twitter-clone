@@ -16,6 +16,8 @@ const Page = async () => {
     let tweets = await getTweetsAction({ userId: user.id, isFollowing });
     if (!tweets?.length) tweets = [];
 
+    console.info(tweets)
+
     return (
         <>
             {tweets.length

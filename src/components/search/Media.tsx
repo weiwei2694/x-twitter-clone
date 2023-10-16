@@ -1,8 +1,8 @@
-import { MultipleTweetWithConnection } from "@/interfaces/tweet.interface"
+import { DetailTweet } from "@/interfaces/tweet.interface"
 import Tweets from "../cards/tweets/Tweets";
 
 interface Props {
-  tweets: MultipleTweetWithConnection[] | undefined;
+  tweets: DetailTweet[] | undefined;
   userId: string;
 }
 

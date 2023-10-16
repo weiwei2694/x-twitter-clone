@@ -3,12 +3,12 @@
 import { useState, useEffect } from 'react'
 import { useInView } from 'react-intersection-observer';
 import Loading from '../sharing/Loading';
-import { MultipleTweetWithConnection } from '@/interfaces/tweet.interface';
+import { DetailTweet } from '@/interfaces/tweet.interface';
 import { getTweetsAction } from '@/actions/tweet.action';
 import Tweets from '../cards/tweets/Tweets';
 
 interface Props {
-  initialDataTweets: MultipleTweetWithConnection[] | null;
+  initialDataTweets: DetailTweet[] | null;
   userId: string;
   isFollowing: boolean;
   parentId?: string;
@@ -34,7 +34,7 @@ const ShowTweetsData = ({ initialDataTweets, userId, isFollowing, parentId }: Pr
       return;
     }
 
-    setDataTweets((prev: MultipleTweetWithConnection[] | null) => [
+    setDataTweets((prev: DetailTweet[] | null) => [
       ...(prev?.length ? prev : []),
       ...newDataTweets
     ]);

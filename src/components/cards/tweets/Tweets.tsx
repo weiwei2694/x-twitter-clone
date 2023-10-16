@@ -1,6 +1,6 @@
 "use client"
 
-import { DataTweet, MultipleTweetWithConnection } from '@/interfaces/tweet.interface'
+import { DataTweet, DetailTweet } from '@/interfaces/tweet.interface'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -12,7 +12,7 @@ import { Like, Share, Comment, Menu } from "./"
 import TweetText from '@/components/sharing/TweetText'
 
 interface Props {
-  tweet: MultipleTweetWithConnection
+  tweet: DetailTweet
   userId: string;
 }
 
@@ -170,7 +170,7 @@ const Tweets = ({ tweet, userId }: Props) => {
            */}
           <section className="flex items-center gap-x-8">
             <Comment
-              totalReplies={tweet.replies.length}
+              totalReplies={tweet._count.replies}
               replyTweet={replyTweet}
             />
             <Like
