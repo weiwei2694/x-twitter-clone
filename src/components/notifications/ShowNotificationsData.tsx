@@ -1,7 +1,7 @@
 "use client"
 
 import { DataNotification } from '@/interfaces/notification.interface';
-import { useState, useEffect, Fragment } from 'react'
+import { useState, useEffect, Fragment, useTransition } from 'react'
 import { useInView } from 'react-intersection-observer';
 import Loading from '../sharing/Loading';
 import { getNotifications } from '@/actions/notification.action';
@@ -17,25 +17,41 @@ interface Props {
 const ShowNotificationsData = ({ initialDataNotifications, userId, currentUsername }: Props) => {
   const [dataNotifications, setDataNotifications] = useState(initialDataNotifications);
   const [isNotificationDataMaxed, setIsNotificationDataMaxed] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [sectionLoadingRef, inView] = useInView();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [_, startTransition] = useTransition();
+  const [isPending, setIsPending] = useState(false);
+  const [ref, inView] = useInView();
 
   const loadMoreDataNotifications = async () => {
-    const newDataNotifications = await getNotifications({
-      userId,
-      page: currentPage,
-    })
+    try {
+      if (currentPage === 0) {
+        return startTransition(() => {
+          setCurrentPage((prev: number) => prev + 1);
+        })
+      }
+      setIsPending(true);
 
-    if (!newDataNotifications?.length) {
-      setIsNotificationDataMaxed(true)
-      return;
+      const newDataNotifications = await getNotifications({
+        userId,
+        page: currentPage,
+      })
+
+      startTransition(() => {
+        if (!newDataNotifications?.length) {
+          return setIsNotificationDataMaxed(true);
+        }
+
+        setDataNotifications((prev: DataNotification[] | null) => [
+          ...(prev?.length ? prev : []),
+          ...newDataNotifications
+        ]);
+        setCurrentPage(prev => prev + 1);
+      })
+    } catch (error) {
+      console.info("[ERROR_LOAD_MORE_DATA_NOTIFICATIONS]", error)
+    } finally {
+      setIsPending(false);
     }
-
-    setDataNotifications((prev: DataNotification[] | null) => [
-      ...(prev?.length ? prev : []),
-      ...newDataNotifications
-    ]);
-    setCurrentPage(prev => prev + 1);
   }
 
   useEffect(() => {
@@ -45,6 +61,8 @@ const ShowNotificationsData = ({ initialDataNotifications, userId, currentUserna
   }, [initialDataNotifications])
 
   useEffect(() => {
+    if (isPending) return;
+
     if (inView) {
       loadMoreDataNotifications();
     }
@@ -72,25 +90,23 @@ const ShowNotificationsData = ({ initialDataNotifications, userId, currentUserna
   }
 
   return (
-    <>
-      <section className="flex flex-col">
-        {!dataNotifications?.length ? null : (
-          dataNotifications.map(notification => (
-            <Fragment key={notification.id}>
-              {actionTypeField(notification)}
-            </Fragment>
-          ))
-        )}
-      </section>
+    dataNotifications?.length && (
+      <>
+        {dataNotifications.map(notification => (
+          <Fragment key={notification.id}>
+            {actionTypeField(notification)}
+          </Fragment>
+        ))}
 
-      {!isNotificationDataMaxed && (
-        <section
-          ref={sectionLoadingRef}
-        >
-          <Loading />
-        </section>
-      )}
-    </>
+        {!isNotificationDataMaxed && (
+          <section
+            ref={ref}
+          >
+            <Loading />
+          </section>
+        )}
+      </>
+    )
   )
 }
 
