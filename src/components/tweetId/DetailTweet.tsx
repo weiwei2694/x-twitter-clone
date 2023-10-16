@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTweet, SingleTweetWithConnection } from '@/interfaces/tweet.interface'
+import { DataTweet, DetailTweet } from '@/interfaces/tweet.interface'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -12,7 +12,7 @@ import { Share, Bookmark, Like, Menu, Comment } from "../cards/tweets"
 import TweetText from '../sharing/TweetText';
 
 interface Props {
-  tweet: SingleTweetWithConnection;
+  tweet: DetailTweet;
   userId: string;
 }
 
@@ -187,7 +187,7 @@ const DetailTweet = ({ tweet, userId }: Props) => {
            * @Comment
            */}
           <Comment
-            totalReplies={tweet.replies.length}
+            totalReplies={tweet._count.replies}
             replyTweet={replyTweet}
           />
           {/**

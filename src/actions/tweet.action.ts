@@ -47,33 +47,22 @@ export async function getTweetAction(id: string) {
 			where: { id },
 			include: {
 				user: {
-					include: {
+					select: {
+						id: true,
+						imageUrl: true,
+						name: true,
+						username: true,
 						followers: true,
-						followings: true,
-					},
+						followings: true
+					}
 				},
 				bookmarks: true,
 				likes: true,
-				replies: {
-					orderBy: {
-						createdAt: "desc",
-					},
-					include: {
-						user: {
-							include: {
-								followers: true,
-								followings: true,
-							},
-						},
-						bookmarks: true,
-						likes: true,
-						replies: {
-							select: {
-								id: true,
-							},
-						},
-					},
-				},
+				_count: {
+					select: {
+						replies: true
+					}
+				}
 			},
 		});
 	} catch (error) {

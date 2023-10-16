@@ -19,7 +19,7 @@ const Page = async ({ params }: Props) => {
   const user = await getUserAction(clerkUser.id);
   if (!user) redirect('/')
 
-  let initialDataTweets = await getTweetsAction({
+  const initialDataTweets = await getTweetsAction({
     userId: user.id,
     parentId: tweetId,
     isFollowing: false

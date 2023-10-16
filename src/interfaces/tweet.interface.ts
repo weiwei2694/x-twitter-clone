@@ -1,9 +1,18 @@
-import { Bookmark, Like, Thread } from "@prisma/client";
+import { Bookmark, Follower, Like, Thread } from "@prisma/client";
 import { UserWithFollowers } from "./user.interface";
 import { InitialProps } from "./interface";
 
 interface RepliesId {
 	id: string;
+}
+
+interface User {
+	id: string;
+	imageUrl: string;
+	username: string;
+	name: string;
+	followings: Follower[];
+	followers: Follower[];
 }
 
 interface Replies extends Thread {
@@ -20,11 +29,13 @@ export interface MultipleTweetWithConnection extends Thread {
 	likes: Like[];
 }
 
-export interface SingleTweetWithConnection extends MultipleTweetWithConnection {
-	replies: Replies[];
-	user: UserWithFollowers;
-	bookmarks: Bookmark[];
+export interface DetailTweet extends Thread {
+	user: User;
 	likes: Like[];
+	bookmarks: Bookmark[];
+	_count: {
+		replies: number;
+	}
 }
 
 export interface DataTweet {
