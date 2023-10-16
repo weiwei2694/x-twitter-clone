@@ -3,7 +3,7 @@
 import { ArrowLeft } from "lucide-react";
 import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import { getLikeTweetsByUserId, getTweetsByUserIdAction } from "@/actions/tweet.action";
+import { getLikeTweetsByUserIdAction, getTweetsByUserIdAction } from "@/actions/tweet.action";
 import { useEffect, useState, useTransition } from "react";
 import { usePrevious } from "@/hooks/usePrevious";
 
@@ -42,7 +42,7 @@ const Topbar = ({ name, username, userId }: Props) => {
     else {
       setTitle("Likes")
 
-      let likeTweets = await getLikeTweetsByUserId(userId);
+      let likeTweets = await getLikeTweetsByUserIdAction(userId);
       if (!likeTweets || "message" in likeTweets) likeTweets = [];
 
       setTotalTweets(String(likeTweets.length));
