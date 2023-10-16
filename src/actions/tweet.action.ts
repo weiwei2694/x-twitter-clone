@@ -126,65 +126,38 @@ export async function getTweetsByUserIdAction(
 	isReplies?: boolean
 ) {
 	try {
-		if (isReplies) {
-			const replies = await prisma.thread.findMany({
-				where: {
-					userId,
-					parentId: {
-						not: null,
-					},
-				},
-				include: {
-					user: {
-						include: {
-							followers: true,
-							followings: true,
-						},
-					},
-					likes: true,
-					bookmarks: true,
-					replies: {
-						select: {
-							id: true,
-						},
-					},
-				},
-				orderBy: {
-					createdAt: "desc",
-				},
-			});
+		if (!userId) throw new Error('userId required')
 
-			return replies;
-		}
-
-		if (!userId) throw new Error("userId required");
-
-		const tweets = await prisma.thread.findMany({
+		return await prisma.thread.findMany({
 			where: {
 				userId,
-				parentId: null,
+				parentId: isReplies
+					? { not: null }
+					: null
 			},
 			include: {
 				user: {
-					include: {
+					select: {
+						id: true,
+						imageUrl: true,
+						username: true,
+						name: true,
 						followers: true,
 						followings: true,
 					},
 				},
 				likes: true,
 				bookmarks: true,
-				replies: {
+				_count: {
 					select: {
-						id: true,
-					},
-				},
+						replies: true
+					}
+				}
 			},
 			orderBy: {
 				createdAt: "desc",
 			},
 		});
-
-		return tweets;
 	} catch (error) {
 		console.log("[ERROR_GET_TWEETS_BY_USER_ID_ACTION]", error);
 	}
@@ -308,18 +281,22 @@ export async function getLikeTweetsByUserId(userId: string) {
 				thread: {
 					include: {
 						user: {
-							include: {
+							select: {
+								id: true,
+								imageUrl: true,
+								username: true,
+								name: true,
 								followers: true,
 								followings: true,
 							},
 						},
 						likes: true,
 						bookmarks: true,
-						replies: {
+						_count: {
 							select: {
-								id: true,
-							},
-						},
+								replies: true
+							}
+						}
 					},
 				},
 			},
