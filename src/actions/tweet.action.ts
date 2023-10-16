@@ -273,7 +273,7 @@ export async function toggleLikeAction({
 	}
 }
 
-export async function getLikeTweetsByUserId(userId: string) {
+export async function getLikeTweetsByUserIdAction(userId: string) {
 	try {
 		const likes = await prisma.like.findMany({
 			where: { userId },
@@ -356,18 +356,22 @@ export async function getBookmarksAction(userId: string) {
 				thread: {
 					include: {
 						user: {
-							include: {
+							select: {
+								id: true,
+								name: true,
+								username: true,
+								imageUrl: true,
 								followers: true,
 								followings: true,
 							},
 						},
 						bookmarks: true,
 						likes: true,
-						replies: {
+						_count: {
 							select: {
-								id: true,
-							},
-						},
+								replies: true
+							}
+						}
 					},
 				},
 			},
