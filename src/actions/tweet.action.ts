@@ -73,12 +73,12 @@ export async function getTweetAction(id: string) {
 type WhereFilter = {
 	parentId: string | null;
 	user: {
-		followers: { some: { followingId: string } | undefined }
+		followers: { some: { followingId: string } | undefined };
 	};
 	bookmarks: { some: { userId: string } } | undefined;
 	likes: { some: { userId: string } } | undefined;
 	userId: string | undefined;
-}
+};
 
 export async function getTweetsAction({
 	size = 30,
@@ -112,15 +112,15 @@ export async function getTweetsAction({
 		}
 
 		if (isProfile) {
-			whereFilter.userId = userId
+			whereFilter.userId = userId;
 		}
 
 		if (isLikes) {
 			whereFilter.likes = {
 				some: {
-					userId
-				}
-			}
+					userId,
+				},
+			};
 		}
 
 		const data = await prisma.thread.findMany({
@@ -162,6 +162,53 @@ export async function getTweetsAction({
 		};
 	} catch (error) {
 		console.log("[GET_TWEETS_ACTION]", error);
+	}
+}
+
+export async function getTotalTweetsAction({
+	userId,
+	isFollowing = false,
+	isBookmarks = false,
+	isProfile = false,
+	isReplies = false,
+	isLikes = false,
+	parentId = "",
+}: GetTweetsActionProps): Promise<number | undefined> {
+	try {
+		if (!userId) throw new Error("userId required");
+
+		const whereFilter = {
+			parentId: isReplies ? { not: null } : parentId ? parentId : null,
+			user: {
+				followers: isFollowing ? { some: { followingId: userId } } : undefined,
+			},
+		} as WhereFilter;
+
+		if (isBookmarks) {
+			whereFilter.bookmarks = {
+				some: {
+					userId,
+				},
+			};
+		}
+
+		if (isProfile) {
+			whereFilter.userId = userId;
+		}
+
+		if (isLikes) {
+			whereFilter.likes = {
+				some: {
+					userId,
+				},
+			};
+		}
+
+		return await prisma.thread.count({
+			where: whereFilter,
+		});
+	} catch (error) {
+		console.info("[ERROR_GET_TOTAL_TWEETS_ACTION]", error);
 	}
 }
 
@@ -315,45 +362,17 @@ export async function toggleLikeAction({
 	}
 }
 
-export async function getLikeTweetsByUserIdAction(userId: string) {
+export async function getTotalLikesTweetsAction(userId: string) {
 	try {
-		const likes = await prisma.like.findMany({
-			where: { userId },
-			include: {
-				thread: {
-					include: {
-						user: {
-							select: {
-								id: true,
-								imageUrl: true,
-								username: true,
-								name: true,
-								followers: true,
-								followings: true,
-							},
-						},
-						likes: true,
-						bookmarks: true,
-						_count: {
-							select: {
-								replies: true,
-							},
-						},
-					},
-				},
-			},
-			orderBy: {
-				thread: {
-					createdAt: "desc",
+		return await prisma.thread.count({
+			where: {
+				likes: {
+					some: { userId },
 				},
 			},
 		});
-
-		const tweets = likes.map((like) => like.thread);
-
-		return tweets;
 	} catch (error) {
-		console.log("[ERROR_GET_LIKE_TWEETS]", error);
+		console.info("[ERROR_GET_TOTAL_LIKES_TWEETS_ACTION]", error);
 	}
 }
 
