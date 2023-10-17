@@ -71,11 +71,12 @@ export async function getTweetAction(id: string) {
 }
 
 type WhereFilter = {
-	parentId: string | null,
+	parentId: string | null;
 	user: {
 		followers: { some: { followingId: string } | undefined }
-	}
-	bookmarks: { some: { userId: string } } | undefined
+	};
+	bookmarks: { some: { userId: string } } | undefined;
+	userId: string | undefined;
 }
 
 export async function getTweetsAction({
@@ -84,6 +85,7 @@ export async function getTweetsAction({
 	userId,
 	isFollowing = false,
 	isBookmarks = false,
+	isProfile = false,
 	parentId = "",
 }: GetTweetsActionProps) {
 	try {
@@ -104,6 +106,10 @@ export async function getTweetsAction({
 					userId,
 				},
 			};
+		}
+
+		if (isProfile) {
+			whereFilter.userId = userId
 		}
 
 		const data = await prisma.thread.findMany({

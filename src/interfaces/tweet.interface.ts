@@ -65,6 +65,7 @@ export interface GetTweetsActionProps {
 	userId: string;
 	isFollowing?: boolean;
 	isBookmarks?: boolean;
+	isProfile?: boolean;
 	parentId?: string;
 }
 
