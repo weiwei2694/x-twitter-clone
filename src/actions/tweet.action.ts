@@ -70,27 +70,44 @@ export async function getTweetAction(id: string) {
 	}
 }
 
+type WhereFilter = {
+	parentId: string | null,
+	user: {
+		followers: { some: { followingId: string } | undefined }
+	}
+	bookmarks: { some: { userId: string } } | undefined
+}
+
 export async function getTweetsAction({
 	size = 30,
 	page = 0,
 	userId,
-	isFollowing,
+	isFollowing = false,
+	isBookmarks = false,
 	parentId = "",
 }: GetTweetsActionProps) {
 	try {
 		if (!userId) throw new Error("userId required");
-		
+
 		const skip = size * page;
 
-		const data =  await prisma.thread.findMany({
-			where: {
-				parentId: parentId ? parentId : null,
-				user: {
-					followers: isFollowing
-						? { some: { followingId: userId } }
-						: undefined,
-				},
+		const whereFilter = {
+			parentId: parentId ? parentId : null,
+			user: {
+				followers: isFollowing ? { some: { followingId: userId } } : undefined,
 			},
+		} as WhereFilter;
+
+		if (isBookmarks) {
+			whereFilter.bookmarks = {
+				some: {
+					userId,
+				},
+			};
+		}
+
+		const data = await prisma.thread.findMany({
+			where: whereFilter,
 			include: {
 				user: {
 					select: {
@@ -99,16 +116,16 @@ export async function getTweetsAction({
 						name: true,
 						username: true,
 						followers: true,
-						followings: true
-					}
+						followings: true,
+					},
 				},
 				bookmarks: true,
 				likes: true,
 				_count: {
 					select: {
-						replies: true
-					}
-				}
+						replies: true,
+					},
+				},
 			},
 			orderBy: {
 				createdAt: "desc",
@@ -118,19 +135,14 @@ export async function getTweetsAction({
 		});
 
 		const totalCount = await prisma.thread.count({
-			where: {
-				parentId: parentId ? parentId : null,
-				user: {
-					followers: isFollowing ? { some: { followingId: userId } } : undefined,
-				},
-			},
-		})
+			where: whereFilter,
+		});
 		const hasNext = Boolean(totalCount - skip - data.length);
 
 		return {
 			data,
 			hasNext,
-		}
+		};
 	} catch (error) {
 		console.log("[GET_TWEETS_ACTION]", error);
 	}
@@ -141,14 +153,12 @@ export async function getTweetsByUserIdAction(
 	isReplies?: boolean
 ) {
 	try {
-		if (!userId) throw new Error('userId required')
+		if (!userId) throw new Error("userId required");
 
 		return await prisma.thread.findMany({
 			where: {
 				userId,
-				parentId: isReplies
-					? { not: null }
-					: null
+				parentId: isReplies ? { not: null } : null,
 			},
 			include: {
 				user: {
@@ -165,9 +175,9 @@ export async function getTweetsByUserIdAction(
 				bookmarks: true,
 				_count: {
 					select: {
-						replies: true
-					}
-				}
+						replies: true,
+					},
+				},
 			},
 			orderBy: {
 				createdAt: "desc",
@@ -225,14 +235,14 @@ export async function getTweetsBySearchAction({
 				bookmarks: true,
 				_count: {
 					select: {
-						replies: true
-					}
-				}
+						replies: true,
+					},
+				},
 			},
 			orderBy: {
 				likes: {
-					_count: "desc"
-				}
+					_count: "desc",
+				},
 			},
 			take: size,
 		});
@@ -309,9 +319,9 @@ export async function getLikeTweetsByUserIdAction(userId: string) {
 						bookmarks: true,
 						_count: {
 							select: {
-								replies: true
-							}
-						}
+								replies: true,
+							},
+						},
 					},
 				},
 			},
@@ -365,38 +375,67 @@ export async function getBookmarksAction(userId: string) {
 	try {
 		if (!userId) throw new Error("userId required");
 
-		const results = await prisma.bookmark.findMany({
-			where: { userId },
+		return await prisma.thread.findMany({
+			where: {
+				bookmarks: {
+					some: {
+						userId,
+					},
+				},
+			},
 			include: {
-				thread: {
-					include: {
-						user: {
-							select: {
-								id: true,
-								name: true,
-								username: true,
-								imageUrl: true,
-								followers: true,
-								followings: true,
-							},
-						},
-						bookmarks: true,
-						likes: true,
-						_count: {
-							select: {
-								replies: true
-							}
-						}
+				user: {
+					select: {
+						id: true,
+						name: true,
+						username: true,
+						imageUrl: true,
+						followers: true,
+						followings: true,
+					},
+				},
+				bookmarks: true,
+				likes: true,
+				_count: {
+					select: {
+						replies: true,
 					},
 				},
 			},
 		});
 
-		if (!results) return [];
+		// const results = await prisma.bookmark.findMany({
+		// 	where: { userId },
+		// 	include: {
+		// 		thread: {
+		// 			include: {
+		// 				user: {
+		// 					select: {
+		// 						id: true,
+		// 						name: true,
+		// 						username: true,
+		// 						imageUrl: true,
+		// 						followers: true,
+		// 						followings: true,
+		// 					},
+		// 				},
+		// 				bookmarks: true,
+		// 				likes: true,
+		// 				_count: {
+		// 					select: {
+		// 						replies: true
+		// 					}
+		// 				}
+		// 			},
+		// 		},
+		// 	},
+		// });
 
-		const tweets = results.map((value) => value.thread);
+		// if (!results) return [];
 
-		return tweets;
+		// const tweets = results.map((value) => value.thread);
+
+		// return tweets;
 	} catch (error) {
 		console.log("[ERROR_GET_BOOKMARKS_ACTION]", error);
 	}
