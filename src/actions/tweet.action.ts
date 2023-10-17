@@ -76,6 +76,7 @@ type WhereFilter = {
 		followers: { some: { followingId: string } | undefined }
 	};
 	bookmarks: { some: { userId: string } } | undefined;
+	likes: { some: { userId: string } } | undefined;
 	userId: string | undefined;
 }
 
@@ -87,6 +88,7 @@ export async function getTweetsAction({
 	isBookmarks = false,
 	isProfile = false,
 	isReplies = false,
+	isLikes = false,
 	parentId = "",
 }: GetTweetsActionProps) {
 	try {
@@ -111,6 +113,14 @@ export async function getTweetsAction({
 
 		if (isProfile) {
 			whereFilter.userId = userId
+		}
+
+		if (isLikes) {
+			whereFilter.likes = {
+				some: {
+					userId
+				}
+			}
 		}
 
 		const data = await prisma.thread.findMany({
