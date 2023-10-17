@@ -3,9 +3,22 @@ import { currentUser } from "@clerk/nextjs";
 import { getUserAction } from "@/actions/user.action";
 import { redirect } from "next/navigation";
 import NotFound from "@/components/sharing/NotFound";
-import ShowTweetsData from "@/components/home/ShowTweetsData";
+import Tweets from "@/components/cards/tweets/Tweets";
+import { isValidPage } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import PaginationButtons from "@/components/sharing/PaginationButtons";
 
-const Page = async () => {
+interface Props {
+    searchParams: {
+        page: string;
+    }
+}
+
+const Page = async ({ searchParams }: Props) => {
+    const { page: qPage } = searchParams;
+    const page = isValidPage(qPage);
+
     const clerkUser = await currentUser()
     if (!clerkUser) return null;
 
@@ -13,13 +26,27 @@ const Page = async () => {
     if (!user) redirect('/');
 
     const isFollowing = false;
-    let tweets = await getTweetsAction({ userId: user.id, isFollowing });
-    if (!tweets?.length) tweets = [];
+    const tweets = await getTweetsAction({ userId: user.id, isFollowing, page });
 
     return (
         <>
-            {tweets.length
-                ? <ShowTweetsData userId={user.id} isFollowing={isFollowing} initialDataTweets={tweets} />
+            {tweets?.data.length
+                ? (
+                    <>
+                        {tweets?.data.map(tweet => (
+                            <Tweets
+                                tweet={tweet}
+                                userId={user.id}
+                            />
+                        ))}
+
+                        <PaginationButtons
+                            currentPage={page}
+                            currentPath={"/home"}
+                            hasNext={tweets.hasNext}
+                        />
+                    </>
+                )
                 : <NotFound description="No posts can be displayed" />}
         </>
     )

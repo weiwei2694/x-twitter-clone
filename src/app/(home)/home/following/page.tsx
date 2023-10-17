@@ -2,28 +2,50 @@ import { getTweetsAction } from "@/actions/tweet.action";
 import { currentUser } from "@clerk/nextjs";
 import { getUserAction } from "@/actions/user.action";
 import { redirect } from "next/navigation";
-import NotFound from "@/components/sharing/NotFound";
-import ShowTweetsData from "@/components/home/ShowTweetsData";
+import { isValidPage } from "@/lib/utils";
+import PaginationButtons from "@/components/sharing/PaginationButtons";
+import Tweets from "@/components/cards/tweets/Tweets";
 
-const Page = async () => {
-    const clerkUser = await currentUser()
-    if (!clerkUser) return null;
+interface Props {
+  searchParams: {
+    page: string;
+  }
+}
 
-    const user = await getUserAction(clerkUser.id)
-    if (!user) redirect('/');
+const Page = async ({ searchParams }: Props) => {
+  const { page: qPage } = searchParams;
+  const page = isValidPage(qPage);
 
-    const isFollowing = true;
+  const clerkUser = await currentUser()
+  if (!clerkUser) return null;
 
-    let tweets = await getTweetsAction({ userId: user.id, isFollowing });
-    if (!tweets?.length) tweets = [];
+  const user = await getUserAction(clerkUser.id)
+  if (!user) redirect('/');
 
-    return (
-        <>
-            {tweets.length
-                ? <ShowTweetsData userId={user.id} isFollowing={isFollowing} initialDataTweets={tweets} />
-                : <NotFound description="No posts can be displayed" />}
-        </>
-    )
+  const isFollowing = true;
+  const tweets = await getTweetsAction({ userId: user.id, isFollowing, page });
+
+  return (
+    <>
+      {tweets?.data.length
+        && (
+          <>
+            {tweets?.data.map(tweet => (
+              <Tweets
+                tweet={tweet}
+                userId={user.id}
+              />
+            ))}
+
+            <PaginationButtons
+              currentPage={page}
+              currentPath="/home/following"
+              hasNext={tweets.hasNext}
+            />
+          </>
+        )}
+    </>
+  )
 }
 
 export default Page

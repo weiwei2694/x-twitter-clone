@@ -104,3 +104,16 @@ export const getCurrentPath = () => {
 	
 	return `${path}${searchParams}`
 }
+
+/**
+ * Checks if the given page value is valid and returns it.
+ *
+ * @param {string} qPage - The page value to be validated.
+ * @return {number} The valid page value.
+ */
+export const isValidPage = (qPage: string): number => {
+	const page = parseInt(qPage);
+
+	if (page < 0 || isNaN(page)) return 0;
+	return page;
+}
