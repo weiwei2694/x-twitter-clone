@@ -1,21 +1,63 @@
-import { getNotifications } from "@/actions/notification.action";
+import { getNotificationsAction } from "@/actions/notification.action";
 import { getUserAction } from "@/actions/user.action";
-import ShowNotificationsData from "@/components/notifications/ShowNotificationsData";
+import PostNotification from "@/components/cards/notifications/PostNotification";
+import UserNotification from "@/components/cards/notifications/UserNotification";
+import PaginationButtons from "@/components/sharing/PaginationButtons";
+import { DataNotification } from "@/interfaces/notification.interface";
+import { isValidPage } from "@/lib/utils";
 import { currentUser } from "@clerk/nextjs"
 import { redirect } from "next/navigation";
+import { Fragment } from "react";
 
-const Page = async () => {
+interface Props {
+  searchParams: {
+    page: string;
+  }
+}
+
+const Page = async ({ searchParams }: Props) => {
+  const { page: qPage } = searchParams;
+  const page = isValidPage(qPage);
+
   const clerkUser = await currentUser()
   if (!clerkUser) return null;
 
   const user = await getUserAction(clerkUser.id)
   if (!user) redirect('/');
 
-  const notifications = await getNotifications({
-    userId: user.id
+  const notifications = await getNotificationsAction({
+    userId: user.id,
+    page
   });
 
-  return <ShowNotificationsData currentUsername={user.username} initialDataNotifications={notifications!} userId={user.id} />
+  const actionTypeField = (data: DataNotification): JSX.Element | null => {
+    if (!data?.activityType) return null;
+
+    const options: any = {
+      "User": <UserNotification dataNotification={data} />,
+      "Post": <PostNotification currentUsername={user.username} dataNotification={data} />,
+    }
+
+    return options[data.parentType]
+  }
+
+  return (
+    notifications?.data.length ? (
+      <>
+        {notifications.data.map(notification => (
+          <Fragment key={notification.id}>
+            {actionTypeField(notification)}
+          </Fragment>
+        ))}
+
+        <PaginationButtons
+          currentPage={page}
+          currentPath="/notifications"
+          hasNext={notifications.hasNext}
+        />
+      </>
+    ) : null
+  )
 }
 
 export default Page
