@@ -7,6 +7,7 @@ import UserProfile from '@/components/profile/UserProfile';
 import Topbar from '@/components/profile/Topbar';
 import Tabs from '@/components/profile/Tabs';
 import ButtonCreatePostMobile from '@/components/sharing/ButtonCreatePostMobile';
+import { getTotalTweetsAction } from '@/actions/tweet.action';
 
 interface Props {
   children: ReactNode;
@@ -50,13 +51,21 @@ const Layout = async ({ children, params }: Props) => {
   const user = await getUserByUsernameAction(username);
   if (!user) return <NotFound />;
 
+  const [totalTweets, totalReplies, totalLikes] = await Promise.all([
+    getTotalTweetsAction({ userId: user.id, isProfile: true }),
+    getTotalTweetsAction({ userId: user.id, isProfile: true, isReplies: true }),
+    getTotalTweetsAction({ userId: user.id, isProfile: true, isLikes: true }),
+  ])
+
   return (
     <>
       <ButtonCreatePostMobile />
       <Topbar
         name={user.name}
         username={user.username}
-        userId={user.id}
+        totalTweets={totalTweets ?? 0}
+        totalReplies={totalReplies ?? 0}
+        totalLikes={totalLikes ?? 0}
       />
       <UserProfile
         isMyProfile={currentUser.id === user.id}

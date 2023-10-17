@@ -3,55 +3,23 @@
 import { ArrowLeft } from "lucide-react";
 import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import { getLikeTweetsByUserIdAction, getTweetsByUserIdAction } from "@/actions/tweet.action";
-import { useEffect, useState, useTransition } from "react";
+import { useTransition } from "react";
 import { usePrevious } from "@/hooks/usePrevious";
 
 interface Props {
   name: string;
   username: string;
-  userId: string;
+  totalTweets: number;
+  totalReplies: number;
+  totalLikes: number;
 }
 
-const Topbar = ({ name, username, userId }: Props) => {
+const Topbar = ({ name, username, totalTweets, totalReplies, totalLikes }: Props) => {
   const { navigationHistory, goBack } = usePrevious()
-  const [title, setTitle] = useState("")
-  const [totalTweets, setTotalTweets] = useState("")
   const [isPending, startTransition] = useTransition();
   
   const path = usePathname()
   const router = useRouter()
-
-  const getTotalTweets = async () => {
-    if (path === `/${username}`) {
-      setTitle("Posts")
-
-      let tweets = await getTweetsByUserIdAction(userId);
-      if (!tweets || "message" in tweets) tweets = [];
-
-      setTotalTweets(String(tweets.length))
-    }
-    else if (path === `/${username}/with_replies`) {
-      setTitle("Replies")
-
-      let replies = await getTweetsByUserIdAction(userId, true);
-      if (!replies || "message" in replies) replies = [];
-
-      setTotalTweets(String(replies.length))
-    }
-    else {
-      setTitle("Likes")
-
-      let likeTweets = await getLikeTweetsByUserIdAction(userId);
-      if (!likeTweets || "message" in likeTweets) likeTweets = [];
-
-      setTotalTweets(String(likeTweets.length));
-    }
-  }
-
-  useEffect(() => {
-    getTotalTweets();
-  }, [path])
 
   const redirectToPreviousPage = () => {
     if (isPending) return;
@@ -61,6 +29,16 @@ const Topbar = ({ name, username, userId }: Props) => {
     startTransition(() => {
       goBack()
     })
+  }
+
+  const showTotals = (currentPath: string): string | null => {
+    const variants = {
+      [`/${username}`]: `${totalTweets} posts`,
+      [`/${username}/with_replies`]: `${totalReplies} replies`,
+      [`/${username}/likes`]: `${totalLikes} likes`
+    }
+
+    return variants[currentPath];
   }
 
   return (
@@ -79,7 +57,7 @@ const Topbar = ({ name, username, userId }: Props) => {
             <h2 className="font-bold tracking-wide text-xl">
               {name}
             </h2>
-            <p className="text-sm font-normal text-gray-200">{totalTweets} {title}</p>
+            <p className="text-sm font-normal text-gray-200">{showTotals(path)}</p>
           </div>
         </div>
       </div>
