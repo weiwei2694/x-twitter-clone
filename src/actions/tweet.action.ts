@@ -86,6 +86,7 @@ export async function getTweetsAction({
 	isFollowing = false,
 	isBookmarks = false,
 	isProfile = false,
+	isReplies = false,
 	parentId = "",
 }: GetTweetsActionProps) {
 	try {
@@ -94,7 +95,7 @@ export async function getTweetsAction({
 		const skip = size * page;
 
 		const whereFilter = {
-			parentId: parentId ? parentId : null,
+			parentId: isReplies ? { not: null } : parentId ? parentId : null,
 			user: {
 				followers: isFollowing ? { some: { followingId: userId } } : undefined,
 			},
