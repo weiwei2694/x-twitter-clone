@@ -6,14 +6,14 @@ interface LeftSidebarProps {
     username: string;
     name: string;
     imageUrl: string;
-    totalNotifications: number;
+    totalUnreadNotifications: number;
 }
 
-const LeftSidebar = ({ username, name, imageUrl, totalNotifications }: LeftSidebarProps) => {
+const LeftSidebar = ({ username, name, imageUrl, totalUnreadNotifications }: LeftSidebarProps) => {
     return (
         <aside className="w-fit max-w-[300px] h-screen p-3 max-sm:hidden sm:flex">
             <section className="overflow-y-auto space-y-20 flex flex-col justify-between">
-                <Lists totalNotifications={totalNotifications} username={username} />
+                <Lists totalUnreadNotifications={totalUnreadNotifications} username={username} />
                 <Logout
                     imageUrl={imageUrl}
                     name={name}

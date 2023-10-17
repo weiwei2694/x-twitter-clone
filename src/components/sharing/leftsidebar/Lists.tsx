@@ -12,10 +12,10 @@ import { usePathname } from 'next/navigation';
 
 interface Props {
   username: string;
-  totalNotifications: number;
+  totalUnreadNotifications: number;
 }
 
-const Lists = ({ username, totalNotifications }: Props) => {
+const Lists = ({ username, totalUnreadNotifications }: Props) => {
   const pathname = usePathname()
   const { addToNavigationHistory } = usePrevious();
   const openTweetModal = useTweetModal(state => state.onOpen)
@@ -52,7 +52,7 @@ const Lists = ({ username, totalNotifications }: Props) => {
                   className="object-contain w-[30px] h-[30px]"
                 />
 
-                {link.href === '/notifications' && Boolean(totalNotifications) && (
+                {link.href === '/notifications' && Boolean(totalUnreadNotifications) && (
                   <span className="w-[12px] h-[12px] grid place-items-center bg-blue text-white rounded-full absolute text-xs top-0 right-0">
                     
                   </span>

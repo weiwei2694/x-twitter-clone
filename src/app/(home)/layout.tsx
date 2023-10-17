@@ -6,7 +6,7 @@ import RightSidebar from '@/components/sharing/rightsidebar/RightSidebar'
 import Modal from '@/components/modals/Modal'
 import { currentUser } from '@clerk/nextjs'
 import { redirect } from 'next/navigation'
-import { getNotificationsAction } from "@/actions/notification.action"
+import { getNotificationsAction, getTotalNotificationsAction } from "@/actions/notification.action"
 
 interface Props {
     children: ReactNode,
@@ -25,17 +25,14 @@ const layout = async ({ children}: Props) => {
     let users = await getUsersAction({ userId: user.id });
     if (!users?.length) users = [];
 
-    const notifications = await getNotificationsAction({
-        userId: user.id
-    });
-    const totalNotifications = notifications?.data.filter(notification => notification.isRead === false);
+    const totalUnreadNotifications = await getTotalNotificationsAction(user.id)
 
     return (
         <main className="max-h-screen overflow-hidden">
             <Modal imageUrl={user.imageUrl} userId={user.id} />
             <section className="h-full max-w-7xl mx-auto flex justify-center">
                 <LeftSidebar
-                    totalNotifications={totalNotifications?.length ?? 0}
+                    totalUnreadNotifications={totalUnreadNotifications ?? 0}
                     username={user.username}
                     name={user.name}
                     imageUrl={user.imageUrl}

@@ -12,11 +12,11 @@ import { markAllNotificationsAsReadAction } from "@/actions/notification.action"
 import { usePrevious } from "@/hooks/usePrevious";
 
 interface Props {
-  isNotificationEmpty: boolean;
+  totalUnreadNotifications: number;
   userId: string;
 }
 
-const Topbar = ({ isNotificationEmpty, userId }: Props) => {
+const Topbar = ({ totalUnreadNotifications, userId }: Props) => {
   const path = usePathname();
   const router = useRouter();
   const { navigationHistory, goBack } = usePrevious();
@@ -64,7 +64,7 @@ const Topbar = ({ isNotificationEmpty, userId }: Props) => {
               Notifications
             </h2>
           </div>
-          {!isNotificationEmpty &&
+          {Boolean(totalUnreadNotifications) &&
             <DropdownMenu>
               <DropdownMenuTrigger className="!outline-none rounded-full hover:bg-gray-300/30 p-2">
                 <MoreHorizontal size={30} />

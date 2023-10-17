@@ -1,4 +1,4 @@
-import { getNotificationsAction } from '@/actions/notification.action'
+import { getNotificationsAction, getTotalNotificationsAction } from '@/actions/notification.action'
 import { getUserAction } from '@/actions/user.action'
 import Topbar from '@/components/notifications/Topbar'
 import Loading from '@/components/sharing/Loading'
@@ -26,15 +26,14 @@ const layout = async ({ children }: Props) => {
   const user = await getUserAction(clerkUser.id)
   if (!user) redirect('/');
 
-  let notifications = await getNotificationsAction({
-    userId: user.id
-  });
-
-  const isNotificationEmpty = !Boolean(notifications?.data.length);
+  const totalUnreadNotifications = await getTotalNotificationsAction(user.id)
 
   return (
     <>
-      <Topbar userId={user.id} isNotificationEmpty={isNotificationEmpty} />
+      <Topbar
+        userId={user.id}
+        totalUnreadNotifications={totalUnreadNotifications ?? 0}
+      />
       <Suspense fallback={<Loading />}>
         {children}
       </Suspense>
