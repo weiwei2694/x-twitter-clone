@@ -8,7 +8,7 @@ import {
 	GetTweetsBySearchActionProps,
 } from "@/interfaces/tweet.interface";
 import prisma from "@/lib/prismadb";
-import { GetTweetsActionType } from "@/types/tweet.type";
+import { GetTweetsActionType, WhereFilter } from "@/types/tweet.type";
 import { revalidatePath } from "next/cache";
 
 export const createTweetAction = async ({
@@ -71,16 +71,6 @@ export async function getTweetAction(id: string) {
 	}
 }
 
-type WhereFilter = {
-	parentId: string | null;
-	user: {
-		followers: { some: { followingId: string } | undefined };
-	};
-	bookmarks: { some: { userId: string } } | undefined;
-	likes: { some: { userId: string } } | undefined;
-	userId: string | undefined;
-};
-
 export async function getTweetsAction({
 	size = 30,
 	page = 0,
@@ -91,7 +81,7 @@ export async function getTweetsAction({
 	isReplies = false,
 	isLikes = false,
 	parentId = "",
-}: GetTweetsActionProps) {
+}: GetTweetsActionProps): Promise<GetTweetsActionType | undefined> {
 	try {
 		if (!userId) throw new Error("userId required");
 
