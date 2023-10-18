@@ -56,18 +56,18 @@ const Page = async ({ searchParams }: Props) => {
    * Media
    */
   const DisplayContent = () => {
-    const Comp: any = {
-      "top": <Top currentUser={user} queryQ={queryQ} people={people} tweets={tweets} />,
+    const Comp = {
+      "top": <Top currentUser={user} queryQ={queryQ} people={people?.data} tweets={tweets} />,
       "latest": <Latest userId={user.id} tweets={tweets} />,
-      "people": <People queryQ={queryQ} people={people} currentUser={user} />,
+      "people": <People queryQ={queryQ} people={people?.data} currentUser={user} />,
       "media": <Media tweets={tweets} userId={user.id} />,
       "notfound": <NotFound title={`No results for "${queryQ}"`} description="Try searching for something else" />
-    }
+    } as any
 
-    if (!people?.length && !tweets?.length) return Comp["notfound"]
-    if (typeof queryF == "undefined") return Comp["top"]
+    if (!people?.data.length && !tweets?.length) return Comp["notfound"];
+    if (typeof queryF == "undefined") return Comp["top"];
 
-    return Comp[queryF.toLowerCase()]
+    return Comp[queryF.toLowerCase()];
   }
 
   return (
@@ -78,4 +78,4 @@ const Page = async ({ searchParams }: Props) => {
   )
 }
 
-export default Page
+export default Page;
