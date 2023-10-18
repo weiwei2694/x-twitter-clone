@@ -8,8 +8,22 @@ import {
 } from "@/interfaces/user.interface";
 import prisma from "@/lib/prismadb";
 import { GetUsersActionType } from "@/types/user.type";
+import { User } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
+/**
+ * Saves user action with the given parameters.
+ *
+ * @param {SaveUserActionProps} options - The options for saving the user action.
+ * @param {string} options.id - The ID of the user.
+ * @param {string} options.imageUrl - The URL of the user's image.
+ * @param {string} options.name - The name of the user.
+ * @param {string} options.username - The username of the user.
+ * @param {string} options.email - The email of the user.
+ * @param {string} options.bio - The bio of the user.
+ * @param {boolean} options.isCompleted - Indicates if the user action is completed.
+ * @return {Promise<User | undefined>} The updated user object or undefined if not found.
+ */
 export async function saveUserAction({
 	id,
 	imageUrl,
@@ -18,37 +32,32 @@ export async function saveUserAction({
 	email,
 	bio,
 	isCompleted,
-}: SaveUserActionProps) {
+}: SaveUserActionProps): Promise<User | undefined> {
 	try {
 		if (!id) throw new Error("id required");
-		if (!imageUrl) throw new Error("imageUrl required");
 		if (!name) throw new Error("name required");
-		if (!username) throw new Error("username required");
-		if (!email) throw new Error("email required");
 		if (!isCompleted) throw new Error("isCompleted required");
 
-		// is user data already exists
 		const existingUser = await prisma.user.findUnique({
 			where: { id },
 		});
 
-		// if user existing, update data user
 		if (existingUser) {
-			const updateUser = await prisma.user.update({
+			return await prisma.user.update({
 				where: { id },
 				data: {
 					name,
-					imageUrl,
 					bio,
 					isCompleted,
 				},
 			});
-
-			return updateUser;
 		}
 
-		// if user not existing, create new one
-		const newUser = await prisma.user.create({
+		if (!imageUrl) throw new Error("imageUrl required");
+		if (!username) throw new Error("username required");
+		if (!email) throw new Error("email required");
+
+		return await prisma.user.create({
 			data: {
 				id,
 				imageUrl,
@@ -59,8 +68,6 @@ export async function saveUserAction({
 				isCompleted,
 			},
 		});
-
-		return newUser;
 	} catch (error) {
 		console.log("[ERROR_SAVE_USER_ACTION]", error);
 	}

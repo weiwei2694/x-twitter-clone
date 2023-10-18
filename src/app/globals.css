@@ -104,6 +104,15 @@ body {
 	}
 }
 
+/* ==== OnBoarding ==== */
+.onboarding__input {
+	@apply no-focus text-black-200 py-6 px-3 rounded-xl font-normal;
+}
+
+.onboarding__textarea {
+	@apply no-focus !text-black-200 p-3 rounded-xl font-normal;
+}
+
 /* ==== Profile ==== */
 .profile__formItem {
 	@apply relative w-full;

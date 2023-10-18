@@ -11,10 +11,7 @@ const Page = async () => {
 
     // if user already registered and isCompleted already true, redirect to home page
     const user = await getUserAction(clerkUser.id);
-    if (user && "isCompleted" in user) {
-        const isCompleted = user.isCompleted;
-        if (isCompleted) redirect('/home');
-    }
+    if (user?.isCompleted) redirect('/home');
 
     const mapUser = {
         id: clerkUser.id,
@@ -22,46 +19,42 @@ const Page = async () => {
         name: "",
         username: clerkUser.username!.toLowerCase(),
         email: clerkUser.emailAddresses[0].emailAddress,
-        bio: ""
+        bio: "",
     }
 
-    const createTemporaryUserData = {
+    // save temporary user data into database
+    const temporaryUserData = {
         ...mapUser,
         name: "unknown",
-        bio: "",
         isCompleted: false,
     }
-    // save temporary user data into database
-    await saveUserAction(createTemporaryUserData);
+    await saveUserAction(temporaryUserData);
 
     return (
-        <section className="w-full h-full flex lg:flex-row max-lg:flex-col">
-            <div className="max-lg:flex lg:hidden py-7 max-lg:px-10 border-b border-b-gray-300 items-center justify-between">
-                <Image
-                    src="/assets/small-x-logo.png"
-                    alt="X Logo"
-                    width={20}
-                    height={20}
-                    className="object-contain"
-                />
-                <Logout>Sign Out</Logout>
-            </div>
-            <div className="max-lg:hidden lg:flex flex-col justify-evenly items-center min-w-fit p-20 border-r border-r-gray-300">
-                <Image
-                    src="/assets/large-x-logo.png"
-                    alt="X Logo"
-                    width={215}
-                    height={215}
-                    className="object-contain"
-                />
-                <Logout>Sign Out</Logout>
-            </div>
-            <div className="max-lg:p-10 p-20 w-full flex flex-col justify-center">
-                <h1 className="text-6xl font-extrabold tracking-wider">Let's complete your profile</h1>
-                <div className="max-xl:w-full w-[600px] mt-10 p-5 rounded-xl bg-zinc-900">
+        <section className="w-full h-screen">
+            <nav className="py-6 border-b border-gray-300">
+                <div className="px-3 sm:lg-0 max-w-4xl mx-auto flex items-center justify-between">
+                    <Image
+                        width={35}
+                        height={35}
+                        alt="X Logo"
+                        src="/assets/small-x-logo.png"
+                        className="object-contain"
+                    />
+                    <Logout>
+                        Log Out
+                    </Logout>
+                </div>
+            </nav>
+            <section className="max-w-4xl mx-auto px-3 flex justify-center mt-20 lg:px-0 font-lato">
+                <div className="w-full max-w-[500px] flex flex-col space-y-10">
+                    <div className="text-center flex flex-col space-y-2 items-center max-w-[450px] mx-auto">
+                        <h1 className="text-3xl font-extrabold tracking-wide">Welcome.</h1>
+                        <p className="font-normal text-gray-100">Let's take a moment to complete your profile so we can provide you with a better and more personalized experience on our platform.</p>
+                    </div>
                     <OnBoarding initialValue={mapUser} />
                 </div>
-            </div>
+            </section>
         </section>
     )
 }

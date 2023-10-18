@@ -2,7 +2,6 @@ import * as z from "zod";
 
 export const userSchema = z.object({
 	id: z.string(),
-	imageUrl: z.string(),
 	name: z
 		.string()
 		.min(1, {
