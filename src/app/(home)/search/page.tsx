@@ -6,9 +6,7 @@ import People from "@/components/search/People";
 import Tabs from "@/components/search/Tabs";
 import Top from "@/components/search/Top";
 import NotFound from "@/components/sharing/NotFound";
-import { DetailTweet } from "@/interfaces/tweet.interface";
 import { isValidPage } from "@/lib/utils";
-import { GetUsersActionType } from "@/types/user.type";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { ReactNode } from "react";
@@ -19,12 +17,6 @@ interface Props {
     f: string;
     page: string;
   }
-}
-
-type DisplayContentType = {
-  queryF: string;
-  users: GetUsersActionType | undefined;
-  tweets: DetailTweet[] | undefined;
 }
 
 export const generateMetadata = async ({ searchParams }: Props) => {
@@ -67,7 +59,7 @@ const Page = async ({ searchParams }: Props) => {
    *
    * @return {React.ReactNode} The generated content to be displayed.
    */
-  const DisplayContent = ({ users, tweets, queryF }: DisplayContentType): ReactNode => {
+  const DisplayContent = (): ReactNode => {
     const Comp = {
       "top": <Top currentUser={user} queryQ={queryQ} people={users?.data} tweets={tweets} />,
       "latest": <Latest userId={user.id} tweets={tweets} />,
@@ -82,7 +74,7 @@ const Page = async ({ searchParams }: Props) => {
       isQueryFExist
     ] = [
         Boolean(users?.data.length),
-        Boolean(tweets?.length),
+        Boolean(tweets?.data.length),
         Boolean(queryF)
       ];
 
@@ -95,11 +87,7 @@ const Page = async ({ searchParams }: Props) => {
   return (
     <>
       <Tabs />
-      <DisplayContent
-        queryF={queryF}
-        users={users}
-        tweets={tweets}
-      />
+      <DisplayContent />
     </>
   )
 }

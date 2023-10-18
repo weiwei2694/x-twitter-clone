@@ -1,12 +1,14 @@
-import { DetailTweet } from "@/interfaces/tweet.interface"
+"use client";
+
 import Tweets from "../cards/tweets/Tweets"
 import { UserWithFollowers } from "@/interfaces/user.interface";
 import { User } from "@prisma/client";
 import UsersTwo from "../cards/UsersTwo";
 import Link from "next/link";
+import { GetTweetsActionType } from "@/types/tweet.type";
 
 interface Props {
-  tweets: DetailTweet[] | undefined;
+  tweets: GetTweetsActionType | undefined;
   people: User[] | undefined;
   currentUser: UserWithFollowers;
   queryQ: string;
@@ -51,13 +53,13 @@ const Top = ({ tweets, currentUser, people, queryQ }: Props) => {
           )}
         </section>
       )}
-      {tweets?.map(tweet => (
+      {tweets?.data.length ? tweets.data.map(tweet => (
         <Tweets
           key={tweet.id}
           tweet={tweet}
           userId={currentUser.id}
         />
-      ))}
+      )) : null}
     </>
   )
 }
