@@ -15,7 +15,7 @@ const ButtonBack = () => {
     if (isPending) return;
 
     const len = navigationHistory.length - 1;
-    router.push(navigationHistory[len]);
+    router.push(navigationHistory[len] ?? "/home");
 
     startTransition(() => {
       goBack();
