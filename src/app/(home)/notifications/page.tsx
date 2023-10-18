@@ -2,6 +2,7 @@ import { getNotificationsAction } from "@/actions/notification.action";
 import { getUserAction } from "@/actions/user.action";
 import PostNotification from "@/components/cards/notifications/PostNotification";
 import UserNotification from "@/components/cards/notifications/UserNotification";
+import NotFound from "@/components/sharing/NotFound";
 import PaginationButtons from "@/components/sharing/PaginationButtons";
 import { DataNotification } from "@/interfaces/notification.interface";
 import { isValidPage } from "@/lib/utils";
@@ -57,12 +58,10 @@ const Page = async ({ searchParams }: Props) => {
         />
       </>
     ) : (
-      <section className="flex justify-center mt-6">
-        <div className="flex flex-col items-start">
-          <h1 className="text-3xl font-extrabold tracking-wide">Nothing to see here — yet</h1>
-          <p className="font-normal text-gray-200">All notifications will be here, starting from likes, comments, replies and others</p>
-        </div>
-      </section>
+      <NotFound
+        title="Nothing to see here — yet"
+        description="All notifications will be here, starting from likes, comments, replies and others"
+      />
     )
   )
 }

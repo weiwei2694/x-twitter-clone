@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { isValidPage } from "@/lib/utils";
 import PaginationButtons from "@/components/sharing/PaginationButtons";
 import Tweets from "@/components/cards/tweets/Tweets";
+import NotFound from "@/components/sharing/NotFound";
 
 interface Props {
   searchParams: {
@@ -28,7 +29,7 @@ const Page = async ({ searchParams }: Props) => {
   return (
     <>
       {tweets?.data.length
-        && (
+        ? (
           <>
             {tweets?.data.map(tweet => (
               <Tweets
@@ -44,6 +45,11 @@ const Page = async ({ searchParams }: Props) => {
               hasNext={tweets.hasNext}
             />
           </>
+        ) : (
+          <NotFound
+            title="No posts can be displayed"
+            description="You haven't followed anyone or the people you follow have no posts at all"
+          />
         )}
     </>
   )
