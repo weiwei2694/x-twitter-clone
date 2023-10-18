@@ -35,6 +35,7 @@ const Page = async ({ searchParams }: Props) => {
                     <>
                         {tweets?.data.map(tweet => (
                             <Tweets
+                                key={tweet.id}
                                 tweet={tweet}
                                 userId={user.id}
                             />
