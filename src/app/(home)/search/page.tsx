@@ -6,14 +6,23 @@ import People from "@/components/search/People";
 import Tabs from "@/components/search/Tabs";
 import Top from "@/components/search/Top";
 import NotFound from "@/components/sharing/NotFound";
+import { DetailTweet } from "@/interfaces/tweet.interface";
+import { GetUsersActionType } from "@/types/user.type";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
+import { ReactNode } from "react";
 
 interface Props {
   searchParams: {
     q: string;
     f: string;
   }
+}
+
+type DisplayContentType = {
+  queryF: string;
+  users: GetUsersActionType | undefined;
+  tweets: DetailTweet[] | undefined;
 }
 
 export const generateMetadata = async ({ searchParams }: Props) => {
@@ -38,10 +47,11 @@ const Page = async ({ searchParams }: Props) => {
   const user = await getUserAction(clerkUser.id);
   if (!user || "message" in user) redirect('/')
 
-  const people = await getUsersAction({
+  const users = await getUsersAction({
     userId: user.id,
     isOnSearch: true,
-    searchQuery: queryQ
+    searchQuery: queryQ,
+    size: 30
   })
 
   const tweets = await getTweetsBySearchAction({
@@ -49,23 +59,31 @@ const Page = async ({ searchParams }: Props) => {
   })
 
   /**
-   * @DisplayContent - Tabs
-   * Top
-   * Latest
-   * People
-   * Media
+   * Generates the content to be displayed based on the query and user information.
+   *
+   * @return {React.ReactNode} The generated content to be displayed.
    */
-  const DisplayContent = () => {
+  const DisplayContent = ({ users, tweets, queryF }: DisplayContentType): ReactNode => {
     const Comp = {
-      "top": <Top currentUser={user} queryQ={queryQ} people={people?.data} tweets={tweets} />,
+      "top": <Top currentUser={user} queryQ={queryQ} people={users?.data} tweets={tweets} />,
       "latest": <Latest userId={user.id} tweets={tweets} />,
-      "people": <People queryQ={queryQ} people={people?.data} currentUser={user} />,
+      "people": <People queryQ={queryQ} people={users?.data} currentUser={user} />,
       "media": <Media tweets={tweets} userId={user.id} />,
       "notfound": <NotFound title={`No results for "${queryQ}"`} description="Try searching for something else" />
     } as any
 
-    if (!people?.data.length && !tweets?.length) return Comp["notfound"];
-    if (typeof queryF == "undefined") return Comp["top"];
+    const [
+      isUsersDataExist,
+      isTweetsDataExist,
+      isQueryFExist
+    ] = [
+        Boolean(users?.data.length),
+        Boolean(tweets?.length),
+        Boolean(queryF)
+      ];
+
+    if (!isUsersDataExist && !isTweetsDataExist) return Comp["notfound"];
+    if (!isQueryFExist) return Comp["top"];
 
     return Comp[queryF.toLowerCase()];
   }
@@ -73,7 +91,11 @@ const Page = async ({ searchParams }: Props) => {
   return (
     <>
       <Tabs />
-      <DisplayContent />
+      <DisplayContent
+        queryF={queryF}
+        users={users}
+        tweets={tweets}
+      />
     </>
   )
 }
