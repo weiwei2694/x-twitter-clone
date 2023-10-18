@@ -1,4 +1,4 @@
-import { getBookmarksAction } from '@/actions/tweet.action';
+import { getTotalBookmarksAction } from '@/actions/tweet.action';
 import { getUserAction } from '@/actions/user.action';
 import Topbar from '@/components/bookmarks/Topbar';
 import ButtonCreatePostMobile from '@/components/sharing/ButtonCreatePostMobile';
@@ -27,10 +27,7 @@ const Layout = async ({ children }: Props) => {
   const user = await getUserAction(clerkUser.id)
   if (!user) redirect("/")
 
-  let bookmarks = await getBookmarksAction(user.id)
-  if (!bookmarks?.length) bookmarks = []
-
-  const isBookmarksEmpty = !bookmarks.length;
+  const bookmarks = await getTotalBookmarksAction(user.id)
 
   return (
     <>
@@ -38,7 +35,7 @@ const Layout = async ({ children }: Props) => {
       <Topbar
         username={user.username}
         userId={user.id}
-        isBookmarksEmpty={isBookmarksEmpty}
+        isBookmarksEmpty={!Boolean(bookmarks)}
       />
       <Suspense fallback={<Loading />}>
         {children}

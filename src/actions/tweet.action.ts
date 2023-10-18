@@ -360,11 +360,11 @@ export async function toggleBookmarkAction({
 	}
 }
 
-export async function getBookmarksAction(userId: string) {
+export async function getTotalBookmarksAction(userId: string) {
 	try {
 		if (!userId) throw new Error("userId required");
 
-		return await prisma.thread.findMany({
+		return await prisma.thread.count({
 			where: {
 				bookmarks: {
 					some: {
@@ -372,59 +372,7 @@ export async function getBookmarksAction(userId: string) {
 					},
 				},
 			},
-			include: {
-				user: {
-					select: {
-						id: true,
-						name: true,
-						username: true,
-						imageUrl: true,
-						followers: true,
-						followings: true,
-					},
-				},
-				bookmarks: true,
-				likes: true,
-				_count: {
-					select: {
-						replies: true,
-					},
-				},
-			},
 		});
-
-		// const results = await prisma.bookmark.findMany({
-		// 	where: { userId },
-		// 	include: {
-		// 		thread: {
-		// 			include: {
-		// 				user: {
-		// 					select: {
-		// 						id: true,
-		// 						name: true,
-		// 						username: true,
-		// 						imageUrl: true,
-		// 						followers: true,
-		// 						followings: true,
-		// 					},
-		// 				},
-		// 				bookmarks: true,
-		// 				likes: true,
-		// 				_count: {
-		// 					select: {
-		// 						replies: true
-		// 					}
-		// 				}
-		// 			},
-		// 		},
-		// 	},
-		// });
-
-		// if (!results) return [];
-
-		// const tweets = results.map((value) => value.thread);
-
-		// return tweets;
 	} catch (error) {
 		console.log("[ERROR_GET_BOOKMARKS_ACTION]", error);
 	}
