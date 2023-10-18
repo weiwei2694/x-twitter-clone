@@ -56,7 +56,14 @@ const Page = async ({ searchParams }: Props) => {
           hasNext={notifications.hasNext}
         />
       </>
-    ) : null
+    ) : (
+      <section className="flex justify-center mt-6">
+        <div className="flex flex-col items-start">
+          <h1 className="text-3xl font-extrabold tracking-wide">Nothing to see here — yet</h1>
+          <p className="font-normal text-gray-200">All notifications will be here, starting from likes, comments, replies and others</p>
+        </div>
+      </section>
+    )
   )
 }
 
