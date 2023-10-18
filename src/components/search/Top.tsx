@@ -6,31 +6,32 @@ import { User } from "@prisma/client";
 import UsersTwo from "../cards/UsersTwo";
 import Link from "next/link";
 import { GetTweetsActionType } from "@/types/tweet.type";
+import PaginationButtons from "../sharing/PaginationButtons";
 
 interface Props {
   tweets: GetTweetsActionType | undefined;
   people: User[] | undefined;
   currentUser: UserWithFollowers;
   queryQ: string;
+  page: number;
 }
 
-const Top = ({ tweets, currentUser, people, queryQ }: Props) => {
+const Top = ({ tweets, currentUser, people, queryQ, page }: Props) => {
   const optionLink = {
     pathname: '/search',
     query: {
       q: queryQ,
       f: "people"
     }
-  }
-
-  const isDataPeopleEmpty = !people?.length
+  },
+    path = `/search?q=${queryQ}`;
 
   return (
     <>
-      {!isDataPeopleEmpty && (
+      {people?.length ? (
         <section className="border-b border-gray-300">
           <h2 className="text-xl font-bold px-3 py-4">People</h2>
-          {people.slice(0,3).map(user => (
+          {people.slice(0, 3).map(user => (
             <UsersTwo
               key={user.id}
               userId={user.id}
@@ -52,14 +53,24 @@ const Top = ({ tweets, currentUser, people, queryQ }: Props) => {
             </div>
           )}
         </section>
-      )}
-      {tweets?.data.length ? tweets.data.map(tweet => (
-        <Tweets
-          key={tweet.id}
-          tweet={tweet}
-          userId={currentUser.id}
-        />
-      )) : null}
+      ) : null}
+      {tweets?.data.length ? (
+        <>
+          {tweets.data.map(tweet => (
+            <Tweets
+              key={tweet.id}
+              tweet={tweet}
+              userId={currentUser.id}
+            />
+          ))}
+
+          <PaginationButtons
+            currentPage={page}
+            currentPath={path}
+            hasNext={tweets.hasNext}
+          />
+        </>
+      ) : null}
     </>
   )
 }
