@@ -10,12 +10,11 @@ interface Props {
   currentUser: UserWithFollowers;
   people: GetUsersActionType | undefined;
   queryQ: string;
-  queryF: string;
   page: number;
 }
 
-const People = ({ currentUser, people, queryQ, queryF, page }: Props) => {
-  const path = `/search?q=${queryQ}&f=${queryF}`;
+const People = ({ currentUser, people, queryQ, page }: Props) => {
+  const path = `/search?q=${queryQ}&f=people`;
 
   return (
     people?.data.length ? (

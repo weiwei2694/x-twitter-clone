@@ -63,7 +63,7 @@ const Page = async ({ searchParams }: Props) => {
     const Comp = {
       "top": <Top currentUser={user} queryQ={queryQ} people={users?.data} tweets={tweets} />,
       "latest": <Latest userId={user.id} tweets={tweets} />,
-      "people": <People page={page} queryF={queryF} queryQ={queryQ} people={users} currentUser={user} />,
+      "people": <People page={page} queryQ={queryQ} people={users} currentUser={user} />,
       "media": <Media tweets={tweets} userId={user.id} />,
       "notfound": <NotFound title={`No results for "${queryQ}"`} description="Try searching for something else" />
     } as any;
