@@ -22,8 +22,7 @@ const layout = async ({ children}: Props) => {
     const isCompleted = user.isCompleted;
     if (!isCompleted) redirect("/onboarding");
 
-    let users = await getUsersAction({ userId: user.id });
-    if (!users?.length) users = [];
+    const users = await getUsersAction({ userId: user.id });
 
     const totalUnreadNotifications = await getTotalNotificationsAction(user.id)
 
@@ -41,7 +40,7 @@ const layout = async ({ children}: Props) => {
                     {children}
                 </section>
                 <RightSidebar
-                    users={users}
+                    users={users?.data!}
                     user={user}
                 />
             </section>
