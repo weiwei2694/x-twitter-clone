@@ -7,6 +7,7 @@ import Tabs from "@/components/search/Tabs";
 import Top from "@/components/search/Top";
 import NotFound from "@/components/sharing/NotFound";
 import { DetailTweet } from "@/interfaces/tweet.interface";
+import { isValidPage } from "@/lib/utils";
 import { GetUsersActionType } from "@/types/user.type";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
@@ -16,6 +17,7 @@ interface Props {
   searchParams: {
     q: string;
     f: string;
+    page: string;
   }
 }
 
@@ -38,7 +40,8 @@ export const generateMetadata = async ({ searchParams }: Props) => {
 }
 
 const Page = async ({ searchParams }: Props) => {
-  const { q: queryQ, f: queryF } = searchParams;
+  const { q: queryQ, f: queryF, page: qPage } = searchParams;
+  const page = isValidPage(qPage);
   if (!queryQ) redirect('/explore');
 
   const clerkUser = await currentUser();
@@ -51,6 +54,7 @@ const Page = async ({ searchParams }: Props) => {
     userId: user.id,
     isOnSearch: true,
     searchQuery: queryQ,
+    page,
     size: 30
   })
 
@@ -67,10 +71,10 @@ const Page = async ({ searchParams }: Props) => {
     const Comp = {
       "top": <Top currentUser={user} queryQ={queryQ} people={users?.data} tweets={tweets} />,
       "latest": <Latest userId={user.id} tweets={tweets} />,
-      "people": <People queryQ={queryQ} people={users?.data} currentUser={user} />,
+      "people": <People page={page} queryF={queryF} queryQ={queryQ} people={users} currentUser={user} />,
       "media": <Media tweets={tweets} userId={user.id} />,
       "notfound": <NotFound title={`No results for "${queryQ}"`} description="Try searching for something else" />
-    } as any
+    } as any;
 
     const [
       isUsersDataExist,

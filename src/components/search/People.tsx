@@ -1,30 +1,48 @@
+"use client";
+
 import { UserWithFollowers } from "@/interfaces/user.interface"
-import { User } from "@prisma/client";
 import UsersTwo from "../cards/UsersTwo";
 import NotFound from "../sharing/NotFound";
+import PaginationButtons from "../sharing/PaginationButtons";
+import { GetUsersActionType } from "@/types/user.type";
 
 interface Props {
   currentUser: UserWithFollowers;
-  people: User[] | undefined;
+  people: GetUsersActionType | undefined;
   queryQ: string;
+  queryF: string;
+  page: number;
 }
 
-const People = ({ currentUser, people, queryQ }: Props) => {
-  const isDataPeopleEmpty = !people?.length
+const People = ({ currentUser, people, queryQ, queryF, page }: Props) => {
+  const path = `/search?q=${queryQ}&f=${queryF}`;
 
   return (
-    !isDataPeopleEmpty ? people.map(user => (
-      <UsersTwo
-        key={user.id}
-        userId={user.id}
-        username={user.username}
-        name={user.name}
-        imageUrl={user.imageUrl}
-        bio={user.bio}
-        currentUser={currentUser}
+    people?.data.length ? (
+      <>
+        {people.data.map(user => (
+          <UsersTwo
+            key={user.id}
+            userId={user.id}
+            username={user.username}
+            name={user.name}
+            imageUrl={user.imageUrl}
+            bio={user.bio}
+            currentUser={currentUser}
+          />
+        ))}
+
+        <PaginationButtons
+          currentPage={page}
+          currentPath={path}
+          hasNext={people.hasNext}
+        />
+      </>
+    ) : (
+      <NotFound
+        title={`No results for users "${queryQ}"`}
+        description="Try searching for something else"
       />
-    )) : (
-      <NotFound title={`No results for users "${queryQ}"`} description="Try searching for something else" />
     )
   )
 }
