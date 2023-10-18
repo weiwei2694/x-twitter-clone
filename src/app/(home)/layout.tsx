@@ -6,7 +6,7 @@ import RightSidebar from '@/components/sharing/rightsidebar/RightSidebar'
 import Modal from '@/components/modals/Modal'
 import { currentUser } from '@clerk/nextjs'
 import { redirect } from 'next/navigation'
-import { getNotificationsAction, getTotalNotificationsAction } from "@/actions/notification.action"
+import { getTotalNotificationsAction } from "@/actions/notification.action"
 
 interface Props {
     children: ReactNode,
@@ -22,9 +22,10 @@ const layout = async ({ children}: Props) => {
     const isCompleted = user.isCompleted;
     if (!isCompleted) redirect("/onboarding");
 
-    const users = await getUsersAction({ userId: user.id });
-
-    const totalUnreadNotifications = await getTotalNotificationsAction(user.id)
+    const [users, totalUnreadNotifications] = await Promise.all([
+        getUsersAction({ userId: user.id }),
+        getTotalNotificationsAction(user.id)
+    ]);
 
     return (
         <main className="max-h-screen overflow-hidden">
