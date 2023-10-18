@@ -203,46 +203,6 @@ export async function getTotalTweetsAction({
 	}
 }
 
-export async function getTweetsByUserIdAction(
-	userId: string,
-	isReplies?: boolean
-) {
-	try {
-		if (!userId) throw new Error("userId required");
-
-		return await prisma.thread.findMany({
-			where: {
-				userId,
-				parentId: isReplies ? { not: null } : null,
-			},
-			include: {
-				user: {
-					select: {
-						id: true,
-						imageUrl: true,
-						username: true,
-						name: true,
-						followers: true,
-						followings: true,
-					},
-				},
-				likes: true,
-				bookmarks: true,
-				_count: {
-					select: {
-						replies: true,
-					},
-				},
-			},
-			orderBy: {
-				createdAt: "desc",
-			},
-		});
-	} catch (error) {
-		console.log("[ERROR_GET_TWEETS_BY_USER_ID_ACTION]", error);
-	}
-}
-
 export async function getTweetsBySearchAction({
 	size = 30,
 	page = 0,
@@ -307,16 +267,16 @@ export async function getTweetsBySearchAction({
 			skip,
 			take: size,
 		});
-		
+
 		const remainingData = await prisma.thread.count({
-			where: whereFilter
-		})
+			where: whereFilter,
+		});
 		const hasNext = Boolean(remainingData - skip - data.length);
 
 		return {
 			data,
-			hasNext
-		}
+			hasNext,
+		};
 	} catch (error) {
 		console.info("[ERROR_GET_TWEETS_BY_SEARCH_ACTION]", error);
 	}
@@ -366,20 +326,6 @@ export async function toggleLikeAction({
 		console.log("[ERROR_TOGGLE_LIKE_ACTION]", error);
 	} finally {
 		revalidatePath(path);
-	}
-}
-
-export async function getTotalLikesTweetsAction(userId: string) {
-	try {
-		return await prisma.thread.count({
-			where: {
-				likes: {
-					some: { userId },
-				},
-			},
-		});
-	} catch (error) {
-		console.info("[ERROR_GET_TOTAL_LIKES_TWEETS_ACTION]", error);
 	}
 }
 

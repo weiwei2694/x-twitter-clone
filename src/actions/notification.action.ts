@@ -158,31 +158,33 @@ export const getNotificationsAction = async ({
 		});
 
 		const remainingData = await prisma.notification.count({
-			where: { userId }
-		})
+			where: { userId },
+		});
 		const hasNext = Boolean(remainingData - data.length - skip);
 
 		return {
 			data,
-			hasNext
-		}
+			hasNext,
+		};
 	} catch (error) {
 		console.info("[ERROR_GET_NOTIFICATIONS]", error);
 	}
 };
 
-export const getTotalNotificationsAction = async (userId: string): Promise<number | undefined> => {
+export const getTotalNotificationsAction = async (
+	userId: string
+): Promise<number | undefined> => {
 	try {
 		return await prisma.notification.count({
 			where: {
 				userId,
-				isRead: { not: true }
-			}
-		})
+				isRead: { not: true },
+			},
+		});
 	} catch (error) {
 		console.info("[ERROR_GET_TOTAL_NOTIFICATIONS_ACTION]", error);
 	}
-}
+};
 
 export const markAsReadNotification = async (
 	notificationId: string,
@@ -232,7 +234,7 @@ export const deleteNotificationAction = async (
 ) => {
 	try {
 		if (!notificationId) throw new Error("notificationId required");
-		
+
 		await prisma.notification.delete({
 			where: { id: notificationId },
 		});
