@@ -1,10 +1,7 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
-import { Button } from "../ui/button";
-import { usePathname, useRouter } from "next/navigation";
-import { useTransition } from "react";
-import { usePrevious } from "@/hooks/usePrevious";
+import { usePathname } from "next/navigation";
+import ButtonBack from "../sharing/ButtonBack";
 
 interface Props {
   name: string;
@@ -15,21 +12,7 @@ interface Props {
 }
 
 const Topbar = ({ name, username, totalTweets, totalReplies, totalLikes }: Props) => {
-  const { navigationHistory, goBack } = usePrevious()
-  const [isPending, startTransition] = useTransition();
-  
   const path = usePathname()
-  const router = useRouter()
-
-  const redirectToPreviousPage = () => {
-    if (isPending) return;
-    const len = navigationHistory.length - 1;
-    router.push(navigationHistory[len] ?? "/home");
-
-    startTransition(() => {
-      goBack()
-    })
-  }
 
   const showTotals = (currentPath: string): string | null => {
     const variants = {
@@ -45,14 +28,7 @@ const Topbar = ({ name, username, totalTweets, totalReplies, totalLikes }: Props
     <nav className="sticky top-0 z-10 backdrop-blur bg-black/80">
       <div className="px-3 py-4">
         <div className="flex flex-row items-center gap-x-2">
-          <Button
-            className="rounded-full hover:bg-gray-300/50 transition"
-            variant="icon"
-            size="icon"
-            onClick={redirectToPreviousPage}
-          >
-            <ArrowLeft size="16" />
-          </Button>
+          <ButtonBack />
           <div className="flex flex-col item-start justify-start">
             <h2 className="font-bold tracking-wide text-xl">
               {name}
