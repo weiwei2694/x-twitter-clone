@@ -21,15 +21,15 @@ const Searchbar = ({ currentUser }: Props) => {
     const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
     async function getAllOfUsers(searchQuery: string) {
-        const data = await getUsersAction({
+        const users = await getUsersAction({
             searchQuery,
             userId: currentUser.id,
             isOnSearch: true
         })
 
-        if (!data?.length) return;
+        if (!users?.data.length) return;
 
-        setUsers(data)
+        setUsers(users.data)
     }
 
     useEffect(() => {
