@@ -1,4 +1,4 @@
-import { getNotificationsAction, getTotalNotificationsAction } from '@/actions/notification.action'
+import { getTotalNotificationsAction } from '@/actions/notification.action'
 import { getUserAction } from '@/actions/user.action'
 import Topbar from '@/components/notifications/Topbar'
 import Loading from '@/components/sharing/Loading'

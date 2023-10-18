@@ -5,8 +5,6 @@ import { redirect } from "next/navigation";
 import NotFound from "@/components/sharing/NotFound";
 import Tweets from "@/components/cards/tweets/Tweets";
 import { isValidPage } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
 import PaginationButtons from "@/components/sharing/PaginationButtons";
 
 interface Props {
