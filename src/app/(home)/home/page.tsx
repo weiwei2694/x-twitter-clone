@@ -48,7 +48,7 @@ const Page = async ({ searchParams }: Props) => {
                 )
                 : (
                     <NotFound
-                        title="No posts can be displayed"
+                        description="No posts can be displayed"
                     />
                 )}
         </>
