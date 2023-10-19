@@ -16,7 +16,7 @@ import { Follower } from "@prisma/client"
 import { MoreHorizontal } from "lucide-react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { useState, useTransition } from "react"
+import { MouseEvent, useState, useTransition } from "react"
 import toast from "react-hot-toast"
 
 interface Props {
@@ -44,14 +44,15 @@ const Menu = ({
   const [isPendingTweet, startTransitionTweet] = useTransition();
   const [isPendingFollowUser, startTransitionFollowUser] = useTransition();
 
-  const deleteTweetHandler = () => {
+  const deleteTweetHandler = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+    e.stopPropagation();
     deleteTweet({
       isPending: isPendingTweet,
       startTransition: startTransitionTweet,
       toast,
       path,
       id: tweetId
-    })
+    });
   }
 
   const redirectToDetailPost = () => {
@@ -85,7 +86,10 @@ const Menu = ({
           </DropdownMenuItem>
           {isOwnTweet ? (
             <DropdownMenuItem
-              onClick={() => setIsDialogOpen(true)}
+              onClick={e => {
+                e.stopPropagation();
+                setIsDialogOpen(true)
+              }}
               className={cn("text-[#f4212e]", isPendingTweet && "opacity-50 cursor-not-allowed")}
               disabled={isPendingTweet}
             >
@@ -100,16 +104,19 @@ const Menu = ({
             </DropdownMenuItem>
           ) : (
             <DropdownMenuItem
-              onClick={() => toggleFollowUser({
-                isPending: isPendingFollowUser,
-                startTransition: startTransitionFollowUser,
-                toast,
-                path,
-                username,
-                followed,
-                userId,
-                currentUserId,
-              })}
+              onClick={e => {
+                e.stopPropagation();
+                toggleFollowUser({
+                  isPending: isPendingFollowUser,
+                  startTransition: startTransitionFollowUser,
+                  toast,
+                  path,
+                  username,
+                  followed,
+                  userId,
+                  currentUserId,
+                });
+              }}
               disabled={isPendingFollowUser}
               className={cn(isPendingFollowUser && "opacity-50 cursor-not-allowed")}
             >

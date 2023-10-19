@@ -87,9 +87,9 @@ const Tweets = ({ tweet, userId }: Props) => {
           className="object-cover rounded-full w-[35px] h-[35px]"
         />
       </div>
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col space-y-4">
         <section className="flex-1 flex justify-between">
-          <div className="flex-1 flex flex-col spcae-y-6">
+          <div className="flex-1 flex flex-col space-y-3">
             <div className="flex-1 flex items-center flex-wrap gap-x-2">
               <h5 className="text-ellipsis overflow-hidden whitespace-nowrap font-bold text-white w-fit max-w-[150px]">
                 {tweet.user.name}
@@ -131,7 +131,7 @@ const Tweets = ({ tweet, userId }: Props) => {
             )}
           </section>
 
-          <section className="flex items-center gap-x-8">
+          <section className="flex items-center gap-x-10">
             <Comment
               totalReplies={tweet._count.replies}
               replyTweet={replyTweet}
