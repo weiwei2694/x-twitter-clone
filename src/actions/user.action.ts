@@ -7,20 +7,27 @@ import {
 	UpdateUserActionProps,
 } from "@/interfaces/user.interface";
 import prisma from "@/lib/prismadb";
-import { GetUsersActionType, SaveUserActionType } from "@/types/user.type";
+import {
+	GetUserActionType,
+	GetUserByUsernameActionType,
+	GetUsersActionType,
+	SaveUserActionType,
+	ToggleFollowUserActionType,
+	UpdateUserActionType,
+} from "@/types/user.type";
 import { revalidatePath } from "next/cache";
 
 /**
  * Saves user action with the given parameters.
  *
- * @param {SaveUserActionProps} options - The options for saving the user action.
- * @param {string} options.id - The ID of the user.
- * @param {string} options.imageUrl - The URL of the user's image.
- * @param {string} options.name - The name of the user.
- * @param {string} options.username - The username of the user.
- * @param {string} options.email - The email of the user.
- * @param {string} options.bio - The bio of the user.
- * @param {boolean} options.isCompleted - Indicates if the user action is completed.
+ * @param {SaveUserActionProps} props - The props for saving the user action.
+ * @param {string} props.id - The ID of the user.
+ * @param {string} props.imageUrl - The URL of the user's image.
+ * @param {string} props.name - The name of the user.
+ * @param {string} props.username - The username of the user.
+ * @param {string} props.email - The email of the user.
+ * @param {string} props.bio - The bio of the user.
+ * @param {boolean} props.isCompleted - Indicates if the user action is completed.
  * @return {Promise<SaveUserActionType>} The updated user object or undefined if not found.
  */
 export async function saveUserAction({
@@ -72,6 +79,17 @@ export async function saveUserAction({
 	}
 }
 
+/**
+ * Retrieves a list of users based on the provided parameters.
+ *
+ * @param {GetUsersActionProps} props - The parameters for fetching users.
+ * @param {number} [props.size = 5] - The number of users to fetch per page.
+ * @param {number} [props.page = 0] - The page number.
+ * @param {string} props.userId - The ID of the user.
+ * @param {string} [props.searchQuery = ""] - The search query for filtering users.
+ * @param {boolean} porps.isOnSearch - Indicates whether the search query is active.
+ * @return {Promise<GetUsersActionType>} - A promise that resolves to the fetched users.
+ */
 export async function getUsersAction({
 	size = 5,
 	page = 0,
@@ -127,24 +145,42 @@ export async function getUsersAction({
 	}
 }
 
-export async function getUserAction(id: string) {
+/**
+ * Retrieves a user's information and related data.
+ *
+ * @param {string} id - The ID of the user.
+ * @return {Promise<GetUserActionType>} The user's information and related data.
+ */
+export async function getUserAction(id: string): Promise<GetUserActionType> {
 	try {
 		if (!id) throw new Error("id required");
 
-		const result = await prisma.user.findUnique({
+		return await prisma.user.findUnique({
 			where: { id },
 			include: {
 				followers: true,
 				followings: true,
 			},
 		});
-
-		return result;
 	} catch (error) {
 		console.log("[ERROR_USER_ACTION]", error);
 	}
 }
 
+/**
+ * Updates a user's information.
+ *
+ * @param {UpdateUserActionProps} props - The properties to update the user with.
+ * @param {string} props.id - The ID of the user.
+ * @param {string} props.imageUrl - The URL of the user's image.
+ * @param {string} props.bannerUrl - The URL of the user's banner.
+ * @param {string} props.name - The name of the user.
+ * @param {string} props.bio - The bio of the user.
+ * @param {string} props.location - The location of the user.
+ * @param {string} props.website - The website of the user.
+ * @param {string} props.path - The path of the user.
+ * @return {Promise<UpdateUserActionType>} The updated user object.
+ */
 export async function updateUserAction({
 	id,
 	imageUrl,
@@ -154,13 +190,13 @@ export async function updateUserAction({
 	location,
 	website,
 	path,
-}: UpdateUserActionProps) {
+}: UpdateUserActionProps): Promise<UpdateUserActionType> {
 	try {
 		if (!id) throw new Error("id required");
 		if (!imageUrl) throw new Error("bannerUrl required");
 		if (!name) throw new Error("name required");
 
-		const updateUser = await prisma.user.update({
+		return await prisma.user.update({
 			where: { id },
 			data: {
 				imageUrl,
@@ -171,8 +207,6 @@ export async function updateUserAction({
 				website,
 			},
 		});
-
-		return updateUser;
 	} catch (error) {
 		console.log("[ERROR_UPDATE_USER_ACTION]", error);
 	} finally {
@@ -180,29 +214,44 @@ export async function updateUserAction({
 	}
 }
 
-export async function getUserByUsernameAction(username: string) {
+/**
+ * Fetches a user from the database based on the provided username.
+ *
+ * @param {string} username - The username of the user to fetch.
+ * @return {Promise<GetUserByUsernameActionType>} A promise that resolves to the user object.
+ */
+export async function getUserByUsernameAction(
+	username: string
+): Promise<GetUserByUsernameActionType> {
 	try {
 		if (!username) throw new Error("username required");
 
-		const user = await prisma.user.findUnique({
+		return await prisma.user.findUnique({
 			where: { username },
 			include: {
 				followers: true,
 				followings: true,
 			},
 		});
-
-		return user;
 	} catch (error) {
 		console.info("[ERROR_GET_USER_BY_USERNAME_ACTION]", error);
 	}
 }
 
+/**
+ * Toggles the follow status of a user.
+ *
+ * @param {ToggleFollowUserActionProps} props - An object containing the following properties:
+ * @param {string} props.userId - The ID of the user to be followed/unfollowed.
+ * @param {string} props.currentUserId - The ID of the current user performing the action.
+ * @param {string} props.path - The path to revalidate after the action is performed.
+ * @return {Promise<ToggleFollowUserActionType>} - A promise that resolves to the updated follower object.
+ */
 export const toggleFollowUserAction = async ({
 	userId,
 	currentUserId,
 	path,
-}: ToggleFollowUserActionProps) => {
+}: ToggleFollowUserActionProps): Promise<ToggleFollowUserActionType> => {
 	try {
 		const existingUser = await prisma.follower.findFirst({
 			where: {
