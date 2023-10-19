@@ -1,5 +1,5 @@
 import { Bookmark, Follower, Like, Thread } from "@prisma/client";
-import { InitialProps } from "./interface";
+import { InitialProps } from ".";
 
 interface User {
 	id: string;
