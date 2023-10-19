@@ -8,7 +8,7 @@ import { GetUsersActionType } from "@/types/user.type";
 
 interface Props {
   currentUser: UserWithFollowers;
-  people: GetUsersActionType | undefined;
+  people: GetUsersActionType;
   queryQ: string;
   page: number;
 }

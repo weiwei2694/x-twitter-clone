@@ -7,8 +7,7 @@ import {
 	UpdateUserActionProps,
 } from "@/interfaces/user.interface";
 import prisma from "@/lib/prismadb";
-import { GetUsersActionType } from "@/types/user.type";
-import { User } from "@prisma/client";
+import { GetUsersActionType, SaveUserActionType } from "@/types/user.type";
 import { revalidatePath } from "next/cache";
 
 /**
@@ -22,7 +21,7 @@ import { revalidatePath } from "next/cache";
  * @param {string} options.email - The email of the user.
  * @param {string} options.bio - The bio of the user.
  * @param {boolean} options.isCompleted - Indicates if the user action is completed.
- * @return {Promise<User | undefined>} The updated user object or undefined if not found.
+ * @return {Promise<SaveUserActionType>} The updated user object or undefined if not found.
  */
 export async function saveUserAction({
 	id,
@@ -32,7 +31,7 @@ export async function saveUserAction({
 	email,
 	bio,
 	isCompleted,
-}: SaveUserActionProps): Promise<User | undefined> {
+}: SaveUserActionProps): Promise<SaveUserActionType> {
 	try {
 		if (!id) throw new Error("id required");
 		if (!name) throw new Error("name required");
@@ -79,7 +78,7 @@ export async function getUsersAction({
 	userId,
 	searchQuery = "",
 	isOnSearch,
-}: GetUsersActionProps): Promise<GetUsersActionType | undefined> {
+}: GetUsersActionProps): Promise<GetUsersActionType> {
 	try {
 		if (!userId) throw new Error("userId required");
 		if (isOnSearch && !searchQuery) return;
