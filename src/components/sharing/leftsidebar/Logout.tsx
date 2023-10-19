@@ -38,7 +38,7 @@ const Logout = ({ imageUrl, username, name }: Props) => {
             </p>
           </div>
         </div>
-        <MoreHorizontal size={30} className="text-white" />
+        <MoreHorizontal className="w-6 h-6 text-white" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem>
