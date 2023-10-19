@@ -5,7 +5,7 @@ import Tweets from "../cards/tweets/Tweets";
 import PaginationButtons from "../sharing/PaginationButtons";
 
 interface Props {
-  tweets: GetTweetsActionType | undefined;
+  tweets: GetTweetsActionType;
   userId: string;
   page: number;
   queryQ: string;

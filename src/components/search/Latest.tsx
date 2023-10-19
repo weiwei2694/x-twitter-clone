@@ -6,7 +6,7 @@ import PaginationButtons from "../sharing/PaginationButtons";
 
 interface Props {
   userId: string;
-  tweets: GetTweetsActionType | undefined;
+  tweets: GetTweetsActionType;
   queryQ: string;
   page: number;
 }

@@ -9,7 +9,7 @@ import { GetTweetsActionType } from "@/types/tweet.type";
 import PaginationButtons from "../sharing/PaginationButtons";
 
 interface Props {
-  tweets: GetTweetsActionType | undefined;
+  tweets: GetTweetsActionType;
   people: User[] | undefined;
   currentUser: UserWithFollowers;
   queryQ: string;
