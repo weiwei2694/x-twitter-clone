@@ -4,12 +4,13 @@ import { DataTweet, DetailTweet } from '@/interfaces/tweet.interface'
 import Image from 'next/image'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { customDatePost } from '@/lib/utils'
+import { customDatePost, getCurrentPath } from '@/lib/utils'
 import { useTweetModal } from '@/hooks/useTweetModal'
 import { useReplyTweet } from '@/hooks/useReplyTweet'
 import { renderText } from '@/lib/tweet'
 import { Like, Share, Comment, Menu } from "./"
 import TweetText from '@/components/sharing/TweetText'
+import { usePrevious } from '@/hooks/usePrevious'
 
 interface Props {
   tweet: DetailTweet
@@ -17,43 +18,18 @@ interface Props {
 }
 
 const Tweets = ({ tweet, userId }: Props) => {
-  /**
-   * @router
-   * @pathname
-   */
   const router = useRouter();
   const pathname = usePathname();
+  const { addToNavigationHistory } = usePrevious();
 
-  /**
-   * @state
-   * isMounted ( handle hydration UI )
-   * setDataTweet
-   * setOnReplyTweetModal
-   */
   const [isMounted, setIsMounted] = useState(false)
   const setDataTweet = useReplyTweet(state => state.setDataTweet);
   const setOnOpenReplyTweetModal = useTweetModal(state => state.onOpen);
 
-  /**
-   * @liked
-   * @followed
-   * @bookmark
-   * 
-   * Check current user engagement,
-   * whether they have followed,
-   * bookmarked,
-   * or liked this post,
-   * or vice versa
-   */
   const liked = tweet.likes.find(like => like.userId === userId);
   const followed = tweet.user.followers.find(({ followingId }) => followingId === userId)
   const bookmark = tweet.bookmarks.find(item => item.userId === userId);
 
-  /**
-   * @replyTweet
-   * 
-   * communication to createTweetForm
-   */
   const replyTweet = (isForModal: boolean) => {
     const dataTweet: DataTweet = {
       id: tweet.id,
@@ -79,32 +55,27 @@ const Tweets = ({ tweet, userId }: Props) => {
     }
   };
 
-  /**
-   * @formattedCreatedAt
-   * 
-   * format date tweet
-   */
   const formattedCreatedAt = tweet.createdAt && customDatePost(tweet.createdAt.getTime());
 
-  /**
-   * @isOwnTweet
-   * 
-   * for validation on the menu side
-   * if false, display follow user action
-   */
-  const isOwnTweet = tweet.userId === userId
+  const isOwnTweet = tweet.userId === userId;
 
-  /**
-   * handle hydration ui
-   */
+  const redirectToDetailPost = () => {
+    addToNavigationHistory(getCurrentPath());
+    router.push(`/${tweet.user.username}/status/${tweet.id}`);
+  }
+
   useEffect(() => {
     setIsMounted(true)
   }, [])
   if (!isMounted) return null;
 
   return (
-    <section
-      className="flex gap-x-5 px-3 py-4 border-b border-b-gray-300 transition"
+    <article
+      className="flex gap-x-5 px-3 py-4 border-b border-b-gray-300 bg-black-100 hover:bg-black-200/20 transition-all cursor-pointer"
+      onClick={e => {
+        e.stopPropagation();
+        redirectToDetailPost();
+      }}
     >
       <div className="flex items-start jsutify-start rounded-full overflow-hidden">
         <Image
@@ -116,9 +87,9 @@ const Tweets = ({ tweet, userId }: Props) => {
           className="object-cover rounded-full w-[35px] h-[35px]"
         />
       </div>
-      <div className="flex-1 flex flex-col space-y-10">
+      <div className="flex-1 flex flex-col">
         <section className="flex-1 flex justify-between">
-          <div className="flex-1 flex flex-col gap-y-5">
+          <div className="flex-1 flex flex-col spcae-y-6">
             <div className="flex-1 flex items-center flex-wrap gap-x-2">
               <h5 className="text-ellipsis overflow-hidden whitespace-nowrap font-bold text-white w-fit max-w-[150px]">
                 {tweet.user.name}
@@ -147,9 +118,6 @@ const Tweets = ({ tweet, userId }: Props) => {
         </section>
 
         <section className="flex flex-col space-y-3">
-          {/**
-           * @ImageUrl
-           */}
           <section>
             {tweet.imageUrl && (
               <Image
@@ -163,11 +131,6 @@ const Tweets = ({ tweet, userId }: Props) => {
             )}
           </section>
 
-          {/**
-           * @Comment
-           * @Like
-           * @Share
-           */}
           <section className="flex items-center gap-x-8">
             <Comment
               totalReplies={tweet._count.replies}
@@ -181,10 +144,6 @@ const Tweets = ({ tweet, userId }: Props) => {
               threadId={tweet.id}
               totalLikes={tweet.likes.length}
             />
-            {/**
-             * @CopyLink
-             * @Bookmark
-             */}
             <div className="flex-1 flex justify-end">
               <Share
                 path={pathname}
@@ -197,7 +156,7 @@ const Tweets = ({ tweet, userId }: Props) => {
           </section>
         </section>
       </div>
-    </section>
+    </article>
   )
 }
 

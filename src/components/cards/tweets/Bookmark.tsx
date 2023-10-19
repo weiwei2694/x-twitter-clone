@@ -30,27 +30,44 @@ const Bookmark = ({
     <Button
       variant="icon"
       size="icon"
-      className={cn("flex items-center gap-x-2 transition", bookmark ? "text-blue" : "text-gray-200 hover:text-blue")}
-      onClick={() => toggleBookmarkTweet({
-        isPending,
-        startTransition,
-        toast,
-        path,
-        bookmark,
-        userId,
-        threadId
-      })}
+      className={cn("flex items-center gap-x-1 transition-all group", bookmark ? "text-blue" : "text-gray-200 hover:text-blue")}
+      onClick={e => {
+        e.stopPropagation();
+        toggleBookmarkTweet({
+          isPending,
+          startTransition,
+          toast,
+          path,
+          bookmark,
+          userId,
+          threadId
+        });
+      }}
       disabled={isPending}
     >
       {bookmark
         ? (
-            <Image src="/assets/tweet-bookmark-fill-icon.png" alt="Bookmark Fill Icon" width={20} height={20} className="object-contain" />
-          )
-        : <BookmarkIcon size="20" />
+          <div className="p-1 group-hover:bg-blue/10 transition-all rounded-full">
+            <div className="w-4 h-4">
+              <Image
+                src="/assets/tweet-bookmark-fill-icon.png"
+                alt="Bookmark Fill Icon"
+                width={20}
+                height={20}
+                className="w-4 h-4"
+              />
+            </div>
+          </div>
+        )
+        : (
+          <span className="p-2 group-hover:bg-blue/10 transition-all rounded-full">
+            <BookmarkIcon className="w-4 h-4" />
+          </span>
+        )
       }
-      <span className="text-sm font-extrabold">
+      <b>
         {totalBookmarks}
-      </span>
+      </b>
     </Button>
   )
 }

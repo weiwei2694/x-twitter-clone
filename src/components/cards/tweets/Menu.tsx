@@ -63,13 +63,16 @@ const Menu = ({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger
-          className="!outline-none text-white bg-transparent hover:bg-blue/20 hover:text-blue transition p-2 rounded-full"
+          className="!outline-none text-gray-200 bg-transparent hover:bg-blue/20 hover:text-blue transition p-2 rounded-full"
         >
-          <MoreHorizontal />
+          <MoreHorizontal className="w-5 h-5" />
         </DropdownMenuTrigger>
         <DropdownMenuContent side="bottom" align="end">
           <DropdownMenuItem
-            onClick={redirectToDetailPost}
+            onClick={e => {
+              e.stopPropagation();
+              redirectToDetailPost();
+            }}
           >
             <Image
               src="/assets/right-arrow.png"

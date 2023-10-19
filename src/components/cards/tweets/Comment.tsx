@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { MessageCircle } from "lucide-react"
+import { MouseEvent } from "react";
 
 interface Props {
   replyTweet: (isForModal: boolean) => void;
@@ -9,36 +10,41 @@ interface Props {
 }
 
 const Comment = ({ replyTweet, totalReplies }: Props) => {
+  const replyTweetHandler = (e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => {
+    e.stopPropagation();
+    replyTweet(true);
+  }
+
   return (
     <>
-      {/**
-       * @Dekstop
-       */}
+      {/* Dekstop */}
       <Button
         variant="icon"
         size="icon"
-        className="flex items-center gap-x-2 text-gray-200 transition hover:text-blue !outline-none max-sm:hidden"
-        onClick={() => replyTweet(true)}
+        className="flex items-center gap-x-1 text-gray-200 transition hover:text-blue !outline-none max-sm:hidden group"
+        onClick={replyTweetHandler}
       >
-        <MessageCircle size="20px" />
-        <span className="text-sm font-extrabold">
-          {totalReplies}
+        <span className="p-2 group-hover:bg-blue/10 rounded-full">
+          <MessageCircle className="h-4 w-4" />
         </span>
+        <b>
+          {totalReplies}
+        </b>
       </Button>
 
-      {/**
-       * @Mobile
-       */}
+      {/* Mobile */}
       <Button
         variant="icon"
         size="icon"
-        className="flex items-center gap-x-2 text-gray-200 transition hover:text-blue !outline-none sm:hidden"
-        onClick={() => replyTweet(false)}
+        className="flex items-center gap-x-2 text-gray-200 transition hover:text-blue !outline-none sm:hidden group"
+        onClick={replyTweetHandler}
       >
-        <MessageCircle size="20px" />
-        <span className="text-sm font-extrabold">
-          {totalReplies}
+        <span className="p-2 group-hover:bg-blue/10 rounded-full">
+          <MessageCircle className="h-4 w-4" />
         </span>
+        <b>
+          {totalReplies}
+        </b>
       </Button>
     </>
   )

@@ -24,25 +24,43 @@ const Like = ({ liked, userId, currentUserId, path, threadId, totalLikes }: Prop
     <Button
       variant="icon"
       size="icon"
-      className={cn("flex items-center gap-x-2 transition", liked ? "text-red-500" : "text-gray-200 hover:text-red-500")}
-      onClick={() => toggleLikeTweet({
-        isPending,
-        startTransition,
-        liked,
-        userId,
-        currentUserId,
-        threadId,
-        path
-      })}
+      className={cn("flex items-center gap-x-1 transition-all group", liked ? "text-pink-600" : "text-gray-200 hover:text-pink-600")}
+      onClick={e => {
+        e.stopPropagation();
+        toggleLikeTweet({
+          isPending,
+          startTransition,
+          liked,
+          userId,
+          currentUserId,
+          threadId,
+          path
+        })
+      }}
       disabled={isPending}
     >
       {liked
-        ? <Image src="/assets/heart-fill-icon.png" alt="Heart Fill" width={20} height={20} className="object-contain" />
-        : <Heart size="20" />
-      }
-      <span className="text-sm font-extrabold">
+        ? (
+          <div className="p-1 group-hover:bg-pink-600/20 rounded-full">
+            <div className="w-6 h-6">
+              <Image
+                src="/assets/heart-fill-icon.png"
+                alt="Heart Fill Icon"
+                width={20}
+                height={20}
+                className="h-6 w-6"
+              />
+            </div>
+          </div>
+        )
+        : (
+          <span className="p-2 group-hover:bg-pink-600/20 rounded-full">
+            <Heart className="w-4 h-4" />
+          </span>
+        )}
+      <b>
         {totalLikes}
-      </span>
+      </b>
     </Button>
   )
 }
