@@ -1,3 +1,4 @@
+import { ConvertToHttpsType } from "@/types";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -5,8 +6,13 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
-// generate by chatGPT
-export function customDatePost(timestamp: number) {
+/**
+ * Converts a given timestamp into a custom date format.
+ *
+ * @param {number} timestamp - The timestamp to convert.
+ * @return {string} The custom date format.
+ */
+export function customDatePost(timestamp: number): string {
 	const now = Date.now();
 	const timeDiff = now - timestamp;
 
@@ -32,8 +38,13 @@ export function customDatePost(timestamp: number) {
 	}
 }
 
-// generate by chatGPT
-export const formatDateTime = (Date: Date) => {
+/**
+ * Formats a given Date object into a string representing the time and date.
+ *
+ * @param {Date} Date - The Date object to be formatted.
+ * @return {string} The formatted string representing the time and date.
+ */
+export const formatDateTime = (Date: Date): string => {
 	const formattedTime = Date.toLocaleTimeString([], {
 		hour: "2-digit",
 		minute: "2-digit",
@@ -47,7 +58,6 @@ export const formatDateTime = (Date: Date) => {
 	return `${formattedTime} · ${formattedDate}`;
 };
 
-// toast option
 export const toastOptions = {
 	duration: 2000,
 	style: {
@@ -56,39 +66,44 @@ export const toastOptions = {
 	},
 };
 
-// generate by chatGPT
 export const months = [
-	"Januari",
-	"Februari",
-	"Maret",
+	"January",
+	"February",
+	"March",
 	"April",
-	"Mei",
-	"Juni",
-	"Juli",
-	"Agustus",
+	"May",
+	"June",
+	"July",
+	"August",
 	"September",
-	"Oktober",
+	"October",
 	"November",
-	"Desember",
+	"December",
 ];
 
-export function convertToHttps(url: string) {
+/**
+ * Converts a given URL to HTTPS.
+ *
+ * @param {string} url - The URL to be converted.
+ * @return {{ href: string, title: string } | undefined} - The converted URL object with href and title.
+ */
+export function convertToHttps(url: string): ConvertToHttpsType {
 	if (!url) return;
 
 	if (url.startsWith("https://")) {
 		return {
 			href: url,
-			title: url.slice(8)
+			title: url.slice(8),
 		};
 	} else if (url.startsWith("http://")) {
 		return {
 			href: "https://" + url.slice(7),
-			title: url.slice(7)
-		}
+			title: url.slice(7),
+		};
 	} else {
 		return {
 			href: "https://" + url,
-			title: url
+			title: url,
 		};
 	}
 }
@@ -98,12 +113,12 @@ export function convertToHttps(url: string) {
  *
  * @return {string} The current path and search parameters.
  */
-export const getCurrentPath = () => {
+export const getCurrentPath = (): string => {
 	const path = window.location.pathname;
 	const searchParams = window.location.search;
-	
-	return `${path}${searchParams}`
-}
+
+	return `${path}${searchParams}`;
+};
 
 /**
  * Checks if the given page value is valid and returns it.
@@ -116,4 +131,4 @@ export const isValidPage = (qPage: string): number => {
 
 	if (page < 0 || isNaN(page)) return 0;
 	return page;
-}
+};
