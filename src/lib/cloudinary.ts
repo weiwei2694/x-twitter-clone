@@ -1,6 +1,12 @@
 import axios from "axios";
 
-export const uploadFile = async (file: File) => {
+/**
+ * Uploads a file to Cloudinary and returns the URL of the uploaded image.
+ *
+ * @param {File} file - The file to be uploaded.
+ * @return {Promise<string | undefined>} The URL of the uploaded image.
+ */
+export const uploadFile = async (file: File): Promise<string | undefined> => {
 	const formData = new FormData();
 	formData.append("file", file!);
 	formData.append("upload_preset", process.env.NEXT_PUBLIC_UPLOAD_PRESET!);
