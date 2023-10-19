@@ -41,7 +41,7 @@ const Like = ({ liked, userId, currentUserId, path, threadId, totalLikes }: Prop
     >
       {liked
         ? (
-          <div className="p-1 group-hover:bg-pink-600/20 rounded-full">
+          <div className="p-1 group-hover:bg-pink-600/20 rounded-full transition-all">
             <div className="w-6 h-6">
               <Image
                 src="/assets/heart-fill-icon.png"
@@ -54,7 +54,7 @@ const Like = ({ liked, userId, currentUserId, path, threadId, totalLikes }: Prop
           </div>
         )
         : (
-          <span className="p-2 group-hover:bg-pink-600/20 rounded-full">
+          <span className="p-2 group-hover:bg-pink-600/20 rounded-full transition-all">
             <Heart className="w-4 h-4" />
           </span>
         )}

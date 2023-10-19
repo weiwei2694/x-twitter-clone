@@ -35,7 +35,7 @@ const Share = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className="!outline-none p-2 text-gray-200 transition hover:text-blue hover:bg-blue/10 rounded-full"
+        className="!outline-none p-2 text-gray-200 transition-all hover:text-blue hover:bg-blue/10 rounded-full"
       >
         <ShareIcon className="h-4 w-4" />
       </DropdownMenuTrigger>

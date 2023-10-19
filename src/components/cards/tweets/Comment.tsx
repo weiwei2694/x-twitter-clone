@@ -21,10 +21,10 @@ const Comment = ({ replyTweet, totalReplies }: Props) => {
       <Button
         variant="icon"
         size="icon"
-        className="flex items-center gap-x-1 text-gray-200 transition hover:text-blue !outline-none max-sm:hidden group"
+        className="flex items-center gap-x-1 text-gray-200 transition-all hover:text-blue !outline-none max-sm:hidden group"
         onClick={replyTweetHandler}
       >
-        <span className="p-2 group-hover:bg-blue/10 rounded-full">
+        <span className="p-2 group-hover:bg-blue/10 rounded-full transition-all">
           <MessageCircle className="h-4 w-4" />
         </span>
         <b>
@@ -36,10 +36,10 @@ const Comment = ({ replyTweet, totalReplies }: Props) => {
       <Button
         variant="icon"
         size="icon"
-        className="flex items-center gap-x-2 text-gray-200 transition hover:text-blue !outline-none sm:hidden group"
+        className="flex items-center gap-x-2 text-gray-200 transition-all hover:text-blue !outline-none sm:hidden group"
         onClick={replyTweetHandler}
       >
-        <span className="p-2 group-hover:bg-blue/10 rounded-full">
+        <span className="p-2 group-hover:bg-blue/10 rounded-full transition-all">
           <MessageCircle className="h-4 w-4" />
         </span>
         <b>
