@@ -8,21 +8,39 @@ import {
 	ReplyCommentPostNotificationActionProps,
 } from "@/interfaces/notification.interface";
 import prisma from "@/lib/prismadb";
+import {
+	CommentPostNotificationActionType,
+	FollowUserNotificationActionType,
+	GetNotificationsActionType,
+	GetTotalNotificationsActionType,
+	LikePostNotificationActionType,
+	ReplyCommentPostNotificationActionType,
+} from "@/types/notification.type";
 import { revalidatePath } from "next/cache";
 
+/**
+ * Creates a follow user notification action.
+ *
+ * @param {FollowUserNotificationActionProps} param - The parameters for creating the follow user notification action.
+ * @param {string} param.userId - The ID of the user.
+ * @param {string} param.parentIdUser - The ID of the parent user.
+ * @param {string} param.sourceId - The ID of the source.
+ * @param {string} param.path - The path for revalidation.
+ * @return {Promise<FollowUserNotificationActionType>} The created follow user notification action.
+ */
 export const followUserNotificationAction = async ({
 	userId,
 	parentIdUser,
 	sourceId,
 	path,
-}: FollowUserNotificationActionProps) => {
+}: FollowUserNotificationActionProps): Promise<FollowUserNotificationActionType> => {
 	try {
 		if (!userId) throw new Error("userId required");
 		if (!parentIdUser) throw new Error("parentIdUser required");
 		if (!sourceId) throw new Error("sourceId required");
 		if (!path) throw new Error("path required");
 
-		await prisma.notification.create({
+		return await prisma.notification.create({
 			data: {
 				userId,
 				parentIdUser,
@@ -38,19 +56,29 @@ export const followUserNotificationAction = async ({
 	}
 };
 
+/**
+ * Creates a notification for when a post is liked.
+ *
+ * @param {LikePostNotificationActionProps} props - The properties for creating the notification.
+ * @param {string} props.userId - The ID of the user who liked the post.
+ * @param {string} props.sourceId - The ID of the post being liked.
+ * @param {string} props.parentIdPost - The ID of the parent post.
+ * @param {string} props.path - The path to revalidate.
+ * @return {Promise<LikePostNotificationActionType>} - The created notification.
+ */
 export const likePostNotificationAction = async ({
 	userId,
 	sourceId,
 	parentIdPost,
 	path,
-}: LikePostNotificationActionProps) => {
+}: LikePostNotificationActionProps): Promise<LikePostNotificationActionType> => {
 	try {
 		if (!userId) throw new Error("userId required");
 		if (!sourceId) throw new Error("sourceId required");
 		if (!parentIdPost) throw new Error("parentIdPost required");
 		if (!path) throw new Error("path required");
 
-		await prisma.notification.create({
+		return await prisma.notification.create({
 			data: {
 				userId,
 				sourceId,
@@ -66,19 +94,29 @@ export const likePostNotificationAction = async ({
 	}
 };
 
+/**
+ * Creates a comment post notification action.
+ *
+ * @param {CommentPostNotificationActionProps} props - The properties for the comment post notification action.
+ * @param {string} props.userId - The ID of the user.
+ * @param {string} props.sourceId - The ID of the source.
+ * @param {string} props.parentIdPost - The ID of the parent post.
+ * @param {string} props.path - The path.
+ * @return {Promise<CommentPostNotificationAction>} - A promise that resolves when the notification is created.
+ */
 export const commentPostNotificationAction = async ({
 	userId,
 	sourceId,
 	parentIdPost,
 	path,
-}: CommentPostNotificationActionProps) => {
+}: CommentPostNotificationActionProps): Promise<CommentPostNotificationActionType> => {
 	try {
 		if (!userId) throw new Error("userId required");
 		if (!sourceId) throw new Error("sourceId required");
 		if (!parentIdPost) throw new Error("parentIdPost required");
 		if (!path) throw new Error("path required");
 
-		await prisma.notification.create({
+		return await prisma.notification.create({
 			data: {
 				userId,
 				sourceId,
@@ -94,19 +132,29 @@ export const commentPostNotificationAction = async ({
 	}
 };
 
+/**
+ * Reply to a comment and create a notification.
+ *
+ * @param {ReplyCommentPostNotificationActionProps} props - The properties for the reply comment post notification action.
+ * @param {string} props.userId - The ID of the user replying to the comment.
+ * @param {string} props.sourceId - The ID of the source.
+ * @param {string} props.parentIdPost - The ID of the parent post.
+ * @param {string} props.path - The path.
+ * @return {Promise<ReplyCommentPostNotificationActionType>} The created notification.
+ */
 export const replyCommentPostNotificationAction = async ({
 	userId,
 	sourceId,
 	parentIdPost,
 	path,
-}: ReplyCommentPostNotificationActionProps) => {
+}: ReplyCommentPostNotificationActionProps): Promise<ReplyCommentPostNotificationActionType> => {
 	try {
 		if (!userId) throw new Error("userId required");
 		if (!sourceId) throw new Error("sourceId required");
 		if (!parentIdPost) throw new Error("parentIdPost required");
 		if (!path) throw new Error("path required");
 
-		await prisma.notification.create({
+		return await prisma.notification.create({
 			data: {
 				userId,
 				sourceId,
@@ -122,11 +170,20 @@ export const replyCommentPostNotificationAction = async ({
 	}
 };
 
+/**
+ * Retrieves notifications for a specific user.
+ *
+ * @param {GetNotificationsActionProps} props - The parameters for retrieving notifications.
+ * @param {string} props.userId - The ID of the user.
+ * @param {number} props.size - The number of notifications to retrieve per page (default is 30).
+ * @param {number} props.page - The page number to retrieve (default is 0).
+ * @return {Promise<GetNotificationsActionType>} - The notifications for the user.
+ */
 export const getNotificationsAction = async ({
 	userId,
 	size = 30,
 	page = 0,
-}: GetNotificationsActionProps) => {
+}: GetNotificationsActionProps): Promise<GetNotificationsActionType> => {
 	try {
 		if (!userId) throw new Error("userId required");
 
@@ -171,9 +228,15 @@ export const getNotificationsAction = async ({
 	}
 };
 
+/**
+ * Retrieves the total number of unread notifications for a given user.
+ *
+ * @param {string} userId - The ID of the user.
+ * @return {Promise<GetTotalNotificationsActionType>} - The total number of unread notifications for the user.
+ */
 export const getTotalNotificationsAction = async (
 	userId: string
-): Promise<number | undefined> => {
+): Promise<GetTotalNotificationsActionType> => {
 	try {
 		return await prisma.notification.count({
 			where: {
@@ -186,10 +249,17 @@ export const getTotalNotificationsAction = async (
 	}
 };
 
+/**
+ * Marks a notification as read.
+ *
+ * @param {string} notificationId - The ID of the notification.
+ * @param {string} path - The path to revalidate.
+ * @return {Promise<void>} - A promise that resolves when the notification is marked as read.
+ */
 export const markAsReadNotification = async (
 	notificationId: string,
 	path: string
-) => {
+): Promise<void> => {
 	try {
 		if (!notificationId) throw new Error("notificationId required");
 		if (!path) throw new Error("path required");
@@ -207,10 +277,17 @@ export const markAsReadNotification = async (
 	}
 };
 
+/**
+ * Marks all notifications as read for a given user.
+ *
+ * @param {string} userId - The ID of the user.
+ * @param {string} path - The path for revalidation.
+ * @return {Promise<void>} - A promise that resolves when the notifications are marked as read.
+ */
 export const markAllNotificationsAsReadAction = async (
 	userId: string,
 	path: string
-) => {
+): Promise<void> => {
 	try {
 		if (!userId) throw new Error("userId required");
 		if (!path) throw new Error("path required");
@@ -228,10 +305,17 @@ export const markAllNotificationsAsReadAction = async (
 	}
 };
 
+/**
+ * Deletes a notification action.
+ *
+ * @param {string} notificationId - The ID of the notification to be deleted.
+ * @param {string} path - The path to revalidate after deleting the notification.
+ * @return {Promise<void>} - A promise that resolves when the notification is deleted.
+ */
 export const deleteNotificationAction = async (
 	notificationId: string,
 	path: string
-) => {
+): Promise<void> => {
 	try {
 		if (!notificationId) throw new Error("notificationId required");
 
