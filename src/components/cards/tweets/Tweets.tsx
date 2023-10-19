@@ -71,7 +71,7 @@ const Tweets = ({ tweet, userId }: Props) => {
 
   return (
     <article
-      className="flex gap-x-5 px-3 py-4 border-b border-b-gray-300 bg-black-100 hover:bg-black-200/20 transition-all cursor-pointer"
+      className="flex gap-x-4 px-4 py-4 border-b border-b-gray-300 bg-black-100 hover:bg-black-200/20 transition-all cursor-pointer"
       onClick={e => {
         e.stopPropagation();
         redirectToDetailPost();
@@ -100,9 +100,7 @@ const Tweets = ({ tweet, userId }: Props) => {
                 @{tweet.user.username} · {formattedCreatedAt}
               </p>
             </div>
-            <p className="whitespace-break-spaces">
-              <TweetText content={renderText(tweet.text)} />
-            </p>
+            <TweetText content={renderText(tweet.text)} />
           </div>
           <div>
             <Menu

@@ -17,43 +17,17 @@ interface Props {
 }
 
 const DetailTweet = ({ tweet, userId }: Props) => {
-  /**
-   * @router
-   * @pathname
-   */
   const router = useRouter();
   const pathname = usePathname();
 
-  /**
-   * @state
-   * isMounted ( handle hydration UI )
-   * setDataTweet
-   * setOnReplyTweetModal
-   */
   const [isMounted, setIsMounted] = useState(false)
   const setOnOpenReplyTweetModal = useTweetModal(state => state.onOpen);
   const setDataTweet = useReplyTweet(state => state.setDataTweet);
 
-  /**
-   * @liked
-   * @followed
-   * @bookmark
-   * 
-   * Check current user engagement,
-   * whether they have followed,
-   * bookmarked,
-   * or liked this post,
-   * or vice versa
-   */
   const liked = tweet.likes.find(like => like.userId === userId);
   const followed = tweet.user.followers.find(({ followingId }) => followingId === userId)
   const bookmark = tweet.bookmarks.find(item => item.userId === userId);
 
-  /**
-   * @replyTweet
-   * 
-   * communication to createTweetForm
-   */
   const replyTweet = (isForModal: boolean) => {
     const dataTweet: DataTweet = {
       id: tweet.id,
@@ -79,19 +53,8 @@ const DetailTweet = ({ tweet, userId }: Props) => {
     }
   };
 
-  /**
-   * @isOwnTweet
-   * 
-   * for validation on the menu side
-   * if false, display follow user action
-   */
   const isOwnTweet = tweet.userId === userId
 
-  /**
-   * @displayTweetImage
-   * 
-   * If the image from the tweet exists, display it
-   */
   const displayTweetImage = () => {
     if (!tweet.imageUrl) return null;
 
@@ -107,25 +70,15 @@ const DetailTweet = ({ tweet, userId }: Props) => {
     )
   }
 
-  /**
-   * handle hydration ui
-   */
   useEffect(() => {
     setIsMounted(true)
   }, [])
   if (!isMounted) return null;
 
   return (
-    <section className="flex flex-col py-4 px-3 space-y-4">
-      {/**
-       * @Header
-       * User Image Url
-       * Name
-       * Username
-       * Menu
-       */}
+    <section className="flex flex-col py-4 px-4 space-y-4">
       <section className="flex items-center justify-between gap-x-10">
-        <div className="flex items-start justify-start gap-x-5">
+        <div className="flex items-start justify-start gap-x-4">
           <Image
             src={tweet.user.imageUrl}
             alt={tweet.user.name}
@@ -157,42 +110,23 @@ const DetailTweet = ({ tweet, userId }: Props) => {
           />
         </div>
       </section>
-      {/**
-       * @Body
-       * Tweet Text
-       * Image
-       * When tweet created
-      */}
+
       <section className="flex-1 flex flex-col space-y-10">
         <div className="flex flex-col space-y-3">
-          <p className="whitespace-break-spaces">
-            <TweetText content={renderText(tweet.text)} />
-          </p>
+          <TweetText content={renderText(tweet.text)} />
           {displayTweetImage()}
           <p className="font-normal text-gray-200">
             {formatDateTime(tweet.createdAt)}
           </p>
         </div>
       </section>
-      {/**
-       * @Footer
-       * Comment
-       * Like
-       * Bookmark
-       * Share
-       */}
+
       <section className="py-1 border-t border-b border-gray-300">
         <div className="flex items-center justify-between gap-x-8">
-          {/**
-           * @Comment
-           */}
           <Comment
             totalReplies={tweet._count.replies}
             replyTweet={replyTweet}
           />
-          {/**
-           * @Like
-           */}
           <Like
             liked={liked!}
             path={pathname}
@@ -201,9 +135,6 @@ const DetailTweet = ({ tweet, userId }: Props) => {
             threadId={tweet.id}
             totalLikes={tweet.likes.length}
           />
-          {/**
-           * @Bookmark
-           */}
           <Bookmark
             userId={userId}
             path={pathname}
@@ -211,9 +142,6 @@ const DetailTweet = ({ tweet, userId }: Props) => {
             bookmark={bookmark!}
             totalBookmarks={tweet.bookmarks.length}
           />
-          {/**
-             * @CopyLink
-             */}
           <Share
             path={pathname}
             userId={userId}

@@ -11,7 +11,7 @@ const TweetText = ({ content }: Props) => {
   const words = content.split(' ');
 
   return (
-    <>
+    <p className="whitespace-break-spaces break-all">
       {words.map((word: string) => {
         return word.match(URL_REGEX) ? (
           <Fragment key={word + new Date()}>
@@ -23,7 +23,7 @@ const TweetText = ({ content }: Props) => {
           word + ' '
         );
       })}
-    </>
+    </p>
   )
 }
 
