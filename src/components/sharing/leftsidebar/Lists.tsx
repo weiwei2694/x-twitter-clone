@@ -21,7 +21,7 @@ const Lists = ({ username, totalUnreadNotifications }: Props) => {
   const openTweetModal = useTweetModal(state => state.onOpen)
 
   return (
-    <ul className="flex flex-col space-y-6">
+    <ul className="flex flex-col space-y-3">
       {links.map(link => {
         if (!link.href) link.href = `/${username}`
 
@@ -31,7 +31,7 @@ const Lists = ({ username, totalUnreadNotifications }: Props) => {
         return (
           <li
             key={link.title}
-            className={cn("w-fit rounded-full overflow-hidden", isSamePath && "font-bold")}
+            className={cn("w-fit rounded-full overflow-hidden", isSamePath && "font-extrabold")}
           >
             <Link
               href={link.href}
@@ -42,20 +42,20 @@ const Lists = ({ username, totalUnreadNotifications }: Props) => {
                   addToNavigationHistory(getCurrentPath())
                 };
               }}
-              className="flex flex-row items-center gap-x-6 tracking-wider text-xl max-xl:p-3 xl:py-3 xl:px-5 hover:bg-black-200 transition">
+              className={cn("flex flex-row items-center space-x-5 tracking-wider text-xl max-xl:p-3 hover:bg-black-200 transition", isLogo ? "xl:p-4" : "xl:py-3.5 xl:px-4")}>
               <div className="relative">
                 <Image
                   src={isSamePath ? link.activeIcon : link.icon}
                   alt={link.title}
                   width={30}
                   height={30}
-                  className="object-contain w-[30px] h-[30px]"
+                  className={cn("w-[28px] h-[28px]", isLogo ? "object-cover" : "object-contain")}
                 />
 
                 {link.href === '/notifications' && Boolean(totalUnreadNotifications) && (
-                  <span className="w-[12px] h-[12px] grid place-items-center bg-blue text-white rounded-full absolute text-xs top-0 right-0">
-                    
-                  </span>
+                  <span
+                    className="w-[12px] h-[12px] grid place-items-center bg-blue text-white rounded-full absolute text-xs top-0 right-0"
+                  />
                 )}
               </div>
               {!isLogo && (
@@ -67,18 +67,22 @@ const Lists = ({ username, totalUnreadNotifications }: Props) => {
           </li>
         )
       })}
-      <Button
-        variant="primary"
-        className="max-xl:w-fit xl:w-full p-3"
-        onClick={openTweetModal}
-      >
-        <span className="max-xl:hidden xl:inline">
-          Post
-        </span>
-        <span className="max-xl:inline xl:hidden">
-          <Plus size={30} />
-        </span>
-      </Button>
+      <li>
+        <div className="mt-4 w-11/12">
+          <Button
+            variant="primary"
+            className="max-xl:w-fit xl:w-full p-3"
+            onClick={openTweetModal}
+          >
+            <span className="max-xl:hidden xl:inline">
+              Post
+            </span>
+            <span className="max-xl:inline xl:hidden">
+              <Plus size={30} />
+            </span>
+          </Button>
+        </div>
+      </li>
     </ul>
   )
 }
