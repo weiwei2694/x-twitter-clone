@@ -4,13 +4,13 @@ import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 
 const Page = async () => {
-  const clerkUser = await currentUser()
-  if (!clerkUser) return null;
+	const clerkUser = await currentUser();
+	if (!clerkUser) return null;
 
-  const user = await getUserAction(clerkUser.id);
-  if (!user) redirect('/');
+	const user = await getUserAction(clerkUser.id);
+	if (!user) redirect("/");
 
-  return <ShowCreateTweetForm userId={user.id} imageUrl={user.imageUrl} />
-}
+	return <ShowCreateTweetForm userId={user.id} imageUrl={user.imageUrl} />;
+};
 
-export default Page
+export default Page;

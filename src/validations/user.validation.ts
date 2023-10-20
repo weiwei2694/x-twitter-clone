@@ -30,14 +30,10 @@ export const editUserSchema = z.object({
 	bio: z.string().max(255, {
 		message: "maximum character is 255",
 	}),
-	location: z
-		.string()
-		.max(30, {
-			message: "maximum character is 30",
-		}),
-	website: z
-		.string()
-		.max(100, {
-			message: "maximum character is 100",
-		})
+	location: z.string().max(30, {
+		message: "maximum character is 30",
+	}),
+	website: z.string().max(100, {
+		message: "maximum character is 100",
+	}),
 });

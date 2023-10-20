@@ -7,10 +7,10 @@ export interface UserWithFollowers extends User {
 }
 
 export interface toggleFollowUserProps extends InitialProps {
-  username: string;
-  followed: Follower | undefined;
-  userId: string;
-  currentUserId: string;
+	username: string;
+	followed: Follower | undefined;
+	userId: string;
+	currentUserId: string;
 }
 
 export interface CopyLinkUserProps {

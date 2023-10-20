@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -24,7 +24,7 @@ body,
 
 /* font */
 .font-lato {
-	font-family: 'Lato', sans-serif;
+	font-family: "Lato", sans-serif;
 }
 
 @layer base {
@@ -169,6 +169,6 @@ body,
 
 .notifications__component-disabled {
 	pointer-events: none;
-  opacity: 0.6;
+	opacity: 0.6;
 	cursor: not-allowed;
 }

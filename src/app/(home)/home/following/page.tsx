@@ -8,51 +8,46 @@ import Tweets from "@/components/cards/tweets/Tweets";
 import NotFound from "@/components/sharing/NotFound";
 
 interface Props {
-  searchParams: {
-    page: string;
-  }
+	searchParams: {
+		page: string;
+	};
 }
 
 const Page = async ({ searchParams }: Props) => {
-  const { page: qPage } = searchParams;
-  const page = isValidPage(qPage);
+	const { page: qPage } = searchParams;
+	const page = isValidPage(qPage);
 
-  const clerkUser = await currentUser()
-  if (!clerkUser) return null;
+	const clerkUser = await currentUser();
+	if (!clerkUser) return null;
 
-  const user = await getUserAction(clerkUser.id)
-  if (!user) redirect('/');
+	const user = await getUserAction(clerkUser.id);
+	if (!user) redirect("/");
 
-  const isFollowing = true;
-  const tweets = await getTweetsAction({ userId: user.id, isFollowing, page });
+	const isFollowing = true;
+	const tweets = await getTweetsAction({ userId: user.id, isFollowing, page });
 
-  return (
-    <>
-      {tweets?.data.length
-        ? (
-          <>
-            {tweets?.data.map(tweet => (
-              <Tweets
-                key={tweet.id}
-                tweet={tweet}
-                userId={user.id}
-              />
-            ))}
+	return (
+		<>
+			{tweets?.data.length ? (
+				<>
+					{tweets?.data.map((tweet) => (
+						<Tweets key={tweet.id} tweet={tweet} userId={user.id} />
+					))}
 
-            <PaginationButtons
-              currentPage={page}
-              currentPath="/home/following"
-              hasNext={tweets.hasNext}
-            />
-          </>
-        ) : (
-          <NotFound
-            title="No posts can be displayed"
-            description="You haven't followed anyone or the people you follow have no posts at all"
-          />
-        )}
-    </>
-  )
-}
+					<PaginationButtons
+						currentPage={page}
+						currentPath="/home/following"
+						hasNext={tweets.hasNext}
+					/>
+				</>
+			) : (
+				<NotFound
+					title="No posts can be displayed"
+					description="You haven't followed anyone or the people you follow have no posts at all"
+				/>
+			)}
+		</>
+	);
+};
 
-export default Page
+export default Page;

@@ -1,5 +1,5 @@
 const Unread = () => {
-  return <div className="notifications__component-body__unread" />
-}
+	return <div className="notifications__component-body__unread" />;
+};
 
-export default Unread
+export default Unread;

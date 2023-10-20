@@ -1,15 +1,17 @@
-"use client"
+"use client";
 
-import { SignOutButton } from "@clerk/nextjs"
+import { SignOutButton } from "@clerk/nextjs";
 
 const Logout = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <SignOutButton signOutCallback={() => {
-      window.location.href = "/"
-    }}>
-      {children}
-    </SignOutButton>
-  )
-}
+	return (
+		<SignOutButton
+			signOutCallback={() => {
+				window.location.href = "/";
+			}}
+		>
+			{children}
+		</SignOutButton>
+	);
+};
 
-export default Logout
+export default Logout;

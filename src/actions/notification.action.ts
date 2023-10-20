@@ -235,7 +235,7 @@ export const getNotificationsAction = async ({
  * @return {Promise<GetTotalNotificationsActionType>} - The total number of unread notifications for the user.
  */
 export const getTotalNotificationsAction = async (
-	userId: string
+	userId: string,
 ): Promise<GetTotalNotificationsActionType> => {
 	try {
 		return await prisma.notification.count({
@@ -258,7 +258,7 @@ export const getTotalNotificationsAction = async (
  */
 export const markAsReadNotification = async (
 	notificationId: string,
-	path: string
+	path: string,
 ): Promise<void> => {
 	try {
 		if (!notificationId) throw new Error("notificationId required");
@@ -286,7 +286,7 @@ export const markAsReadNotification = async (
  */
 export const markAllNotificationsAsReadAction = async (
 	userId: string,
-	path: string
+	path: string,
 ): Promise<void> => {
 	try {
 		if (!userId) throw new Error("userId required");
@@ -314,7 +314,7 @@ export const markAllNotificationsAsReadAction = async (
  */
 export const deleteNotificationAction = async (
 	notificationId: string,
-	path: string
+	path: string,
 ): Promise<void> => {
 	try {
 		if (!notificationId) throw new Error("notificationId required");

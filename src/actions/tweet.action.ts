@@ -356,7 +356,7 @@ export async function getTweetsBySearchAction({
  */
 export async function deleteTweetAction(
 	id: string,
-	path: string
+	path: string,
 ): Promise<DeleteTweetActionType> {
 	try {
 		if (!id) throw new Error("id required");
@@ -458,7 +458,7 @@ export async function toggleBookmarkAction({
  * @return {Promise<number>} - The total number of bookmarks.
  */
 export async function getTotalBookmarksAction(
-	userId: string
+	userId: string,
 ): Promise<GetTotalBookmarksActionType> {
 	try {
 		if (!userId) throw new Error("userId required");
@@ -486,7 +486,7 @@ export async function getTotalBookmarksAction(
  */
 export async function deleteBookmarksAction(
 	userId: string,
-	path: string
+	path: string,
 ): Promise<DeleteBookmarksAction> {
 	try {
 		if (!userId) throw new Error("userId required");

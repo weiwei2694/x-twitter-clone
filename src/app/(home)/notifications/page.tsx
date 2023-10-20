@@ -6,64 +6,67 @@ import NotFound from "@/components/sharing/NotFound";
 import PaginationButtons from "@/components/sharing/PaginationButtons";
 import { DataNotification } from "@/interfaces/notification.interface";
 import { isValidPage } from "@/lib/utils";
-import { currentUser } from "@clerk/nextjs"
+import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { Fragment } from "react";
 
 interface Props {
-  searchParams: {
-    page: string;
-  }
+	searchParams: {
+		page: string;
+	};
 }
 
 const Page = async ({ searchParams }: Props) => {
-  const { page: qPage } = searchParams;
-  const page = isValidPage(qPage);
+	const { page: qPage } = searchParams;
+	const page = isValidPage(qPage);
 
-  const clerkUser = await currentUser()
-  if (!clerkUser) return null;
+	const clerkUser = await currentUser();
+	if (!clerkUser) return null;
 
-  const user = await getUserAction(clerkUser.id)
-  if (!user) redirect('/');
+	const user = await getUserAction(clerkUser.id);
+	if (!user) redirect("/");
 
-  const notifications = await getNotificationsAction({
-    userId: user.id,
-    page
-  });
+	const notifications = await getNotificationsAction({
+		userId: user.id,
+		page,
+	});
 
-  const actionTypeField = (data: DataNotification): JSX.Element | null => {
-    if (!data?.activityType) return null;
+	const actionTypeField = (data: DataNotification): JSX.Element | null => {
+		if (!data?.activityType) return null;
 
-    const options: any = {
-      "User": <UserNotification dataNotification={data} />,
-      "Post": <PostNotification currentUsername={user.username} dataNotification={data} />,
-    }
+		const options: any = {
+			User: <UserNotification dataNotification={data} />,
+			Post: (
+				<PostNotification
+					currentUsername={user.username}
+					dataNotification={data}
+				/>
+			),
+		};
 
-    return options[data.parentType]
-  }
+		return options[data.parentType];
+	};
 
-  return (
-    notifications?.data.length ? (
-      <>
-        {notifications.data.map(notification => (
-          <Fragment key={notification.id}>
-            {actionTypeField(notification)}
-          </Fragment>
-        ))}
+	return notifications?.data.length ? (
+		<>
+			{notifications.data.map((notification) => (
+				<Fragment key={notification.id}>
+					{actionTypeField(notification)}
+				</Fragment>
+			))}
 
-        <PaginationButtons
-          currentPage={page}
-          currentPath="/notifications"
-          hasNext={notifications.hasNext}
-        />
-      </>
-    ) : (
-      <NotFound
-        title="Nothing to see here — yet"
-        description="All notifications will be here, starting from likes, comments, replies and others"
-      />
-    )
-  )
-}
+			<PaginationButtons
+				currentPage={page}
+				currentPath="/notifications"
+				hasNext={notifications.hasNext}
+			/>
+		</>
+	) : (
+		<NotFound
+			title="Nothing to see here — yet"
+			description="All notifications will be here, starting from likes, comments, replies and others"
+		/>
+	);
+};
 
-export default Page
+export default Page;

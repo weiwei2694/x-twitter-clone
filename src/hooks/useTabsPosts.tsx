@@ -1,14 +1,14 @@
 import { create } from "zustand";
 
 interface State {
-    status: string;
+	status: string;
 }
 
 interface Action {
-    setStatus: (status: string) => void;
+	setStatus: (status: string) => void;
 }
 
-export const useTabsPosts = create<State & Action>(set => ({
-    status: "For You",
-    setStatus: (status) => set({ status }),
-}))
+export const useTabsPosts = create<State & Action>((set) => ({
+	status: "For You",
+	setStatus: (status) => set({ status }),
+}));

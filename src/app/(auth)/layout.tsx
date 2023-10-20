@@ -1,10 +1,5 @@
-const layout = ({ children }: {  children: React.ReactNode }) => {
+const layout = ({ children }: { children: React.ReactNode }) => {
+	return <main className="h-screen grid place-items-center">{children}</main>;
+};
 
-  return (
-    <main className="h-screen grid place-items-center">
-        {children}
-    </main>
-  )
-}
-
-export default layout
+export default layout;

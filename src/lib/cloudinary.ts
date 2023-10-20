@@ -13,7 +13,7 @@ export const uploadFile = async (file: File): Promise<string | undefined> => {
 
 	const response = await axios.post(
 		`https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_NAME}/image/upload`,
-		formData
+		formData,
 	);
 
 	const isStatus200 = response.status === 200;

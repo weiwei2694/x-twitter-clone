@@ -1,7 +1,7 @@
-import Loading from '@/components/sharing/Loading'
+import Loading from "@/components/sharing/Loading";
 
 const loading = () => {
-  return <Loading />
-}
+	return <Loading />;
+};
 
-export default loading
+export default loading;

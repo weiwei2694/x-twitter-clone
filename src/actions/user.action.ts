@@ -221,7 +221,7 @@ export async function updateUserAction({
  * @return {Promise<GetUserByUsernameActionType>} A promise that resolves to the user object.
  */
 export async function getUserByUsernameAction(
-	username: string
+	username: string,
 ): Promise<GetUserByUsernameActionType> {
 	try {
 		if (!username) throw new Error("username required");

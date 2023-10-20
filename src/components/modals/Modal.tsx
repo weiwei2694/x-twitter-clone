@@ -4,24 +4,24 @@ import { useEffect, useState } from "react";
 import CreateTweet from "./CreateTweet";
 
 interface Props {
-    imageUrl: string;
-    userId: string;
+	imageUrl: string;
+	userId: string;
 }
 
 const Modal = ({ imageUrl, userId }: Props) => {
-    const [isMounted, setIsMounted] = useState(false);
+	const [isMounted, setIsMounted] = useState(false);
 
-    useEffect(() => {
-        setIsMounted(true);
-    }, [])
+	useEffect(() => {
+		setIsMounted(true);
+	}, []);
 
-    if (!isMounted) return null;
+	if (!isMounted) return null;
 
-    return (
-        <>
-            <CreateTweet userId={userId} imageUrl={imageUrl} />
-        </>
-    )
-}
+	return (
+		<>
+			<CreateTweet userId={userId} imageUrl={imageUrl} />
+		</>
+	);
+};
 
-export default Modal
+export default Modal;
