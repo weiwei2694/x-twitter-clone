@@ -28,7 +28,7 @@ const layout = async ({ children}: Props) => {
     ]);
 
     return (
-        <main className="max-h-screen overflow-hidden">
+        <main className="min-h-screen">
             <Modal imageUrl={user.imageUrl} userId={user.id} />
             <section className="h-full max-w-7xl mx-auto flex justify-center">
                 <LeftSidebar
@@ -37,7 +37,7 @@ const layout = async ({ children}: Props) => {
                     name={user.name}
                     imageUrl={user.imageUrl}
                 />
-                <section className="hide-scrollbar max-sm:border-none border-l border-r border-gray-300 max-h-screen overflow-y-auto max-sm:pb-32 sm:pb-0 w-full max-sm:max-w-full max-w-[600px]">
+                <section className="max-sm:border-none border-x border-x-gray-300 max-sm:pb-32 sm:pb-0 w-full max-sm:max-w-full max-w-[600px]">
                     {children}
                 </section>
                 <RightSidebar
