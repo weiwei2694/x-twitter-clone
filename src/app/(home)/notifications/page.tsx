@@ -31,9 +31,7 @@ const Page = async ({ searchParams }: Props) => {
 		page,
 	});
 
-	const actionTypeField = (data: DataNotification): JSX.Element | null => {
-		if (!data?.activityType) return null;
-
+	const actionTypeField = (data: DataNotification): JSX.Element => {
 		const options: any = {
 			User: <UserNotification dataNotification={data} />,
 			Post: (
@@ -51,7 +49,7 @@ const Page = async ({ searchParams }: Props) => {
 		<>
 			{notifications.data.map((notification) => (
 				<Fragment key={notification.id}>
-					{actionTypeField(notification)}
+					{actionTypeField(notification as DataNotification)}
 				</Fragment>
 			))}
 
