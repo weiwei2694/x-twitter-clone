@@ -39,7 +39,7 @@ const Page = async ({ params, searchParams }: Props) => {
 
 	return (
 		<>
-			{tweets?.data.length && (
+			{tweets?.data.length ? (
 				<>
 					{tweets?.data.map((tweet) => (
 						<Tweets key={tweet.id} tweet={tweet} userId={currentUser.id} />
@@ -51,7 +51,7 @@ const Page = async ({ params, searchParams }: Props) => {
 						hasNext={tweets.hasNext}
 					/>
 				</>
-			)}
+			) : null}
 		</>
 	);
 };
