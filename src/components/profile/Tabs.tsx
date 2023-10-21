@@ -23,13 +23,13 @@ const Tab = ({ title, href, path }: TabProps) => {
 	return (
 		<Link
 			href={href}
-			onClick={e => {
+			onClick={(e) => {
 				if (isPending) return;
 
 				e.stopPropagation();
 				startTransition(() => {
 					addToNavigationHistory(getCurrentPath());
-				})
+				});
 			}}
 			className="flex-1 flex justify-center cursor-pointer hover:bg-gray-300 transition"
 		>

@@ -17,7 +17,7 @@ const TweetText = ({ content }: Props) => {
 					<Fragment key={word + new Date()}>
 						<Link
 							href={convertToHttps(word)?.href!}
-							onClick={e => e.stopPropagation()}
+							onClick={(e) => e.stopPropagation()}
 							target="_blank"
 							className="text-blue hover:underline"
 						>
