@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import CreateTweet from "./CreateTweet";
+import CreateTweetModal from "./CreateTweetModal";
 
 interface Props {
 	imageUrl: string;
@@ -19,7 +19,7 @@ const Modal = ({ imageUrl, userId }: Props) => {
 
 	return (
 		<>
-			<CreateTweet userId={userId} imageUrl={imageUrl} />
+			<CreateTweetModal userId={userId} imageUrl={imageUrl} />
 		</>
 	);
 };

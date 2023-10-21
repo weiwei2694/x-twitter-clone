@@ -10,7 +10,7 @@ interface Props {
 	imageUrl: string;
 }
 
-const CreateTweet = ({ userId, imageUrl }: Props) => {
+const CreateTweetModal = ({ userId, imageUrl }: Props) => {
 	const { onClose, isOpen } = useTweetModal();
 	const { setDataTweet, dataTweet } = useReplyTweet();
 
@@ -45,4 +45,4 @@ const CreateTweet = ({ userId, imageUrl }: Props) => {
 	);
 };
 
-export default CreateTweet;
+export default CreateTweetModal;
