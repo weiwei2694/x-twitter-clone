@@ -1,8 +1,9 @@
 "use client";
-import { cn } from "@/lib/utils";
+import { usePrevious } from "@/hooks/usePrevious";
+import { cn, getCurrentPath } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import React from "react";
+import { useTransition } from "react";
 
 interface TabsProps {
 	username: string;
@@ -16,10 +17,20 @@ interface TabProps {
 
 const Tab = ({ title, href, path }: TabProps) => {
 	const isSamePath = path === href;
+	const { addToNavigationHistory } = usePrevious();
+	const [isPending, startTransition] = useTransition();
 
 	return (
 		<Link
 			href={href}
+			onClick={e => {
+				if (isPending) return;
+
+				e.stopPropagation();
+				startTransition(() => {
+					addToNavigationHistory(getCurrentPath());
+				})
+			}}
 			className="flex-1 flex justify-center cursor-pointer hover:bg-gray-300 transition"
 		>
 			<p
