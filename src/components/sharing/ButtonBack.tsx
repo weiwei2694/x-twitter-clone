@@ -24,7 +24,7 @@ const ButtonBack = () => {
 
 	return (
 		<Button
-			className="rounded-full hover:bg-gray-300/50 transition"
+			className="button__icon-hover"
 			variant="icon"
 			size="icon"
 			onClick={redirectToPreviousPage}

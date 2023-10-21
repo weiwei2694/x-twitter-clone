@@ -4,6 +4,8 @@ import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { useTweetModal } from "@/hooks/useTweetModal";
 import CreateTweetForm from "../forms/createtweetform/CreateTweetForm";
 import { useReplyTweet } from "@/hooks/useReplyTweet";
+import { XIcon } from "lucide-react";
+import { Button } from "../ui/button";
 
 interface Props {
 	userId: string;
@@ -25,13 +27,19 @@ const CreateTweetModal = ({ userId, imageUrl }: Props) => {
 		<Dialog open={isOpen} onOpenChange={onOpenChangeDialog}>
 			<DialogContent className="!outline-none !border-none bg-black-100 w-full select-none">
 				<DialogHeader>
-					<h3 className="tracking-wide text-2xl font-semibold">
-						{!isDataTweetEmpty
-							? `Replying to @${dataTweet.user.username}`
-							: "Post Tweet"}
-					</h3>
+					<Button
+						variant="icon"
+						size="icon"
+						onClick={(e) => {
+							e.stopPropagation();
+							onOpenChangeDialog();
+						}}
+						className="button__icon-hover absolute top-3 left-3"
+					>
+						<XIcon className="w-5 h-5" />
+					</Button>
 				</DialogHeader>
-				<div className="mt-5">
+				<div className="mt-10">
 					<CreateTweetForm
 						isModal
 						userId={userId}

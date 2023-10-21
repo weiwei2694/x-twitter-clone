@@ -22,6 +22,10 @@ body,
 	@apply focus-within:ring-0 focus-within:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 !important;
 }
 
+.button__icon-hover {
+	@apply rounded-full hover:bg-gray-300/50 transition-all;
+}
+
 /* font */
 .font-lato {
 	font-family: "Lato", sans-serif;
