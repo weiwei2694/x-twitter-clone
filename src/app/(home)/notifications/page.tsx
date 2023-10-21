@@ -49,7 +49,7 @@ const Page = async ({ searchParams }: Props) => {
 		<>
 			{notifications.data.map((notification) => (
 				<Fragment key={notification.id}>
-					{actionTypeField(notification as DataNotification)}
+					{actionTypeField(notification)}
 				</Fragment>
 			))}
 

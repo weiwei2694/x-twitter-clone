@@ -1,3 +1,4 @@
+import { DataNotification } from "@/interfaces/notification.interface";
 import { Notification } from "@prisma/client";
 
 export type FollowUserNotificationActionType = Notification | undefined;
@@ -7,6 +8,6 @@ export type CommentPostNotificationActionType =
 export type ReplyCommentPostNotificationActionType =
 	FollowUserNotificationActionType;
 export type GetNotificationsActionType =
-	| { data: Notification[]; hasNext: boolean }
+	| { data: DataNotification[]; hasNext: boolean }
 	| undefined;
 export type GetTotalNotificationsActionType = number | undefined;
