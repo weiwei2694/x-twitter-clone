@@ -15,7 +15,12 @@ const TweetText = ({ content }: Props) => {
 			{words.map((word: string) => {
 				return word.match(URL_REGEX) ? (
 					<Fragment key={word + new Date()}>
-						<Link href={word} target="_blank" className="text-blue">
+						<Link
+							href={convertToHttps(word)?.href!}
+							onClick={e => e.stopPropagation()}
+							target="_blank"
+							className="text-blue hover:underline"
+						>
 							{convertToHttps(word)?.title}
 						</Link>{" "}
 					</Fragment>
