@@ -13,7 +13,10 @@ const SubmitButton = ({ isMobile, title, isLoading }: Props) => {
 	return (
 		<Button
 			variant="primary"
-			className={cn("px-6 py-1.5 w-fit", isMobile && "text-base")}
+			className={cn(
+				"px-5 py-2 w-fit text-sm font-extrabold",
+				isMobile && "py-1.5",
+			)}
 			type="submit"
 			disabled={isLoading}
 		>
