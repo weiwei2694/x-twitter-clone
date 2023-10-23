@@ -2,6 +2,13 @@
 
 This project does not implement Websockets, so it still has defects in toggle like, bookmark and follow. and it took me about 3-4 weeks to do it, and of course I learned a lot of new things.
 
+## Demo Notice
+<a href="https://x-twitter-clone-weiwei2694.vercel.app/" target="_blank">X Twitter Clone</a>
+
+If you can't open it or there are problems, most likely my railway hobby plan has run out :(.
+So run it locally if you want to see all the features.
+
+because I use a hobby plan from railway, the performance presented by my website will not be very good, maybe there will be a delay of 1-5 seconds, when querying.
 <table style="width:100%; border: 0px; box-sizing: border-box;">
   <tr>
     <td>
