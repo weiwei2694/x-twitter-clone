@@ -16,7 +16,7 @@ interface Props {
 }
 
 const Comment = ({ dataTweet, totalReplies }: Props) => {
-	const router = useRouter()
+	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
 	const setDataTweet = useReplyTweet((state) => state.setDataTweet);
 	const setOnOpenReplyTweetModal = useTweetModal((state) => state.onOpen);
@@ -24,19 +24,19 @@ const Comment = ({ dataTweet, totalReplies }: Props) => {
 
 	const replyTweetHandler = (
 		e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
-		isForModal: boolean
+		isForModal: boolean,
 	) => {
 		e.stopPropagation();
 
 		startTransition(() => {
 			setDataTweet(dataTweet);
 
-			if (isForModal) setOnOpenReplyTweetModal()
+			if (isForModal) setOnOpenReplyTweetModal();
 			else {
 				addToNavigationHistory(getCurrentPath());
 				router.push("/compose/tweet");
 			}
-		})
+		});
 	};
 
 	return (
@@ -47,7 +47,7 @@ const Comment = ({ dataTweet, totalReplies }: Props) => {
 				size="icon"
 				className="flex items-center gap-x-1 text-gray-200 transition-all hover:text-blue !outline-none max-sm:hidden group"
 				disabled={isPending}
-				onClick={e => replyTweetHandler(e, true)}
+				onClick={(e) => replyTweetHandler(e, true)}
 			>
 				<span className="p-2 group-hover:bg-blue/10 rounded-full transition-all">
 					<MessageCircle className="h-4 w-4" />
@@ -61,7 +61,7 @@ const Comment = ({ dataTweet, totalReplies }: Props) => {
 				size="icon"
 				disabled={isPending}
 				className="flex items-center gap-x-2 text-gray-200 transition-all hover:text-blue !outline-none sm:hidden group"
-				onClick={e => replyTweetHandler(e, false)}
+				onClick={(e) => replyTweetHandler(e, false)}
 			>
 				<span className="p-2 group-hover:bg-blue/10 rounded-full transition-all">
 					<MessageCircle className="h-4 w-4" />

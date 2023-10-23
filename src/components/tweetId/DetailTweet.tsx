@@ -106,10 +106,7 @@ const DetailTweet = ({ tweet, userId }: Props) => {
 
 			<section className="py-1 border-t border-b border-gray-300">
 				<div className="flex items-center justify-between gap-x-8">
-					<Comment
-						totalReplies={tweet._count.replies}
-						dataTweet={dataTweet}
-					/>
+					<Comment totalReplies={tweet._count.replies} dataTweet={dataTweet} />
 					<Like
 						liked={liked!}
 						path={pathname}

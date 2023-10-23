@@ -111,9 +111,10 @@ const CreateTweetForm = ({
 				await notificationType(dataNotification);
 			}
 
-			const redirectTo = isMobile && isReply
-				? `/${dataTweet?.user?.username}/status/${dataTweet?.id}`
-				: "/home";
+			const redirectTo =
+				isMobile && isReply
+					? `/${dataTweet?.user?.username}/status/${dataTweet?.id}`
+					: "/home";
 
 			if (isMobile) router.push(redirectTo);
 		} catch (error) {
