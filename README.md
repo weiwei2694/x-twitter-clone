@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Fullstack X Twitter Clone: Next.js 13, React, Typescript, Prisma, Clerk, Tailwind CSS, Cloudinary, MySQL, Shadcn UI, Zustand
 
-## Getting Started
+This project does not implement Websockets, so it still has defects in toggle like, bookmark and follow. and it took me about 3-4 weeks to do it, and of course I learned a lot of new things.
 
-First, run the development server:
+<table style="width:100%; border: 0px; box-sizing: border-box;">
+  <tr>
+    <td>
+      <figure>
+				<img src="./public/assets/previews/preview-home.png" loading="lazy" alt="Preview Home" />
+			</figure>
+    </td>
+    <td>
+      <figure>
+				<img src="./public/assets/previews/preview-explore.png" loading="lazy" alt="Preview Explore" />
+			</figure>
+    </td>
+    <td>
+      <figure>
+				<img src="./public/assets/previews/preview-notifications.png" loading="lazy" alt="Preview Notifications" />
+			</figure>
+    </td>
+    <td>
+      <figure>
+				<img src="./public/assets/previews/preview-bookmarks.png" loading="lazy" alt="Preview Bookmarks" />
+			</figure>
+    </td>
+  </tr>
+	<tr>
+		<td>
+			<figure>
+				<img src="./public/assets/previews/preview-profile.png" loading="lazy" alt="Preview Profile" />
+			</figure>
+		</td>
+	</tr>
+</table>
 
+## Key Features
+- Create Tweet - image upload, link
+- Delete Tweet
+- Share Tweet
+- Reply Tweet
+- Like Tweet
+- Bookmark Tweet
+- Follow User
+- Notifications - like, comment, reply, follow
+- Search Menu - search for user
+- Search and Explore Page
+- Edit Profile
+- Profile - posts, replies, likes
+- Pagination
+- Beautiful UI using TailwindCSS and ShadcnUI
+- Full responsivity and mobile UI
+- MySQL database using Railways
+- ORM using Prisma
+- Authentication with Clerk
+
+## Cloning the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun run dev
+git clone https://github.com/weiwei2694/x-twitter-clone.git
+cd x-twitter-clone
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Install packages
+```bash
+npm install
+yarn install
+pnpm install
+bun install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Setup .env file
+```bash
+# CLERK
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/onboarding
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/onboarding
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+# DATABASE
+DATABASE_URL=
 
-## Learn More
+# CLOUDINARY
+NEXT_PUBLIC_CLOUDINARY_NAME=
+NEXT_PUBLIC_UPLOAD_PRESET=
 
-To learn more about Next.js, take a look at the following resources:
+# NEXT URL
+NEXT_PUBLIC_NEXT_URL=http://localhost:3000
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Setup Prisma
+Add MySQL Database (I used Railway)
+```bash
+npx prisma generate
+npx prisma db push
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Available commands
+| Command         | Description                                   |
+| --------------- | --------------------------------------------- |
+| `npm run dev`   | Starts a development instance of the app     |
+| `npm run build` | Builds the app for production                |
+| `npm run start` | Starts the app in production mode            |
+| `npm run prettier`   | Check and format code using Prettier      |
+| `npm run prettier:fix` | Format code using Prettier (fix issues)   |
