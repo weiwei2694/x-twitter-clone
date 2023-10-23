@@ -5,8 +5,6 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { customDatePost, getCurrentPath } from "@/lib/utils";
-import { useTweetModal } from "@/hooks/useTweetModal";
-import { useReplyTweet } from "@/hooks/useReplyTweet";
 import { renderText } from "@/lib/tweet";
 import { Like, Share, Comment, Menu } from "./";
 import TweetText from "@/components/sharing/TweetText";
@@ -21,10 +19,7 @@ const Tweets = ({ tweet, userId }: Props) => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const { addToNavigationHistory } = usePrevious();
-
 	const [isMounted, setIsMounted] = useState(false);
-	const setDataTweet = useReplyTweet((state) => state.setDataTweet);
-	const setOnOpenReplyTweetModal = useTweetModal((state) => state.onOpen);
 
 	const liked = tweet.likes.find((like) => like.userId === userId);
 	const followed = tweet.user.followers.find(
@@ -32,29 +27,19 @@ const Tweets = ({ tweet, userId }: Props) => {
 	);
 	const bookmark = tweet.bookmarks.find((item) => item.userId === userId);
 
-	const replyTweet = (isForModal: boolean) => {
-		const dataTweet: DataTweet = {
-			id: tweet.id,
-			text: tweet.text,
-			imageUrl: tweet.imageUrl,
-			createdAt: tweet.createdAt,
-			parentId: tweet.id,
-			isParentIdExist: Boolean(tweet.parentId),
-			user: {
-				id: tweet.user.id,
-				name: tweet.user.name,
-				username: tweet.user.username,
-				imageUrl: tweet.user.imageUrl,
-			},
-		};
-
-		setDataTweet(dataTweet);
-
-		if (isForModal) {
-			setOnOpenReplyTweetModal();
-		} else {
-			router.push("/compose/tweet");
-		}
+	const dataTweet: DataTweet = {
+		id: tweet.id,
+		text: tweet.text,
+		imageUrl: tweet.imageUrl,
+		createdAt: tweet.createdAt,
+		parentId: tweet.id,
+		isParentIdExist: Boolean(tweet.parentId),
+		user: {
+			id: tweet.user.id,
+			name: tweet.user.name,
+			username: tweet.user.username,
+			imageUrl: tweet.user.imageUrl,
+		},
 	};
 
 	const formattedCreatedAt =
@@ -133,7 +118,7 @@ const Tweets = ({ tweet, userId }: Props) => {
 					<section className="flex items-center gap-x-10">
 						<Comment
 							totalReplies={tweet._count.replies}
-							replyTweet={replyTweet}
+							dataTweet={dataTweet}
 						/>
 						<Like
 							liked={liked!}

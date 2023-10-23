@@ -2,12 +2,10 @@
 
 import { DataTweet, DetailTweet } from "@/interfaces/tweet.interface";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { formatDateTime } from "@/lib/utils";
-import { useTweetModal } from "@/hooks/useTweetModal";
 import { renderText } from "@/lib/tweet";
-import { useReplyTweet } from "@/hooks/useReplyTweet";
 import { Share, Bookmark, Like, Menu, Comment } from "../cards/tweets";
 import TweetText from "../sharing/TweetText";
 
@@ -17,42 +15,27 @@ interface Props {
 }
 
 const DetailTweet = ({ tweet, userId }: Props) => {
-	const router = useRouter();
 	const pathname = usePathname();
-
 	const [isMounted, setIsMounted] = useState(false);
-	const setOnOpenReplyTweetModal = useTweetModal((state) => state.onOpen);
-	const setDataTweet = useReplyTweet((state) => state.setDataTweet);
-
 	const liked = tweet.likes.find((like) => like.userId === userId);
 	const followed = tweet.user.followers.find(
 		({ followingId }) => followingId === userId,
 	);
 	const bookmark = tweet.bookmarks.find((item) => item.userId === userId);
 
-	const replyTweet = (isForModal: boolean) => {
-		const dataTweet: DataTweet = {
-			id: tweet.id,
-			text: tweet.text,
-			imageUrl: tweet.imageUrl,
-			createdAt: tweet.createdAt,
-			parentId: tweet.id,
-			isParentIdExist: Boolean(tweet.parentId),
-			user: {
-				id: tweet.user.id,
-				name: tweet.user.name,
-				username: tweet.user.username,
-				imageUrl: tweet.user.imageUrl,
-			},
-		};
-
-		setDataTweet(dataTweet);
-
-		if (isForModal) {
-			setOnOpenReplyTweetModal();
-		} else {
-			router.push("/compose/tweet");
-		}
+	const dataTweet: DataTweet = {
+		id: tweet.id,
+		text: tweet.text,
+		imageUrl: tweet.imageUrl,
+		createdAt: tweet.createdAt,
+		parentId: tweet.id,
+		isParentIdExist: Boolean(tweet.parentId),
+		user: {
+			id: tweet.user.id,
+			name: tweet.user.name,
+			username: tweet.user.username,
+			imageUrl: tweet.user.imageUrl,
+		},
 	};
 
 	const isOwnTweet = tweet.userId === userId;
@@ -125,7 +108,7 @@ const DetailTweet = ({ tweet, userId }: Props) => {
 				<div className="flex items-center justify-between gap-x-8">
 					<Comment
 						totalReplies={tweet._count.replies}
-						replyTweet={replyTweet}
+						dataTweet={dataTweet}
 					/>
 					<Like
 						liked={liked!}
