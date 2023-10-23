@@ -12,9 +12,10 @@ interface Props {
 const Comment = ({ replyTweet, totalReplies }: Props) => {
 	const replyTweetHandler = (
 		e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
+		isForModal: boolean
 	) => {
 		e.stopPropagation();
-		replyTweet(true);
+		replyTweet(isForModal);
 	};
 
 	return (
@@ -24,7 +25,7 @@ const Comment = ({ replyTweet, totalReplies }: Props) => {
 				variant="icon"
 				size="icon"
 				className="flex items-center gap-x-1 text-gray-200 transition-all hover:text-blue !outline-none max-sm:hidden group"
-				onClick={replyTweetHandler}
+				onClick={e => replyTweetHandler(e, true)}
 			>
 				<span className="p-2 group-hover:bg-blue/10 rounded-full transition-all">
 					<MessageCircle className="h-4 w-4" />
@@ -37,7 +38,7 @@ const Comment = ({ replyTweet, totalReplies }: Props) => {
 				variant="icon"
 				size="icon"
 				className="flex items-center gap-x-2 text-gray-200 transition-all hover:text-blue !outline-none sm:hidden group"
-				onClick={replyTweetHandler}
+				onClick={e => replyTweetHandler(e, false)}
 			>
 				<span className="p-2 group-hover:bg-blue/10 rounded-full transition-all">
 					<MessageCircle className="h-4 w-4" />
