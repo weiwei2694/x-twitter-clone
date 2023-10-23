@@ -8,6 +8,7 @@ export const metadata: Metadata = {
 		default: "X",
 		template: "%s / X",
 	},
+	metadataBase: new URL(process.env.NEXT_PUBLIC_NEXT_URL!),
 	themeColor: "black",
 	openGraph: {
 		title: {
