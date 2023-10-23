@@ -44,12 +44,7 @@ const Topbar = ({ totalUnreadNotifications, userId }: Props) => {
 				<div className="px-3 py-4 flex items-center justify-between">
 					<div className="flex flex-row items-center gap-x-2">
 						<ButtonBack />
-						<div className="flex flex-col item-start justify-start">
-							<h2 className="font-bold tracking-wide text-xl">Notifications</h2>
-							<p className="text-sm font-normal text-gray-200">
-								{totalUnreadNotifications} unread notifications
-							</p>
-						</div>
+						<h2 className="font-bold tracking-wide text-xl">Notifications</h2>
 					</div>
 					{Boolean(totalUnreadNotifications) && (
 						<DropdownMenu>
