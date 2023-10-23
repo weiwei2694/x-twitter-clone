@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -53,6 +53,7 @@ const CreateTweetForm = ({
 	const onCloseModal = useTweetModal((state) => state.onClose);
 	const { dataTweet, setDataTweet } = useReplyTweet();
 	const path = usePathname();
+	const router = useRouter();
 
 	const [isLoading, setIsLoading] = useState(false);
 	const [file, setFile] = useState<File>();
@@ -69,10 +70,6 @@ const CreateTweetForm = ({
 		},
 	});
 
-	/**
-	 * @onChangeImage
-	 * create previewImage when user try upload file image
-	 */
 	const onChangeImage = (event: ChangeEvent<HTMLInputElement>) => {
 		const files = event.target.files ?? [];
 		if (!files.length) return;
@@ -88,13 +85,7 @@ const CreateTweetForm = ({
 		setPreviewImage(previewPhoto);
 	};
 
-	/**
-	 * Submits the form with the provided values.
-	 *
-	 * @param {z.infer<typeof tweetSchema>} values - The values to be submitted.
-	 * @return {Promise<void>} A promise that resolves when the form is submitted.
-	 */
-	async function onSubmit(values: z.infer<typeof tweetSchema>) {
+	async function onSubmit(values: z.infer<typeof tweetSchema>): Promise<void> {
 		try {
 			setIsLoading(true);
 
@@ -120,11 +111,11 @@ const CreateTweetForm = ({
 				await notificationType(dataNotification);
 			}
 
-			if (isMobile && isReply) {
-				window.location.href = `/${dataTweet?.user?.username}/status/${dataTweet?.id}`;
-			} else if (isMobile) {
-				window.location.href = "/home";
-			}
+			const redirectTo = isMobile && isReply
+				? `/${dataTweet?.user?.username}/status/${dataTweet?.id}`
+				: "/home";
+
+			if (isMobile) router.push(redirectTo);
 		} catch (error) {
 			console.info("[ERROR_CREATE_TWEET_FORM]", error);
 		} finally {
@@ -138,10 +129,6 @@ const CreateTweetForm = ({
 		}
 	}
 
-	/**
-	 * @AutoResize
-	 * works on textarea
-	 */
 	useEffect(() => {
 		const { current } = textarea;
 		if (!current) return;
@@ -160,17 +147,11 @@ const CreateTweetForm = ({
 		current.style.height = current.scrollHeight + "px";
 	};
 
-	/**
-	 * @ShowTextSubmitButton
-	 */
 	const showTextSubmitButton = () => {
 		if (!dataTweet) return "Post";
 		if (isReply) return "Reply";
 	};
 
-	/**
-	 * @ShowTextPlaceholder
-	 */
 	const showTextPlaceholder = () => {
 		if (!dataTweet) return "What is happening?";
 		if (isReply) return "Post your reply";
@@ -185,27 +166,14 @@ const CreateTweetForm = ({
 					!isModal && "px-3 py-4",
 				)}
 			>
-				{/**
-				 * @Topbar
-				 * for the previous button and submit button
-				 */}
 				<Topbar
 					isMobile={isMobile!}
 					title={showTextSubmitButton()!}
 					isLoading={isLoading}
 				/>
 
-				{/**
-				 * @Reply
-				 * displays which tweet will be replied to
-				 */}
 				<Reply isReply={isReply!} dataTweet={dataTweet!} />
 
-				{/**
-				 * @UserProfile
-				 * @Textarea
-				 * @PreviewImage
-				 */}
 				<section className="flex items-start justify-start gap-x-5 w-full">
 					<Image
 						src={imageUrl}
@@ -241,15 +209,8 @@ const CreateTweetForm = ({
 					</section>
 				</section>
 
-				{/**
-				 * @Divider
-				 */}
 				<div className="h-[1px] w-full bg-gray-300" />
 
-				{/**
-				 * @ChoosingFile
-				 * @SubmitButton
-				 */}
 				<section className="flex items-center justify-between">
 					<div>
 						<Label

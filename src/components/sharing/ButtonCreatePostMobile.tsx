@@ -5,6 +5,9 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { useReplyTweet } from "@/hooks/useReplyTweet";
 import { DataTweet } from "@/interfaces/tweet.interface";
+import { usePrevious } from "@/hooks/usePrevious";
+import { getCurrentPath } from "@/lib/utils";
+import { useTransition } from "react";
 
 interface Props {
 	isMobile?: boolean;
@@ -14,20 +17,22 @@ interface Props {
 const ButtonCreatePostMobile = ({ isMobile, dataTweet }: Props) => {
 	const router = useRouter();
 	const setDataTweet = useReplyTweet((state) => state.setDataTweet);
+	const { addToNavigationHistory } = usePrevious();
+	const [isPending, startTransition] = useTransition();
 
-	/**
-	 * @replyTweet
-	 *
-	 * communication to createTweetForm
-	 */
 	const replyTweet = () => {
-		if (isMobile && dataTweet) setDataTweet(dataTweet);
-		router.push("/compose/tweet");
+		startTransition(() => {
+			if (isMobile && dataTweet) setDataTweet(dataTweet);
+
+			addToNavigationHistory(getCurrentPath());
+			router.push("/compose/tweet");
+		});
 	};
 
 	return (
 		<div className="fixed bottom-28 right-6 sm:hidden">
 			<Button
+				disabled={isPending}
 				variant="primary"
 				className="rounded-full p-2"
 				onClick={replyTweet}
