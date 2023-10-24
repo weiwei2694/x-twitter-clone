@@ -10,6 +10,7 @@ import { MouseEvent, useEffect, useRef, useState, useTransition } from "react";
 import Unread from "./Unread";
 import Menu from "./Menu";
 import { usePrevious } from "@/hooks/usePrevious";
+import TweetText from "@/components/sharing/TweetText";
 
 interface Props {
 	dataNotification: DataNotification;
@@ -137,10 +138,10 @@ const PostNotification = ({ dataNotification, currentUsername }: Props) => {
 
 					<div className="flex flex-col space-y-2">
 						<p className="font-normal text-gray-200">
-							{renderText(
+							<TweetText content={renderText(
 								dataNotification.post?.text ??
 								"This post is no longer available",
-							)}
+							)} />
 						</p>
 						{dataNotification.post?.imageUrl && (
 							<Image
