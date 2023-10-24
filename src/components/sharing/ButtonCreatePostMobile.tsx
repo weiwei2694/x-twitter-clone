@@ -38,7 +38,7 @@ const ButtonCreatePostMobile = ({ isMobile, dataTweet }: Props) => {
 				onClick={replyTweet}
 			>
 				<Image
-					src={`/assets/${isMobile ? "reply-tweet.svg" : "create-tweet.svg"}`}
+					src="/assets/create-tweet.svg"
 					alt="Tweet Icon"
 					width={40}
 					height={40}
