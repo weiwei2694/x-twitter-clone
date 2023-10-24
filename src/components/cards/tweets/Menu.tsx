@@ -13,8 +13,7 @@ import { deleteTweet } from "@/lib/tweet";
 import { toggleFollowUser } from "@/lib/user";
 import { cn, getCurrentPath } from "@/lib/utils";
 import { Follower } from "@prisma/client";
-import { MoreHorizontal } from "lucide-react";
-import Image from "next/image";
+import { ChevronsRight, MoreHorizontal, Trash, UserPlus2, UserX2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { MouseEvent, useState, useTransition } from "react";
 import toast from "react-hot-toast";
@@ -75,13 +74,7 @@ const Menu = ({
 							redirectToDetailPost();
 						}}
 					>
-						<Image
-							src="/assets/right-arrow.svg"
-							alt="Right Arrow Icon"
-							width={30}
-							height={30}
-							className="object-contain"
-						/>
+						<ChevronsRight className="w-4 h-4" />
 						Go To Post
 					</DropdownMenuItem>
 					{isOwnTweet ? (
@@ -96,13 +89,7 @@ const Menu = ({
 							)}
 							disabled={isPendingTweet}
 						>
-							<Image
-								src="/assets/delete.svg"
-								alt="Delete"
-								width={30}
-								height={30}
-								className="object-contain"
-							/>
+							<Trash className="w-4 h-4" />
 							Delete
 						</DropdownMenuItem>
 					) : (
@@ -125,23 +112,9 @@ const Menu = ({
 								isPendingFollowUser && "opacity-50 cursor-not-allowed",
 							)}
 						>
-							{followed ? (
-								<Image
-									src="/assets/unfollow.svg"
-									alt="Unfollow"
-									width={30}
-									height={30}
-									className="object-contain"
-								/>
-							) : (
-								<Image
-									src="/assets/follow.svg"
-									alt="Follow"
-									width={30}
-									height={30}
-									className="object-contain"
-								/>
-							)}
+							{followed
+								? <UserX2 className="w-4 h-4" />
+								: <UserPlus2 className="w-4 h-4" />}
 							<p className="flex items-center gap-x-2">
 								{followed ? "Unfollow" : "Follow"}
 								<span className="max-w-[80px] overflow-hidden whitespace-nowrap text-ellipsis">
