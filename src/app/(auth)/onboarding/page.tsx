@@ -9,7 +9,6 @@ const Page = async () => {
 	const clerkUser = await currentUser();
 	if (!clerkUser) return null;
 
-	// if user already registered and isCompleted already true, redirect to home page
 	const user = await getUserAction(clerkUser.id);
 	if (user?.isCompleted) redirect("/home");
 
@@ -23,12 +22,15 @@ const Page = async () => {
 	};
 
 	// save temporary user data into database
-	const temporaryUserData = {
-		...mapUser,
-		name: "unknown",
-		isCompleted: false,
-	};
-	await saveUserAction(temporaryUserData);
+	if (!user) {
+		const temporaryUserData = {
+			...mapUser,
+			name: "unknown",
+			isCompleted: false,
+		};
+		const data = await saveUserAction(temporaryUserData);
+		console.info(data);
+	}
 
 	return (
 		<section className="w-full h-screen">

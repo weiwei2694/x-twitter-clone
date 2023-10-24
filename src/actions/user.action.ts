@@ -42,7 +42,6 @@ export async function saveUserAction({
 	try {
 		if (!id) throw new Error("id required");
 		if (!name) throw new Error("name required");
-		if (!isCompleted) throw new Error("isCompleted required");
 
 		const existingUser = await prisma.user.findUnique({
 			where: { id },
