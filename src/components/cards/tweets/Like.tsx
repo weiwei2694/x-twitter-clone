@@ -53,7 +53,7 @@ const Like = ({
 				<div className="p-1 group-hover:bg-pink-600/20 rounded-full transition-all">
 					<div className="w-6 h-6">
 						<Image
-							src="/assets/heart-fill-icon.png"
+							src="/assets/heart-fill-icon.svg"
 							alt="Heart Fill Icon"
 							width={20}
 							height={20}

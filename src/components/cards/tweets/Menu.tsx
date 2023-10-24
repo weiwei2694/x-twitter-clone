@@ -76,7 +76,7 @@ const Menu = ({
 						}}
 					>
 						<Image
-							src="/assets/right-arrow.png"
+							src="/assets/right-arrow.svg"
 							alt="Right Arrow Icon"
 							width={30}
 							height={30}
@@ -97,7 +97,7 @@ const Menu = ({
 							disabled={isPendingTweet}
 						>
 							<Image
-								src="/assets/delete.png"
+								src="/assets/delete.svg"
 								alt="Delete"
 								width={30}
 								height={30}
@@ -127,7 +127,7 @@ const Menu = ({
 						>
 							{followed ? (
 								<Image
-									src="/assets/unfollow.png"
+									src="/assets/unfollow.svg"
 									alt="Unfollow"
 									width={30}
 									height={30}
@@ -135,7 +135,7 @@ const Menu = ({
 								/>
 							) : (
 								<Image
-									src="/assets/follow.png"
+									src="/assets/follow.svg"
 									alt="Follow"
 									width={30}
 									height={30}

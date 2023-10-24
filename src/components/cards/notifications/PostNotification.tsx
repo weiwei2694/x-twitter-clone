@@ -55,7 +55,7 @@ const PostNotification = ({ dataNotification, currentUsername }: Props) => {
 		const options: any = {
 			Reply: (
 				<Image
-					src="/assets/reply-notification-icon.png"
+					src="/assets/reply-notification-icon.svg"
 					alt="Reply Icon"
 					width={20}
 					height={20}
@@ -63,7 +63,7 @@ const PostNotification = ({ dataNotification, currentUsername }: Props) => {
 			),
 			Comment: (
 				<Image
-					src="/assets/comment-notification-icon.png"
+					src="/assets/comment-notification-icon.svg"
 					alt="Comment Icon"
 					width={20}
 					height={20}
@@ -71,7 +71,7 @@ const PostNotification = ({ dataNotification, currentUsername }: Props) => {
 			),
 			Like: (
 				<Image
-					src="/assets/heart-fill-icon.png"
+					src="/assets/heart-fill-icon.svg"
 					alt="Heart Fill Icon"
 					width={20}
 					height={20}
@@ -139,7 +139,7 @@ const PostNotification = ({ dataNotification, currentUsername }: Props) => {
 						<p className="font-normal text-gray-200">
 							{renderText(
 								dataNotification.post?.text ??
-									"This post is no longer available",
+								"This post is no longer available",
 							)}
 						</p>
 						{dataNotification.post?.imageUrl && (

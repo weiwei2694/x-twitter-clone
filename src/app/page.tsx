@@ -23,7 +23,7 @@ export default async function Home() {
 			<section className="w-full h-full md:h-fit flex flex-col md:flex-row justify-center md:justify-between space-y-24 md:space-y-0">
 				<div className="flex md:hidden">
 					<Image
-						src="/assets/small-x-logo.png"
+						src="/assets/small-x-logo.svg"
 						alt="X Logo"
 						width={40}
 						height={40}
@@ -32,7 +32,7 @@ export default async function Home() {
 				</div>
 				<div className="hidden md:flex">
 					<Image
-						src="/assets/large-x-logo.png"
+						src="/assets/large-x-logo.svg"
 						alt="X Logo"
 						width={300}
 						height={300}

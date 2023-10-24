@@ -52,7 +52,7 @@ const Bookmark = ({
 				<div className="p-1 group-hover:bg-blue/10 transition-all rounded-full">
 					<div className="w-4 h-4">
 						<Image
-							src="/assets/tweet-bookmark-fill-icon.png"
+							src="/assets/tweet-bookmark-fill-icon.svg"
 							alt="Bookmark Fill Icon"
 							width={20}
 							height={20}

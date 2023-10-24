@@ -1,37 +1,37 @@
 export const links = [
 	{
-		icon: "/assets/small-x-logo.png",
-		activeIcon: "/assets/small-x-logo.png",
+		icon: "/assets/small-x-logo.svg",
+		activeIcon: "/assets/small-x-logo.svg",
 		title: "X Logo",
 		href: "/home",
 	},
 	{
-		icon: "/assets/home-icon.png",
-		activeIcon: "/assets/home-fill-icon.png",
+		icon: "/assets/home-icon.svg",
+		activeIcon: "/assets/home-fill-icon.svg",
 		title: "Home",
 		href: "/home",
 	},
 	{
-		icon: "/assets/explore-icon.png",
-		activeIcon: "/assets/explore-fill-icon.png",
+		icon: "/assets/explore-icon.svg",
+		activeIcon: "/assets/explore-fill-icon.svg",
 		title: "Explore",
 		href: "/explore",
 	},
 	{
-		icon: "/assets/notif-icon.png",
-		activeIcon: "/assets/notif-fill-icon.png",
+		icon: "/assets/notif-icon.svg",
+		activeIcon: "/assets/notif-fill-icon.svg",
 		title: "Notifications",
 		href: "/notifications",
 	},
 	{
-		icon: "/assets/bookmark-icon.png",
-		activeIcon: "/assets/bookmark-fill-icon.png",
+		icon: "/assets/bookmark-icon.svg",
+		activeIcon: "/assets/bookmark-fill-icon.svg",
 		title: "Bookmarks",
 		href: "/bookmarks",
 	},
 	{
-		icon: "/assets/profile-icon.png",
-		activeIcon: "/assets/profile-fill-icon.png",
+		icon: "/assets/profile-icon.svg",
+		activeIcon: "/assets/profile-fill-icon.svg",
 		title: "Profile",
 		href: "",
 	},
@@ -39,26 +39,26 @@ export const links = [
 
 export const linksMobile = [
 	{
-		icon: "/assets/home-icon.png",
-		activeIcon: "/assets/home-fill-icon.png",
+		icon: "/assets/home-icon.svg",
+		activeIcon: "/assets/home-fill-icon.svg",
 		title: "Home",
 		href: "/home",
 	},
 	{
-		icon: "/assets/profile-icon.png",
-		activeIcon: "/assets/profile-fill-icon.png",
+		icon: "/assets/profile-icon.svg",
+		activeIcon: "/assets/profile-fill-icon.svg",
 		title: "Profile",
 		href: "",
 	},
 	{
-		icon: "/assets/explore-icon.png",
-		activeIcon: "/assets/explore-fill-icon.png",
+		icon: "/assets/explore-icon.svg",
+		activeIcon: "/assets/explore-fill-icon.svg",
 		title: "Explore",
 		href: "/explore",
 	},
 	{
-		icon: "/assets/notif-icon.png",
-		activeIcon: "/assets/notif-fill-icon.png",
+		icon: "/assets/notif-icon.svg",
+		activeIcon: "/assets/notif-fill-icon.svg",
 		title: "Notifications",
 		href: "/notifications",
 	},
@@ -66,14 +66,14 @@ export const linksMobile = [
 
 export const mobileSidebarLinks = [
 	{
-		icon: "/assets/profile-icon.png",
-		activeIcon: "/assets/profile-fill-icon.png",
+		icon: "/assets/profile-icon.svg",
+		activeIcon: "/assets/profile-fill-icon.svg",
 		title: "Profile",
 		href: "",
 	},
 	{
-		icon: "/assets/bookmark-icon.png",
-		activeIcon: "/assets/bookmark-fill-icon.png",
+		icon: "/assets/bookmark-icon.svg",
+		activeIcon: "/assets/bookmark-fill-icon.svg",
 		title: "Bookmarks",
 		href: "/bookmarks",
 	},

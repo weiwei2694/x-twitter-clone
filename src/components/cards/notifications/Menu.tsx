@@ -83,7 +83,7 @@ const Menu = ({ notificationId, isRead }: Props) => {
 					>
 						<div className="w-7 flex items-center justify-center">
 							<Image
-								src="/assets/delete.png"
+								src="/assets/delete.svg"
 								alt="Delete"
 								width={30}
 								height={30}

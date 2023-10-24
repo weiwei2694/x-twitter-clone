@@ -38,7 +38,7 @@ const Page = async () => {
 						width={35}
 						height={35}
 						alt="X Logo"
-						src="/assets/small-x-logo.png"
+						src="/assets/small-x-logo.svg"
 						className="object-contain"
 					/>
 					<Logout>Log Out</Logout>

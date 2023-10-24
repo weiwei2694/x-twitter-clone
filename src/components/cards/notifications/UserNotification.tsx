@@ -64,7 +64,7 @@ const UserNotification = ({ dataNotification }: Props) => {
 		>
 			<div className="flex justify-center items-center w-[40px] h-[40px]">
 				<Image
-					src="/assets/user-notification-icon.png"
+					src="/assets/user-notification-icon.svg"
 					alt="Profile Icon"
 					width={20}
 					height={20}

@@ -59,7 +59,7 @@ const Topbar = ({ user }: TopbarProps) => {
 					</div>
 					<div className="absolute left-0 top-0 right-0 z-0 flex justify-center">
 						<Image
-							src="/assets/small-x-logo.png"
+							src="/assets/small-x-logo.svg"
 							alt="X Logo"
 							width={30}
 							height={30}
