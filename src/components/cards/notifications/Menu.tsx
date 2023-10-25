@@ -12,7 +12,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { BookX, MoreHorizontal } from "lucide-react";
+import { BookX, MoreHorizontal, Trash } from "lucide-react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { MouseEvent, useState, useTransition } from "react";
@@ -71,9 +71,7 @@ const Menu = ({ notificationId, isRead }: Props) => {
 							className="text-[#f4212e]"
 							disabled={isPending}
 						>
-							<div className="w-7 flex items-center justify-center">
-								<BookX className="object-contain w-4 h-4" />
-							</div>
+							<BookX className="object-contain w-4 h-4" />
 							Mark as read
 						</DropdownMenuItem>
 					)}
@@ -81,15 +79,7 @@ const Menu = ({ notificationId, isRead }: Props) => {
 						onClick={handlerSetIsDialog}
 						className="text-[#f4212e]"
 					>
-						<div className="w-7 flex items-center justify-center">
-							<Image
-								src="/assets/delete.svg"
-								alt="Delete"
-								width={30}
-								height={30}
-								className="object-contain"
-							/>
-						</div>
+						<Trash className="w-4 h-4" />
 						Delete Notification
 					</DropdownMenuItem>
 				</DropdownMenuContent>
