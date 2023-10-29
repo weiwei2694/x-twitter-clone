@@ -2,7 +2,7 @@ import CreateAnAccount from "@/components/sharing/CreateAnAccount";
 import { currentUser } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import Image from "next/image";
-import { getUserAction } from "@/actions/user.action";
+import { getUserAction, saveUserAction } from "@/actions/user.action";
 
 export default async function Home() {
 	const clerkUser = await currentUser();
@@ -12,9 +12,33 @@ export default async function Home() {
 		// get data user from database
 		const user = await getUserAction(clerkUser.id);
 
+		// if user not existing in database
+		if (!user) {
+			const mapUser = {
+				id: clerkUser.id,
+				imageUrl: clerkUser.imageUrl,
+				name: "",
+				username: clerkUser.username!.toLowerCase(),
+				email: clerkUser.emailAddresses[0].emailAddress,
+				bio: "",
+			};
+
+			// save to database
+			const temporaryUserData = {
+				...mapUser,
+				name: "unknown",
+				isCompleted: false,
+			};
+			await saveUserAction(temporaryUserData);
+
+			redirect('/onboarding');
+		}
+
 		// if user data exists and isCompleted is within user
-		if (user && "isCompleted" in user && Boolean(user.isCompleted)) {
-			redirect("/onboarding");
+		if ("isCompleted" in user && Boolean(user.isCompleted)) {
+			redirect("/home");
+		} else {
+			redirect('/onboarding');
 		}
 	}
 

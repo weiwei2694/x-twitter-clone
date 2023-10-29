@@ -28,8 +28,7 @@ const Page = async () => {
 			name: "unknown",
 			isCompleted: false,
 		};
-		const data = await saveUserAction(temporaryUserData);
-		console.info(data);
+		await saveUserAction(temporaryUserData);
 	}
 
 	return (
